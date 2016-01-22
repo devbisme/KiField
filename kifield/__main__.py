@@ -29,43 +29,60 @@ standard_library.install_aliases()
 
 import argparse
 import os
+import shutil
 import sys
 import logging
 from .kifield import *
 from . import __version__
 
-
 ###############################################################################
 # Command-line interface.
 ###############################################################################
 
+
 def main():
     parser = argparse.ArgumentParser(
-        description='Insert fields from spreadsheets into KiCad schematics, or gather fields from schematics and place them into a spreadsheet.')
-    parser.add_argument('--version', '-v',
+        description=
+        'Insert fields from spreadsheets into KiCad schematics, or gather fields from schematics and place them into a spreadsheet.')
+    parser.add_argument('--version',
+                        '-v',
                         action='version',
                         version='KiField ' + __version__)
-    parser.add_argument('--extract', '-x',
-                        nargs='+',
-                        type=str,
-                        metavar='file.[xlsx|csv|sch]',
-                        help='Extract field values from one or more spreadsheet or schematic files.')
-    parser.add_argument('--insert', '-i',
-                        nargs='+',
-                        type=str,
-                        metavar='file.[xlsx|csv|sch]',
-                        help='Insert extracted field values into one or more schematic or spreadsheet files.')
-    parser.add_argument('--overwrite', '-w',
+    parser.add_argument(
+        '--extract',
+        '-x',
+        nargs='+',
+        type=str,
+        metavar='file.[xlsx|csv|sch]',
+        help=
+        'Extract field values from one or more spreadsheet or schematic files.')
+    parser.add_argument(
+        '--insert',
+        '-i',
+        nargs='+',
+        type=str,
+        metavar='file.[xlsx|csv|sch]',
+        help=
+        'Insert extracted field values into one or more schematic or spreadsheet files.')
+    parser.add_argument('--overwrite',
+                        '-w',
                         action='store_true',
                         help='Allow field insertion into an existing file.')
-    parser.add_argument('--fields', '-f',
-                        nargs='+',
-                        type=str,
-                        default=None,
-                        metavar='name',
-                        help='Specify the names of the fields to extract and insert.')
+    parser.add_argument('--backup',
+                        '-b',
+                        action='store_true',
+                        help='Create backups before modifying files.')
     parser.add_argument(
-        '--debug', '-d',
+        '--fields',
+        '-f',
+        nargs='+',
+        type=str,
+        default=None,
+        metavar='name',
+        help='Specify the names of the fields to extract and insert.')
+    parser.add_argument(
+        '--debug',
+        '-d',
         nargs='?',
         type=int,
         default=0,
@@ -81,8 +98,12 @@ def main():
     for file in args.insert:
         if os.path.isfile(file):
             if not args.overwrite:
-                print('File {} already exists! Use the --overwrite option to allow modifications to it.'.format(file))
+                print(
+                    'File {} already exists! Use the --overwrite option to allow modifications to it.'.format(
+                        file))
                 sys.exit(1)
+            if args.backup:
+                shutil.copy(file, file + '.bak')
 
     if args.extract is None:
         print('Hey! Give me some files to extract field values from!')
@@ -96,8 +117,9 @@ def main():
         logger.addHandler(handler)
         logger.setLevel(log_level)
 
-    kifield(extract_filenames=args.extract, insert_filenames=args.insert, field_names=args.fields)
-
+    kifield(extract_filenames=args.extract,
+            insert_filenames=args.insert,
+            field_names=args.fields)
 
 ###############################################################################
 # Main entrypoint.
