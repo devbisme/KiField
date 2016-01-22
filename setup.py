@@ -36,6 +36,7 @@ setup(
     url='https://github.com/xesscorp/kifield',
 #    packages=['kifield',],
     packages=setuptools.find_packages(),
+    entry_points={'console_scripts':['kifield = kifield.__main__:main']},
     package_dir={'kifield':
                  'kifield'},
     include_package_data=True,
