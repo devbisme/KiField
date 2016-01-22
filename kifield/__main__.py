@@ -68,10 +68,10 @@ def main():
                         '-w',
                         action='store_true',
                         help='Allow field insertion into an existing file.')
-    parser.add_argument('--backup',
-                        '-b',
+    parser.add_argument('--nobackup',
+                        '-nb',
                         action='store_true',
-                        help='Create backups before modifying files.')
+                        help='Do *not* create backups before modifying files. (Default is to make backup files.)')
     parser.add_argument(
         '--fields',
         '-f',
@@ -79,7 +79,7 @@ def main():
         type=str,
         default=None,
         metavar='name',
-        help='Specify the names of the fields to extract and insert.')
+        help='Specify the names of the fields to extract and insert. (Leave blank to extract/insert *all* fields.)')
     parser.add_argument(
         '--debug',
         '-d',
@@ -97,13 +97,21 @@ def main():
 
     for file in args.insert:
         if os.path.isfile(file):
-            if not args.overwrite:
+            if not args.overwrite and args.nobackup:
                 print(
-                    'File {} already exists! Use the --overwrite option to allow modifications to it.'.format(
+                    'File {} already exists! Use the --overwrite option to allow modifications to it or allow backups.'.format(
                         file))
                 sys.exit(1)
-            if args.backup:
-                shutil.copy(file, file + '.bak')
+            if not args.nobackup:
+                # Create a backup file.
+                index = 1  # Start with this backup file suffix.
+                while True:
+                    backup_file = file + '.{}.bak'.format(index, file)
+                    if not os.path.isfile(backup_file):
+                        # Found an unused backup file name, so make backup.
+                        shutil.copy(file, backup_file)
+                        break  # Backup done, so break out of loop.
+                    index += 1  # Else keep looking for an unused backup file name.
 
     if args.extract is None:
         print('Hey! Give me some files to extract field values from!')
@@ -111,7 +119,7 @@ def main():
 
     logger = logging.getLogger('kifield')
     if args.debug is not None:
-        log_level = logging.DEBUG - args.debug
+        log_level = logging.DEBUG + 1 - args.debug
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(log_level)
         logger.addHandler(handler)
