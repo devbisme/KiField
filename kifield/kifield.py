@@ -34,6 +34,7 @@ standard_library.install_aliases()
 import sys
 import os
 import re
+import operator
 import csv
 import logging
 from pprint import pprint
@@ -231,6 +232,17 @@ def extract_part_fields_from_csv(filename, field_names):
     return {}
 
 
+def get_component_refs(component):
+    '''Return a list of references for a component.'''
+    # Get the references of the component. (There may be more than one
+    # if the component is part of a hierarchical sheet that's replicated.)
+    refs = [r['ref'] for r in component.references]
+    refs = [re.search(r'="(.*)"', r).group(1) for r in refs]
+    refs = set(refs)
+    refs.add(component.labels['ref'])  # Non-hierarchical ref.
+    return refs
+
+
 def extract_part_fields_from_sch(filename, field_names):
     logger.log(DEBUG_OVERVIEW, 'Extracting fields {} from schematic file {}.'.format(field_names, filename))
     part_fields_dict = {}
@@ -254,14 +266,8 @@ def extract_part_fields_from_sch(filename, field_names):
             del part_fields['']
         except KeyError:
             pass
-        # Get the references of the component. (There may be more than one
-        # if the component is part of a hierarchical sheet that's replicated.)
-        refs = [r['ref'] for r in component.references]
-        refs = [re.search(r'="(.*)"', r).group(1) for r in refs]
-        refs = set(refs)
-        refs.add(component.labels['ref'])  # Non-hierarchical ref.
         # Create a dictionary entry for each ref and assign the part fields to it.
-        for ref in refs:
+        for ref in get_component_refs(component):
             if ref[0] == '#' or ref[-1] == '?':
                 continue  # Skip pseudo-parts (e.g. power nets) and unallocated parts.
             part_fields_dict[ref] = part_fields
@@ -391,6 +397,17 @@ def insert_part_fields_into_csv(part_fields_dict, filename):
     wb_to_csvfile(wb, filename)
 
 
+def reorder_fields(fields):
+    '''Return the part fields with the named fields ordered alphabetically.'''
+    # Don't sort the first four, unnamed fields.
+    named_fields = sorted(fields[4:], key=operator.itemgetter('name','id'))
+    # Renumber the ids of the sorted fields.
+    for id, field in enumerate(named_fields, 4):
+        field['id'] = str(id)
+    # Return the first four fields plus the remaining sorted fields.
+    return fields[:4] + named_fields
+
+
 def insert_part_fields_into_sch(part_fields_dict, filename):
     logger.log(DEBUG_OVERVIEW, 'Inserting extracted fields into schematic file {}.'.format(filename))
     try:
@@ -402,35 +419,45 @@ def insert_part_fields_into_sch(part_fields_dict, filename):
     # Go through all the schematic components, replacing field values and
     # adding new fields from the part fields dictionary.
     for component in sch.components:
-        # Get fields for the part with the same reference as this component.
-        part_fields = part_fields_dict.get(component.labels['ref'], {})
-        for field_name, field_value in part_fields.items():
-            # Get the field id associated with this field name (if there is one).
-            field_id = field_name_to_id.get(field_name, None)
-            # Search for an existing field in the component.
-            for f in component.fields:
-                if unquote(f['name']).lower() == field_name.lower():
-                    # Update existing named field in component.
-                    logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
-                        component.labels['ref'], f['id'], f[
-                            'ref'], field_value))
-                    f['ref'] = quote(field_value)
-                    break
-                elif f['id'] == field_id:
-                    # Update one of the default, unnamed fields in component.
-                    logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
-                        component.labels['ref'], f['id'], f[
-                            'ref'], field_value))
-                    f['ref'] = quote(field_value)
-                    break
-            else:
-                if field_value is not None:
-                    # Add new named field to component.
-                    new_field = {'ref': quote(field_value),
-                                 'name': quote(field_name)}
-                    component.addField(new_field)
-                    logger.log(DEBUG_OBSESSIVE, 'Adding {} field {} with value {}'.format(
-                        component.labels['ref'], component.fields[-1]['id'], field_value))
+        prev_part_fields = None
+        refs = get_component_refs(component)
+        for ref in refs:
+            # Get fields for the part with the same reference as this component.
+            part_fields = part_fields_dict.get(ref, {})
+            if prev_part_fields is not None and part_fields != prev_part_fields:
+                logger.warn("The inserted part lists for hierarchically-instantiated components {} have different values.".format(refs))
+            from copy import deepcopy
+            prev_part_fields = deepcopy(part_fields)    
+            for field_name, field_value in part_fields.items():
+                # Get the field id associated with this field name (if there is one).
+                field_id = field_name_to_id.get(field_name, None)
+                # Search for an existing field with a matching name in the component.
+                for f in component.fields:
+                    if unquote(f['name']).lower() == field_name.lower():
+                        # Update existing named field in component.
+                        logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
+                            ref, f['id'], f['ref'], field_value))
+                        f['ref'] = quote(field_value)
+                        break
+                    elif f['id'] == field_id:
+                        # Update one of the default, unnamed fields in component.
+                        logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
+                                ref, f['id'], f['ref'], field_value))
+                        f['ref'] = quote(field_value)
+                        break
+                else:
+                    if field_value not in (None,''):
+                        # Add new named field to component.
+                        new_field = {'ref': quote(field_value),
+                                     'name': quote(field_name)}
+                        component.addField(new_field)
+                        logger.log(DEBUG_OBSESSIVE, 'Adding {} field {} with value {}'.format(
+                            ref, component.fields[-1]['id'], field_value))
+                # Remove any named fields with empty values. 
+                component.fields = [f for f in component.fields if unquote(f['name']) in (None,'','~') or unquote(f['ref']) not in (None,'')]
+                # Canonically order the fields to make schematic comparisons
+                # easier during acceptance testing.
+                component.fields = reorder_fields(component.fields)
 
     sch.save(filename)
 
