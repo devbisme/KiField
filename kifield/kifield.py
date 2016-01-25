@@ -37,10 +37,12 @@ import re
 import operator
 import csv
 import logging
+from copy import deepcopy
 from pprint import pprint
 from difflib import get_close_matches
 import openpyxl as pyxl
 from .sch import Schematic
+from .schlib import SchLib
 import pdb
 
 logger = logging.getLogger('kifield')
@@ -49,18 +51,24 @@ DEBUG_OVERVIEW = logging.DEBUG
 DEBUG_DETAILED = logging.DEBUG-1
 DEBUG_OBSESSIVE = logging.DEBUG-2
 
-# Assign some names to the unnamed fields in a schematic component.
-field_id_to_name = {'1': 'value', '2': 'footprint', '3': 'datasheet'}
-field_name_to_id = {v: k for k, v in field_id_to_name.items()}
+# Assign some names to the unnamed fields in a schematic or library component.
+sch_field_id_to_name = {'1': 'value', '2': 'footprint', '3': 'datasheet'}
+sch_field_name_to_id = {v: k for k, v in sch_field_id_to_name.items()}
+lib_field_id_to_name = {'0': 'prefix', '1': 'value', '2': 'footprint', '3': 'datasheet'}
+lib_field_name_to_id = {v: k for k, v in lib_field_id_to_name.items()}
 
 
 def quote(s):
     '''Surround a string with quote marks.'''
+    if s is None:
+        return s
     return '"' + str(s) + '"'
 
 
 def unquote(s):
     '''Remove any quote marks around a string.'''
+    if type(s) not in (type(u''), str):
+        return s
     try:
         # This returns inner part of "..." or '...' strings.
         return re.match('^([\'"])(.*)\\1$', s).group(2)
@@ -77,17 +85,16 @@ def explode(ref):
         range_refs = re.split(',|;', ref)
         for r in range_refs:
             mtch = re.match(
-                '^((?P<start_prefix>\D+)(?P<range_start>\d+))[-:]((?P<end_prefix>\D+)(?P<range_end>\d+))$',
+                '^(?P<part_prefix>\D+)(?P<range_start>\d+)[-:]\1(?P<range_end>\d+)$',
                 r)
             if mtch is None:
                 individual_refs.append(r)
             else:
-                start_prefix = mtch.group('start_prefix')
+                part_prefix = mtch.group('part_prefix')
                 range_start = int(mtch.group('range_start'))
-                end_prefix = mtch.group('end_prefix')
                 range_end = int(mtch.group('range_end'))
                 for i in range(range_start, range_end + 1):
-                    individual_refs.append(start_prefix + str(i))
+                    individual_refs.append(part_prefix + str(i))
     logger.log(DEBUG_OBSESSIVE, 'Exploding {} => {}.'.format(ref, individual_refs))
     return individual_refs
 
@@ -257,10 +264,10 @@ def extract_part_fields_from_sch(filename, field_names):
             # Assign a name for the unnamed fields (F1, F2 & F3).
             # Use the name for the higher fields (F4...).
             # Don't use the reference field (F0) because that's already used as the dict key.
-            name = field_id_to_name.get(id, unquote(f['name']))
+            name = sch_field_id_to_name.get(id, unquote(f['name']))
             # Store the field and its value if the field name is in the list of
             # allowed fields. (An empty list means that all fields are allowed.)
-            if field_names is None or len(field_names) != 0 or name in field_names:
+            if field_names is None or len(field_names) == 0 or name in field_names:
                 part_fields[name] = value
         try:
             del part_fields['']
@@ -279,14 +286,55 @@ def extract_part_fields_from_sch(filename, field_names):
     return part_fields_dict
 
 
+def extract_part_fields_from_lib(filename, field_names):
+    logger.log(DEBUG_OVERVIEW, 'Extracting fields {} from part library {}.'.format(field_names, filename))
+    part_fields_dict = {}
+    lib = SchLib(filename)
+    # Go through each component in the library, extracting its fields.
+    for component in lib.components:
+        component_name = component.definition['name']
+        # Get the fields and their values from the component.
+        part_fields = {}
+        for id, f in enumerate(component.fields):
+            if 'reference' in list(f.keys()):
+                name = 'prefix'
+                value = unquote(f['reference'])
+            elif 'name' in list(f.keys()):
+                # Assign a name for the unnamed fields (F1, F2 & F3).
+                # Use the name for the higher fields (F4...).
+                name = lib_field_id_to_name.get(str(id), unquote(f['fieldname']))
+                value = unquote(f['name'])
+            else:
+                logger.warn('Unknown type of field in part {}: {}.'.format(component_name, f))
+                continue
+            # Store the field and its value if the field name is in the list of
+            # allowed fields. (An empty list means that all fields are allowed.)
+            logger.log(DEBUG_OBSESSIVE, 'Extracted library part: {} {} {}.'.format(component_name,name,value))
+            if field_names is None or len(field_names) == 0 or name in field_names:
+                part_fields[name] = value
+        try:
+            del part_fields['']
+        except KeyError:
+            pass
+        # Create a dictionary entry for this library component.
+        part_fields_dict[component_name] = part_fields
+
+    if logger.isEnabledFor(DEBUG_DETAILED):
+        print('Extracted Part Fields:')
+        pprint(part_fields_dict)
+
+    return part_fields_dict
+
+
 def extract_part_fields(filenames, field_names):
     extraction_functions = {
         '.xlsx': extract_part_fields_from_xlsx,
         '.csv': extract_part_fields_from_csv,
         '.sch': extract_part_fields_from_sch,
+        '.lib': extract_part_fields_from_lib,
     }
     logger.log(DEBUG_OVERVIEW, 'Extracting fields {} from files {}.'.format(field_names, filenames))
-    part_fields = {}
+    part_fields_dict = {}
     if type(filenames) == str:
         filenames = [filenames]
     for f in filenames:
@@ -294,16 +342,18 @@ def extract_part_fields(filenames, field_names):
             f_extension = os.path.splitext(f)[1].lower()
             logger.log(DEBUG_DETAILED, 'Extracting fields from {}.'.format(f))
             f_part_fields = extraction_functions[f_extension](f, field_names)
-            part_fields.update(f_part_fields)
+            part_fields_dict.update(f_part_fields)
         except IOError:
             logger.warn('File not found: {}.'.format(f))
         except KeyError:
             logger.warn('Unknown file type for field extraction: {}.'.format(
                 f))
-    return part_fields
+    return part_fields_dict
 
 
 def insert_part_fields_into_wb(part_fields_dict, wb):
+
+    id_label = 'Refs'
 
     # Get all the unique field labels used in the dictionary of part fields.
     field_labels = set([])
@@ -311,7 +361,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
         for field_label in fields_and_values:
             field_labels.add(field_label)
     field_labels = sorted(field_labels)
-    field_labels.insert(0, 'Refs')
+    field_labels.insert(0, id_label)
 
     if wb is None:
         wb = pyxl.Workbook()  # No workbook given, so create one.
@@ -336,13 +386,13 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
     # Next open column. Combine with [0] in case there are no headers.
     next_header_column = max(list(header_columns.values()) + [0]) + 1
     # Find the column with the part references.
-    ref_col = find_header_column(headers, 'Refs')
-    # Go through each row, see if any ref is in the part dictionary, and
+    id_col = find_header_column(headers, id_label)
+    # Go through each row, see if any identifier is in the part dictionary, and
     # insert/overwrite fields from the dictionary.
     for row in range(header_row + 1, ws.max_row + 1):
-        for ref in explode(ws.cell(row=row, column=ref_col).value):
+        for id in explode(ws.cell(row=row, column=id_col).value):
             try:
-                fields = part_fields_dict[ref]
+                fields = part_fields_dict[id]
                 for field, value in fields.items():
                     # Change None field values to empty strings.
                     if value is None:
@@ -354,7 +404,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
                                                    0.3)[0]
                         cell_value = ws.cell(row=row,column=header_columns[header]).value
                         logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
-                            ref, field, cell_value, value))
+                            id, field, cell_value, value))
                         ws.cell(row=row,
                                 column=header_columns[header]).value = value
                     except IndexError:
@@ -362,7 +412,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
                         # so add a new column with the field name as the header label.
                         cell_value = ws.cell(row=row,column=header_columns[header]).value
                         logger.log(DEBUG_OBSESSIVE, 'Adding {} field {} with value {}'.format(
-                            ref, field, value))
+                            id, field, value))
                         ws.cell(row=row,
                                 column=next_header_column).value = value
                         new_header_cell = ws.cell(row=header_row,
@@ -397,7 +447,7 @@ def insert_part_fields_into_csv(part_fields_dict, filename):
     wb_to_csvfile(wb, filename)
 
 
-def reorder_fields(fields):
+def reorder_sch_fields(fields):
     '''Return the part fields with the named fields ordered alphabetically.'''
     # Don't sort the first four, unnamed fields.
     named_fields = sorted(fields[4:], key=operator.itemgetter('name','id'))
@@ -426,11 +476,10 @@ def insert_part_fields_into_sch(part_fields_dict, filename):
             part_fields = part_fields_dict.get(ref, {})
             if prev_part_fields is not None and part_fields != prev_part_fields:
                 logger.warn("The inserted part lists for hierarchically-instantiated components {} have different values.".format(refs))
-            from copy import deepcopy
             prev_part_fields = deepcopy(part_fields)    
             for field_name, field_value in part_fields.items():
                 # Get the field id associated with this field name (if there is one).
-                field_id = field_name_to_id.get(field_name, None)
+                field_id = lib_field_name_to_id.get(field_name, None)
                 # Search for an existing field with a matching name in the component.
                 for f in component.fields:
                     if unquote(f['name']).lower() == field_name.lower():
@@ -454,12 +503,71 @@ def insert_part_fields_into_sch(part_fields_dict, filename):
                         logger.log(DEBUG_OBSESSIVE, 'Adding {} field {} with value {}'.format(
                             ref, component.fields[-1]['id'], field_value))
                 # Remove any named fields with empty values. 
-                component.fields = [f for f in component.fields if unquote(f['name']) in (None,'','~') or unquote(f['ref']) not in (None,'')]
+                component.fields = [f for f in component.fields 
+                    if unquote(f.get('name',None)) in (None,'','~') 
+                    or unquote(f.get('ref',None)) not in (None,'')]
                 # Canonically order the fields to make schematic comparisons
                 # easier during acceptance testing.
-                component.fields = reorder_fields(component.fields)
+                component.fields = reorder_sch_fields(component.fields)
 
     sch.save(filename)
+
+
+def insert_part_fields_into_lib(part_fields_dict, filename):
+    logger.log(DEBUG_OVERVIEW, 'Inserting extracted fields into library file {}.'.format(filename))
+    try:
+        lib = SchLib(filename)
+    except IOError:
+        logger.warn('Library file {} not found.'.format(filename))
+        return
+
+    # Go through all the library components, replacing field values and
+    # adding new fields from the part fields dictionary.
+    for component in lib.components:
+        component_name = component.definition['name']
+        # Get fields for the part with the same name as this component.
+        part_fields = part_fields_dict.get(component_name, {})
+        for field_name, field_value in part_fields.items():
+            # Get the field id associated with this field name (if there is one).
+            field_id = lib_field_name_to_id.get(field_name, None)
+            # Search for an existing field with a matching name in the component.
+            for id, f in enumerate(component.fields):
+                if unquote(f.get('fieldname','')).lower() == field_name.lower():
+                    # Update existing named field in component.
+                    logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
+                        component_name, field_name, f['name'], field_value))
+                    f['name'] = quote(field_value)
+                    break
+                elif str(id) == field_id:
+                    if id == 0:
+                        # Update the F0 field of the component.
+                        logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
+                                component_name, field_id, f['reference'], field_value))
+                        f['reference'] = quote(field_value)
+                    else:
+                        # Update one of the F1, F2, or F3 fields in the component.
+                        logger.log(DEBUG_OBSESSIVE, 'Updating {} field {} from {} to {}'.format(
+                                component_name, field_id, f['name'], field_value))
+                        f['name'] = quote(field_value)
+                    break
+            else:
+                if field_value not in (None,''):
+                    # Add new named field to component.
+                    new_field = deepcopy(component.fields[-1])
+                    new_field['name'] = quote(field_value)
+                    new_field['fieldname'] = quote(field_name)
+                    component.fields.append(new_field)
+                    logger.log(DEBUG_OBSESSIVE, 'Adding {} field {} with value {}'.format(
+                        component_name, field_name, field_value))
+        # Remove any named fields with empty values. 
+        component.fields = [f for f in component.fields 
+            if unquote(f.get('fieldname',None)) in (None,'','~') 
+            or unquote(f.get('name',None)) not in (None,'')]
+        # Canonically order the fields to make schematic comparisons
+        # easier during acceptance testing.
+        #component.fields = reorder_lib_fields(component.fields)
+
+    lib.save(filename)
 
 
 def insert_part_fields(part_fields_dict, filenames):
@@ -467,6 +575,7 @@ def insert_part_fields(part_fields_dict, filenames):
         '.xlsx': insert_part_fields_into_xlsx,
         '.csv': insert_part_fields_into_csv,
         '.sch': insert_part_fields_into_sch,
+        '.lib': insert_part_fields_into_lib,
     }
     logger.log(DEBUG_OVERVIEW, 'Inserting extracted fields into files {}.'.format(filenames))
     if len(part_fields_dict) == 0:

@@ -43,35 +43,38 @@ from . import __version__
 def main():
     parser = argparse.ArgumentParser(
         description=
-        'Insert fields from spreadsheets into KiCad schematics, or gather fields from schematics and place them into a spreadsheet.')
+            '''Insert fields from spreadsheets into KiCad schematics or libraries, 
+            or gather fields from schematics or libraries and place them into 
+            a spreadsheet.''')
     parser.add_argument('--version',
-                        '-v',
-                        action='version',
-                        version='KiField ' + __version__)
+        '-v',
+        action='version',
+        version='KiField ' + __version__)
     parser.add_argument(
         '--extract',
         '-x',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|sch]',
-        help=
-        'Extract field values from one or more spreadsheet or schematic files.')
+        metavar='file.[xlsx|csv|sch|lib]',
+        help='''Extract field values from one or more spreadsheet or 
+            schematic files.''')
     parser.add_argument(
         '--insert',
         '-i',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|sch]',
-        help=
-        'Insert extracted field values into one or more schematic or spreadsheet files.')
+        metavar='file.[xlsx|csv|sch|lib]',
+        help='''Insert extracted field values into one or more schematic 
+            or spreadsheet files.''')
     parser.add_argument('--overwrite',
-                        '-w',
-                        action='store_true',
-                        help='Allow field insertion into an existing file.')
+        '-w',
+        action='store_true',
+        help='Allow field insertion into an existing file.')
     parser.add_argument('--nobackup',
-                        '-nb',
-                        action='store_true',
-                        help='Do *not* create backups before modifying files. (Default is to make backup files.)')
+        '-nb',
+        action='store_true',
+        help='''Do *not* create backups before modifying files. 
+            (Default is to make backup files.)''')
     parser.add_argument(
         '--fields',
         '-f',
@@ -79,7 +82,8 @@ def main():
         type=str,
         default=None,
         metavar='name',
-        help='Specify the names of the fields to extract and insert. (Leave blank to extract/insert *all* fields.)')
+        help='''Specify the names of the fields to extract and insert. 
+            (Leave blank to extract/insert *all* fields.)''')
     parser.add_argument(
         '--debug',
         '-d',
@@ -91,16 +95,28 @@ def main():
 
     args = parser.parse_args()
 
+    logger = logging.getLogger('kifield')
+    if args.debug is not None:
+        log_level = logging.DEBUG + 1 - args.debug
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(log_level)
+        logger.addHandler(handler)
+        logger.setLevel(log_level)
+
+    if args.extract is None:
+        logger.critical('Hey! Give me some files to extract field values from!')
+        sys.exit(2)
+
     if args.insert is None:
-        print('Hey! I need some place to insert the fields!')
+        print('Hey! I need some files where I can insert the field values!')
         sys.exit(1)
 
     for file in args.insert:
         if os.path.isfile(file):
             if not args.overwrite and args.nobackup:
-                print(
-                    'File {} already exists! Use the --overwrite option to allow modifications to it or allow backups.'.format(
-                        file))
+                logger.critical(
+                    '''File {} already exists! Use the --overwrite option to
+                    allow modifications to it or allow backups.'''.format(file))
                 sys.exit(1)
             if not args.nobackup:
                 # Create a backup file.
@@ -112,18 +128,6 @@ def main():
                         shutil.copy(file, backup_file)
                         break  # Backup done, so break out of loop.
                     index += 1  # Else keep looking for an unused backup file name.
-
-    if args.extract is None:
-        print('Hey! Give me some files to extract field values from!')
-        sys.exit(2)
-
-    logger = logging.getLogger('kifield')
-    if args.debug is not None:
-        log_level = logging.DEBUG + 1 - args.debug
-        handler = logging.StreamHandler(sys.stdout)
-        handler.setLevel(log_level)
-        logger.addHandler(handler)
-        logger.setLevel(log_level)
 
     kifield(extract_filenames=args.extract,
             insert_filenames=args.insert,
