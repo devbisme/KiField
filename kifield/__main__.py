@@ -43,20 +43,20 @@ from . import __version__
 def main():
     parser = argparse.ArgumentParser(
         description=
-            '''Insert fields from spreadsheets into KiCad schematics or libraries, 
-            or gather fields from schematics or libraries and place them into 
+        '''Insert fields from spreadsheets into KiCad schematics or libraries,
+            or gather fields from schematics or libraries and place them into
             a spreadsheet.''')
     parser.add_argument('--version',
-        '-v',
-        action='version',
-        version='KiField ' + __version__)
+                        '-v',
+                        action='version',
+                        version='KiField ' + __version__)
     parser.add_argument(
         '--extract',
         '-x',
         nargs='+',
         type=str,
         metavar='file.[xlsx|csv|sch|lib]',
-        help='''Extract field values from one or more spreadsheet or 
+        help='''Extract field values from one or more spreadsheet or
             schematic files.''')
     parser.add_argument(
         '--insert',
@@ -64,16 +64,17 @@ def main():
         nargs='+',
         type=str,
         metavar='file.[xlsx|csv|sch|lib]',
-        help='''Insert extracted field values into one or more schematic 
+        help='''Insert extracted field values into one or more schematic
             or spreadsheet files.''')
     parser.add_argument('--overwrite',
-        '-w',
-        action='store_true',
-        help='Allow field insertion into an existing file.')
-    parser.add_argument('--nobackup',
+                        '-w',
+                        action='store_true',
+                        help='Allow field insertion into an existing file.')
+    parser.add_argument(
+        '--nobackup',
         '-nb',
         action='store_true',
-        help='''Do *not* create backups before modifying files. 
+        help='''Do *not* create backups before modifying files.
             (Default is to make backup files.)''')
     parser.add_argument(
         '--fields',
@@ -82,7 +83,7 @@ def main():
         type=str,
         default=None,
         metavar='name',
-        help='''Specify the names of the fields to extract and insert. 
+        help='''Specify the names of the fields to extract and insert.
             (Leave blank to extract/insert *all* fields.)''')
     parser.add_argument(
         '--debug',
@@ -104,7 +105,8 @@ def main():
         logger.setLevel(log_level)
 
     if args.extract is None:
-        logger.critical('Hey! Give me some files to extract field values from!')
+        logger.critical(
+            'Hey! Give me some files to extract field values from!')
         sys.exit(2)
 
     if args.insert is None:
@@ -116,7 +118,8 @@ def main():
             if not args.overwrite and args.nobackup:
                 logger.critical(
                     '''File {} already exists! Use the --overwrite option to
-                    allow modifications to it or allow backups.'''.format(file))
+                    allow modifications to it or allow backups.'''
+                    .format(file))
                 sys.exit(1)
             if not args.nobackup:
                 # Create a backup file.
