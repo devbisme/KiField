@@ -2,6 +2,20 @@
 Usage
 ========
 
+KiField is usually employed in a three-step process:
+
+#. First use KiField to extract the part field labels and values from a
+   schematic or library and place them into a CSV or XLSX spreadsheet file.
+
+#. Edit the spreadsheet file to change existing field values, add entirely
+   new fields, or completely delete fields.
+
+#. Finally, use KiField to insert the updated field labels and values from
+   the spreadsheet file into the schematic or library. 
+
+Command-line Options
+------------------------
+
 KiField is mainly intended to be  used as a script::
 
     usage: kifield [-h] [--version] [--extract file.[xlsx|csv|sch|lib]
@@ -99,7 +113,6 @@ part numbers:
 Adding fields to a schematic parts library is done in an equivalent manner.
 In this case, however, the ``Refs`` column will hold the library name of the
 component rather than its reference designator in a schematic.
-
 
 
 Removing Fields from a Schematic or Library
