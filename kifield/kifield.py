@@ -43,6 +43,7 @@ from difflib import get_close_matches
 import openpyxl as pyxl
 from .sch import Schematic
 from .schlib import SchLib
+from .dcm import Dcm
 import pdb
 
 logger = logging.getLogger('kifield')
@@ -399,6 +400,46 @@ def extract_part_fields_from_lib(filename, field_names):
     return part_fields_dict
 
 
+def extract_part_fields_from_dcm(filename, field_names):
+    '''Return a dictionary of part fields extracted from a part description file.'''
+
+    logger.log(DEBUG_OVERVIEW,
+               'Extracting fields {} from part description file {}.'.format(field_names,
+                                                                   filename))
+    part_fields_dict = {}
+    dcm = Dcm(filename)
+
+    # Go through each component, extracting its fields.
+    for component in dcm.components:
+        component_name = component.name
+
+        # Get the fields and their values from the component.
+        part_fields = {}
+        for name in ['description', 'keywords']:
+            value = getattr(component, name, None)
+            if value is not None:
+                if field_names is None or len(field_names)==0 or name in field_names:
+                    logger.log(DEBUG_OBSESSIVE,
+                       'Extracted part description: {} {} {}.'.format(
+                           component_name, name, value))
+                    part_fields[name] = value
+
+        # Remove any fields with blank keys.
+        try:
+            del part_fields['']
+        except KeyError:
+            pass
+
+        # Create a dictionary entry for this library component.
+        part_fields_dict[component_name] = part_fields
+
+    if logger.isEnabledFor(DEBUG_DETAILED):
+        print('Extracted part description fields:')
+        pprint(part_fields_dict)
+
+    return part_fields_dict
+
+
 def extract_part_fields(filenames, field_names):
     '''Return a dictionary of part fields extracted from a spreadsheet, part library, or schematic.'''
 
@@ -412,6 +453,7 @@ def extract_part_fields(filenames, field_names):
         '.csv': extract_part_fields_from_csv,
         '.sch': extract_part_fields_from_sch,
         '.lib': extract_part_fields_from_lib,
+        '.dcm': extract_part_fields_from_dcm,
     }
 
     part_fields_dict = {}
