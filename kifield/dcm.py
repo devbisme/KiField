@@ -26,17 +26,20 @@ import re
 
 class Component(object):
 
-    def __init__(self,file):
+    def __init__(self):
 
         self.name = None
         self.description = None
         self.keywords = None
+        self.docfile = None
+
+    def read(self, file):
         
         while True:
             line = file.readline()
             if not line:
-                break
-            mtch = re.match('^(?P<tag>[$\w]+)\s+(?P<contents>.*)\s*$', line)
+                return False
+            mtch = re.match('^(?P<tag>[$\w]+)\s+(?P<contents>.*)$', line)
             if mtch:
                 tag = str(mtch.group('tag').upper())
                 contents = str(mtch.group('contents'))
@@ -46,29 +49,41 @@ class Component(object):
                     self.description = contents
                 elif tag == 'K':
                     self.keywords = contents
+                elif tag == 'F':
+                    self.docfile = contents
+                elif tag == r'$ENDCMP':
+                    return True
+            elif re.match('^\$ENDCMP\s*$', line):
+                return True
 
-    def str():
+    def str(self):
         s = []
         if self.name is None:
             return s
-        s += ['#']
-        s += ['$CMP ' + self.name]
-        if self.description is not None:
-            s += ['D ' + self.description]
-        if self.keywords is not None:
-            s += ['K ' + self.keywords]
-        s += ['$ENDCMP']
-        s += ['#']
+        s.append('#\n')
+        s.append('$CMP ' + self.name + '\n')
+        if self.description is not None and len(self.description) > 0:
+            s.append('D ' + self.description + '\n')
+        if self.keywords is not None and len(self.keywords) > 0:
+            s.append('K ' + self.keywords + '\n')
+        if self.docfile is not None and len(self.docfile) > 0:
+            s.append('F ' + self.docfile + '\n')
+        s.append('$ENDCMP\n')
+        s.append('#\n')
         return s
 
 class Dcm(object):
     """
     A class to parse description files for KiCad schematic libraries.
     """
-    def __init__(self, filename):
+    def __init__(self, filename=None):
 
         self.filename = filename
+        self.header = 'EESchema-DOCLIB  Version 2.0\n'
         self.components = []
+
+        if filename is None:
+            return
 
         with open(filename) as file:
             self.header = file.readline()
@@ -79,32 +94,24 @@ class Dcm(object):
                 return
 
             while True:
-                file_pos = file.tell()
-
-                line = file.readline()
-
-                if not line:
+                c = Component()
+                if c.read(file):
+                    self.components.append(c)
+                else:
                     break
-
-                if line.startswith('$CMP '):
-                    file.seek(file_pos)
-                    self.components.append(Component(file))
+            
 
     def save(self, filename=None):
-        # check whether it has header, what means that sch file was loaded fine
-        if not self.header:
-            return
 
         if not filename:
             filename = self.filename
 
         # Insert the header.
-        to_write = []
-        to_write += [self.header]
+        to_write = [self.header]
 
         # Insert components.
-        for c in components:
-            to_write += c.str()
+        for c in self.components:
+            to_write.extend(c.str())
 
         with open(filename, 'w') as file:
             file.writelines(to_write)

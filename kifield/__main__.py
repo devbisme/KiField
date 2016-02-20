@@ -55,7 +55,7 @@ def main():
         '-x',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|sch|lib]',
+        metavar='file.[xlsx|csv|sch|lib|dcm]',
         help='''Extract field values from one or more spreadsheet or
             schematic files.''')
     parser.add_argument(
@@ -63,7 +63,7 @@ def main():
         '-i',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|sch|lib]',
+        metavar='file.[xlsx|csv|sch|lib|dcm]',
         help='''Insert extracted field values into one or more schematic
             or spreadsheet files.''')
     parser.add_argument('--overwrite',
@@ -81,9 +81,10 @@ def main():
         '-f',
         nargs='+',
         type=str,
-        default=None,
-        metavar='name',
+        default=[],
+        metavar='name|/name|~name',
         help='''Specify the names of the fields to extract and insert.
+            Place a '/' or '~' in front of a field you wish to omit.
             (Leave blank to extract/insert *all* fields.)''')
     parser.add_argument(
         '--debug',
@@ -132,9 +133,18 @@ def main():
                         break  # Backup done, so break out of loop.
                     index += 1  # Else keep looking for an unused backup file name.
 
+    inc_fields = []
+    exc_fields = []
+    for f in args.fields:
+        if f[0] in [r'/', r'~']:
+            exc_fields.append(f[1:])
+        else:
+            inc_fields.append(f)
+
     kifield(extract_filenames=args.extract,
             insert_filenames=args.insert,
-            field_names=args.fields)
+            inc_field_names=inc_fields,
+            exc_field_names=exc_fields)
 
 ###############################################################################
 # Main entrypoint.

@@ -43,7 +43,7 @@ from difflib import get_close_matches
 import openpyxl as pyxl
 from .sch import Schematic
 from .schlib import SchLib
-from .dcm import Dcm
+from .dcm import Dcm, Component
 import pdb
 
 logger = logging.getLogger('kifield')
@@ -63,6 +63,7 @@ lib_field_id_to_name = {'0': 'prefix',
                         '2': 'footprint',
                         '3': 'datasheet'}
 lib_field_name_to_id = {v: k for k, v in lib_field_id_to_name.items()}
+dcm_field_names = ['description', 'keywords', 'docfile']
 
 
 def quote(s):
@@ -119,6 +120,7 @@ def csvfile_to_wb(csv_filename):
     logger.log(
         DEBUG_DETAILED,
         'Converting CSV file {} into an XLSX workbook.'.format(csv_filename))
+
     with open(csv_filename) as csv_file:
         reader = csv.reader(csv_file)
         wb = pyxl.Workbook()
@@ -176,24 +178,62 @@ def find_header(ws):
     return header_row_num, header
 
 
+def lc_get_close_matches(lbl, possibilities, num_matches=3, cutoff=0.6):
+    '''Return list of closest matches to lbl from possibilities (case-insensitive).'''
+
+    if USING_PYTHON2:
+        lc_lbl = str.lower(unicode(lbl))
+        lc_possibilities = [str.lower(unicode(p)) for p in possibilities]
+    else:
+        lc_lbl = str.lower(lbl)
+        lc_possibilities = [str.lower(p) for p in possibilities]
+    lc_matches = get_close_matches(lc_lbl, lc_possibilities, num_matches, cutoff)
+    return [possibilities[lc_possibilities.index(m)] for m in lc_matches]
+    
+
 def find_header_column(header, lbl):
     '''Find the field header column containing the closest match to the given label.'''
 
     header_labels = [cell.value for cell in header]
-    lbl_match = get_close_matches(lbl, header_labels, 1, 0.0)[0]
+    lbl_match = lc_get_close_matches(lbl, header_labels, 1, 0.0)[0]
     for cell in header:
         if str(cell.value).lower() == lbl_match.lower():
             logger.log(DEBUG_OBSESSIVE,
                        'Found {} on header column {}.'.format(lbl,
                                                               cell.column))
-            return pyxl.cell.column_index_from_string(cell.column)
+            return pyxl.cell.column_index_from_string(cell.column), lbl_match
     raise FindLabelError('{} not found in spreadsheet'.format(lbl))
 
 
-def extract_part_fields_from_wb(wb, field_names):
+def cull_list(fields, inc_fields=None, exc_fields=None):
+    '''Update the list by keeping only items in inc_fields and deleting items in exc_fields.'''
+
+    # Only keep these fields unless list is empty, in which case keep all of them.
+    try:
+        if len(inc_fields) > 0:
+            for field in fields[:]:
+                if len(lc_get_close_matches(field, inc_fields, 1, 0.6)) == 0:
+                    fields.remove(field)
+    except TypeError:
+        # inc_fields was not a list, so do nothing to the field list.
+        pass
+
+    # Delete these fields unless list is empty, in which case delete none of them.
+    try:
+        if len(exc_fields) > 0:
+            for field in fields[:]:
+                if len(lc_get_close_matches(field, exc_fields, 1, 0.6)) != 0:
+                    fields.remove(field)
+    except TypeError:
+        # exc_fields was not a list, so do nothing to the field list.
+        pass
+
+
+def extract_part_fields_from_wb(wb, inc_field_names=None, exc_field_names=None):
     '''Return a dictionary of part fields extracted from an XLSX workbook.'''
 
-    part_fields = {}
+    part_fields = {}  # Start with an empty part dictionary.
+
     try:
         ws = wb.active  # Get the active worksheet from the workbook.
 
@@ -201,29 +241,20 @@ def extract_part_fields_from_wb(wb, field_names):
         header_row, header = find_header(ws)
 
         # Find the column with the part references.
-        refs_c = find_header_column(header, 'references')
+        refs_c, refs_lbl = find_header_column(header, 'references')
 
         # Get the list of part references.
         refs = [r.value for r in ws.columns[refs_c - 1][header_row:]]
 
-        # Get the column for each field name that can be found.
-        field_cols = {}
-        if field_names is None or len(field_names) == 0:
-            # Use the header labels if the list of field names is empty.
-            field_cols = {c.value: pyxl.cell.column_index_from_string(c.column)
-                          for c in header}
-            # Get rid of the extra references field in field_cols.
-            del field_cols[ws.cell(row=header_row, column=refs_c).value]
-        else:
-            for field_name in field_names:
-                try:
-                    field_cols[field_name] = find_header_column(header,
-                                                                field_name)
-                except FindLabelError:
-                    logger.warn(
-                        'No field matching {} found in this worksheet.'.format(
-                            field_name))
-                    pass  # Skip fields that can't be found in this sheet.
+        # Make a dict of spreadsheet column indexes keyed by their field name.
+        field_cols = {c.value: pyxl.cell.column_index_from_string(c.column) for c in header}
+        # Get the field names.
+        field_names = list(field_cols.keys())
+        # Keep only the allowed field names.
+        field_names.remove(refs_lbl)  # Remove the part reference field.
+        cull_list(field_names, inc_field_names, exc_field_names)
+        # Update the dictionary so it only has the allowed names.
+        field_cols = {f:field_cols[f] for f in field_names} 
 
         # Get the field values for each part reference.
         for row, ref in enumerate(refs, header_row + 1):
@@ -232,7 +263,7 @@ def extract_part_fields_from_wb(wb, field_names):
 
             # Get the field values from the row of the current part reference.
             field_values = {}
-            for field_name, col in field_cols.items():
+            for field_name, col in list(field_cols.items()):
                 value = ws.cell(row=row, column=col).value
                 if value is not None:
                     field_values[field_name] = value
@@ -255,30 +286,32 @@ def extract_part_fields_from_wb(wb, field_names):
     return part_fields
 
 
-def extract_part_fields_from_xlsx(filename, field_names):
+def extract_part_fields_from_xlsx(filename, inc_field_names=None, exc_field_names=None):
     '''Return a dictionary of part fields extracted from an XLSX spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
-               'Extracting fields {} from XLSX file {}.'.format(field_names,
-                                                                filename))
+               'Extracting fields {}, -{} from XLSX file {}.'.format(inc_field_names, exc_field_names,
+                                                                   filename))
+
     try:
         wb = pyxl.load_workbook(filename)
-        return extract_part_fields_from_wb(wb, field_names)
+        return extract_part_fields_from_wb(wb, inc_field_names, exc_field_names)
     except FieldExtractionError:
         logger.warn('Field extraction failed on {}.'.format(filename))
     return {}
 
 
-def extract_part_fields_from_csv(filename, field_names):
+def extract_part_fields_from_csv(filename, inc_field_names=None, exc_field_names=None):
     '''Return a dictionary of part fields extracted from a CSV spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
-               'Extracting fields {} from CSV file {}.'.format(field_names,
-                                                               filename))
+               'Extracting fields {}, -{} from CSV file {}.'.format(inc_field_names, exc_field_names,
+                                                                   filename))
+
     try:
         # Convert the CSV file into an XLSX workbook object and extract fields from that.
         wb = csvfile_to_wb(filename)
-        return extract_part_fields_from_wb(wb, field_names)
+        return extract_part_fields_from_wb(wb, inc_field_names, exc_field_names)
     except FieldExtractionError:
         logger.warn('Field extraction failed on {}.'.format(filename))
     return {}
@@ -290,21 +323,41 @@ def get_component_refs(component):
     # Get the references of the component. (There may be more than one
     # if the component is part of a hierarchical sheet that's replicated.)
     refs = [r['ref'] for r in component.references]
-    refs = [re.search(r'="(.*)"', r).group(1) for r in refs]
-    refs = set(refs)
+    refs = [re.search(r'="(.*)"', ref).group(1) for ref in refs]
+    refs = set(refs) # Remove any duplicate references.
     refs.add(component.labels['ref'])  # Non-hierarchical ref.
     return refs
 
 
-def extract_part_fields_from_sch(filename, field_names):
+def get_field_names_sch(sch):
+    '''Return a list all the field names found in a schematic's components.'''
+
+    field_names = set(sch_field_id_to_name.values())
+    for component in sch.components:
+        for f in component.fields:
+            try:
+                field_names.add(unquote(f['name']))
+            except KeyError:
+                pass
+
+    field_names.discard('')
+    return list(field_names)
+
+
+def extract_part_fields_from_sch(filename, inc_field_names=None, exc_field_names=None):
     '''Return a dictionary of part fields extracted from a schematic.'''
 
     logger.log(DEBUG_OVERVIEW,
-               'Extracting fields {} from schematic file {}.'.format(
-                   field_names, filename))
+               'Extracting fields {}, -{} from schematic file {}.'.format(inc_field_names, exc_field_names,
+                                                                   filename))
 
-    part_fields_dict = {}
-    sch = Schematic(filename)
+    part_fields_dict = {}  # Start with an empty part fields dictionary.
+
+    sch = Schematic(filename)  # Read in the schematic.
+
+    # Get all the part fields in the schematic and keep only the desired ones.
+    field_names = get_field_names_sch(sch)
+    cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component of the schematic, extracting its fields.
     for component in sch.components:
@@ -321,16 +374,9 @@ def extract_part_fields_from_sch(filename, field_names):
             name = sch_field_id_to_name.get(id, unquote(f['name']))
 
             # Store the field and its value if the field name is in the list of
-            # allowed fields. (An empty list means that all fields are allowed.)
-            if field_names is None or len(
-                    field_names) == 0 or name in field_names:
-                part_fields[name] = value
-
-        # Remove any fields with blank keys.
-        try:
-            del part_fields['']
-        except KeyError:
-            pass
+            # allowed fields.
+            if name in field_names:
+               part_fields[name] = value
 
         # Create a dictionary entry for each ref and assign the part fields to it.
         for ref in get_component_refs(component):
@@ -345,14 +391,35 @@ def extract_part_fields_from_sch(filename, field_names):
     return part_fields_dict
 
 
-def extract_part_fields_from_lib(filename, field_names):
+def get_field_names_lib(lib):
+    '''Return a list all the field names found in a library's components.'''
+
+    field_names = set(lib_field_id_to_name.values())
+    field_names.add('prefix')
+    for component in lib.components:
+        for f in component.fields:
+            try:
+                field_names.add(unquote(f['fieldname']))
+            except KeyError:
+                pass
+    field_names.discard('')
+    return list(field_names)
+
+
+def extract_part_fields_from_lib(filename, inc_field_names=None, exc_field_names=None):
     '''Return a dictionary of part fields extracted from a library.'''
 
     logger.log(DEBUG_OVERVIEW,
-               'Extracting fields {} from part library {}.'.format(field_names,
+               'Extracting fields {}, -{} from part library {}.'.format(inc_field_names, exc_field_names,
                                                                    filename))
-    part_fields_dict = {}
-    lib = SchLib(filename)
+
+    part_fields_dict = {}    # Start with an empty part dictionary.
+
+    lib = SchLib(filename)  # Read in all the parts in the library.
+
+    # Get all the part fields in the schematic and keep only the desired ones.
+    field_names = get_field_names_lib(lib)
+    cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component in the library, extracting its fields.
     for component in lib.components:
@@ -376,19 +443,12 @@ def extract_part_fields_from_lib(filename, field_names):
                 continue
 
             # Store the field and its value if the field name is in the list of
-            # allowed fields. (An empty list means that all fields are allowed.)
+            # allowed fields.
             logger.log(DEBUG_OBSESSIVE,
                        'Extracted library part: {} {} {}.'.format(
                            component_name, name, value))
-            if field_names is None or len(
-                    field_names) == 0 or name in field_names:
+            if name in field_names:
                 part_fields[name] = value
-
-        # Remove any fields with blank keys.
-        try:
-            del part_fields['']
-        except KeyError:
-            pass
 
         # Create a dictionary entry for this library component.
         part_fields_dict[component_name] = part_fields
@@ -400,14 +460,23 @@ def extract_part_fields_from_lib(filename, field_names):
     return part_fields_dict
 
 
-def extract_part_fields_from_dcm(filename, field_names):
+def extract_part_fields_from_dcm(filename, inc_field_names=None, exc_field_names=None):
     '''Return a dictionary of part fields extracted from a part description file.'''
 
     logger.log(DEBUG_OVERVIEW,
-               'Extracting fields {} from part description file {}.'.format(field_names,
+               'Extracting fields {}, -{} from part description file {}.'.format(inc_field_names, exc_field_names,
                                                                    filename))
-    part_fields_dict = {}
-    dcm = Dcm(filename)
+
+    part_fields_dict = {}  # Start with an empty part dictionary.
+
+    try:
+        dcm = Dcm(filename)
+    except IOError:
+        return part_fields_dict  # Return empty part fields dict if no DCM file found.
+
+    # Start with DCM field names and keep the desired ones.
+    field_names = deepcopy(dcm_field_names)
+    cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component, extracting its fields.
     for component in dcm.components:
@@ -415,36 +484,54 @@ def extract_part_fields_from_dcm(filename, field_names):
 
         # Get the fields and their values from the component.
         part_fields = {}
-        for name in ['description', 'keywords']:
+        for name in field_names:
             value = getattr(component, name, None)
             if value is not None:
-                if field_names is None or len(field_names)==0 or name in field_names:
-                    logger.log(DEBUG_OBSESSIVE,
-                       'Extracted part description: {} {} {}.'.format(
-                           component_name, name, value))
-                    part_fields[name] = value
-
-        # Remove any fields with blank keys.
-        try:
-            del part_fields['']
-        except KeyError:
-            pass
+                logger.log(DEBUG_OBSESSIVE,
+                   'Extracted part description: {} {} {}.'.format(
+                       component_name, name, value))
+                part_fields[name] = value
 
         # Create a dictionary entry for this library component.
         part_fields_dict[component_name] = part_fields
 
     if logger.isEnabledFor(DEBUG_DETAILED):
-        print('Extracted part description fields:')
+        print('Extracted Part Fields:')
         pprint(part_fields_dict)
 
     return part_fields_dict
 
 
-def extract_part_fields(filenames, field_names):
-    '''Return a dictionary of part fields extracted from a spreadsheet, part library, or schematic.'''
+def combine_part_field_dicts(from_dict, to_dict, do_union=True):
+    '''Combine two part field dictionaries.'''
+
+    if to_dict is None or len(to_dict)==0:
+        comb_dict = deepcopy(from_dict)
+    else:
+        comb_dict = deepcopy(to_dict)
+        to_dict_part_refs = list(to_dict.keys())
+
+        # Go through the parts in the FROM dictionary...
+        for from_ref, from_fields in list(from_dict.items()):
+
+            # If the TO dictionary has the same part...
+            if from_ref in to_dict_part_refs:
+                # Then insert the fields in the FROM part into the TO part.
+                comb_dict[from_ref].update(from_fields)
+
+            # If the FROM part isn't in the TO dictionary, but a union operation is active...
+            elif do_union:
+                # Then add the FROM part into the TO dictionary.
+                comb_dict[from_ref] = from_fields
+
+    return comb_dict
+
+
+def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None):
+    '''Return a dictionary of part fields extracted from a spreadsheet, part library, DCM, or schematic.'''
 
     logger.log(DEBUG_OVERVIEW,
-               'Extracting fields {} from files {}.'.format(field_names,
+               'Extracting fields +{}, -{} from files {}.'.format(inc_field_names, exc_field_names,
                                                             filenames))
 
     # Table of extraction functions for each file type.
@@ -456,7 +543,7 @@ def extract_part_fields(filenames, field_names):
         '.dcm': extract_part_fields_from_dcm,
     }
 
-    part_fields_dict = {}
+    part_fields_dict = {}  # Start with empty part field dictionary.
 
     # If extracting from only a single file, make a one-entry list.
     if type(filenames) == str:
@@ -469,10 +556,10 @@ def extract_part_fields(filenames, field_names):
 
             # Call the extraction function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            f_part_fields = extraction_functions[f_extension](f, field_names)
+            f_part_fields_dict = extraction_functions[f_extension](f, inc_field_names, exc_field_names)
 
             # Add the extracted fields to the total part dictionary.
-            part_fields_dict.update(f_part_fields)
+            part_fields_dict = combine_part_field_dicts(f_part_fields_dict, part_fields_dict)
 
         except IOError:
             logger.warn('File not found: {}.'.format(f))
@@ -480,6 +567,11 @@ def extract_part_fields(filenames, field_names):
         except KeyError:
             logger.warn('Unknown file type for field extraction: {}.'.format(
                 f))
+
+
+    if logger.isEnabledFor(DEBUG_DETAILED):
+        print('Total Extracted Part Fields:')
+        pprint(part_fields_dict)
 
     return part_fields_dict
 
@@ -524,14 +616,28 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
     next_header_column = max(list(header_columns.values()) + [0]) + 1
 
     # Find the column with the part references.
-    id_col = find_header_column(headers, id_label)
+    ref_col, _ = find_header_column(headers, id_label)
 
-    # Go through each row, see if any identifier is in the part dictionary, and
+    # Add all the missing part references from the field dictionary to the worksheet.
+    # That will ensure a worksheet that only had a subset of the dictionary
+    # part fields will get the missing ones.
+    refs = set([])
+    for row in range(header_row + 1, ws.max_row + 1):
+        for ref in explode(ws.cell(row=row, column=ref_col).value):
+            refs.add(ref)
+    row = ws.max_row + 1
+    for ref in sorted(part_fields_dict.keys()):
+        if ref not in refs:
+            ws.cell(row=row, column=ref_col).value = ref
+            refs.add(ref)
+            row += 1
+
+    # Go through each row, see if any reference is in the part dictionary, and
     # insert/overwrite fields from the dictionary.
     for row in range(header_row + 1, ws.max_row + 1):
-        for id in explode(ws.cell(row=row, column=id_col).value):
+        for ref in explode(ws.cell(row=row, column=ref_col).value):
             try:
-                fields = part_fields_dict[id]
+                fields = part_fields_dict[ref]
                 for field, value in fields.items():
                     # Skip None fields.
                     if value is None:
@@ -540,26 +646,23 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
                     try:
                         # Match the field name to one of the headers and overwrite the
                         # cell value with the dictionary value.
-                        header = get_close_matches(field, header_labels, 1,
+                        header = lc_get_close_matches(field, header_labels, 1,
                                                    0.3)[0]
                         cell_value = ws.cell(
                             row=row,
                             column=header_columns[header]).value
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
-                                       id, field, cell_value, value))
+                                       ref, field, cell_value, value))
                         ws.cell(row=row,
                                 column=header_columns[header]).value = value
 
                     except IndexError:
                         # The dictionary field didn't match any sheet header closely enough,
                         # so add a new column with the field name as the header label.
-                        cell_value = ws.cell(
-                            row=row,
-                            column=header_columns[header]).value
                         logger.log(DEBUG_OBSESSIVE,
                                    'Adding {} field {} with value {}'.format(
-                                       id, field, value))
+                                       ref, field, value))
                         ws.cell(row=row,
                                 column=next_header_column).value = value
                         new_header_cell = ws.cell(row=header_row,
@@ -798,6 +901,33 @@ def insert_part_fields_into_lib(part_fields_dict, filename):
     lib.save(filename)
 
 
+def insert_part_fields_into_dcm(part_fields_dict, filename):
+    '''Insert the fields in the extracted part dictionary into a DCM file.'''
+
+    logger.log(
+        DEBUG_OVERVIEW,
+        'Inserting extracted fields into DCM file {}.'.format(filename))
+
+    # Get the part fields from the DCM file.
+    dcm_part_fields_dict = extract_part_fields_from_dcm(filename)
+
+    # Add the part fields from the part field dictionary.
+    dcm_part_fields_dict = combine_part_field_dicts(part_fields_dict, dcm_part_fields_dict)
+
+    # Create a new Dcm object from the combined part fields.
+    dcm = Dcm()
+    for part_name, fields in list(dcm_part_fields_dict.items()):
+        cmp = Component()
+        cmp.name = part_name
+        for k, v in list(fields.items()):
+            if k in dcm_field_names:
+                setattr(cmp, k, v)
+        dcm.components.append(cmp)
+
+    # Overwrite the current DCM file with the new part fields.
+    dcm.save(filename)
+
+
 def insert_part_fields(part_fields_dict, filenames):
     '''Insert part fields from a dictionary into a spreadsheet, part library, or schematic.'''
 
@@ -810,6 +940,7 @@ def insert_part_fields(part_fields_dict, filenames):
         '.csv': insert_part_fields_into_csv,
         '.sch': insert_part_fields_into_sch,
         '.lib': insert_part_fields_into_lib,
+        '.dcm': insert_part_fields_into_dcm,
     }
 
     if part_fields_dict is None or len(part_fields_dict) == 0:
@@ -836,11 +967,11 @@ def insert_part_fields(part_fields_dict, filenames):
             logger.warn('Unknown file type for field insertion: {}'.format(f))
 
 
-def kifield(extract_filenames, insert_filenames, field_names):
+def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None):
     '''Extract fields from a set of files and insert them into another set of files.'''
 
     # Extract a dictionary of part field values from a set of files. 
-    part_fields_dict = extract_part_fields(extract_filenames, field_names)
+    part_fields_dict = extract_part_fields(extract_filenames, inc_field_names, exc_field_names)
 
     # Insert entries from the dictionary into these files.
     insert_part_fields(part_fields_dict, insert_filenames)

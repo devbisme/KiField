@@ -16,13 +16,17 @@ KiField is usually employed in a three-step process:
 Command-line Options
 ------------------------
 
-KiField is mainly intended to be  used as a script::
+::
 
-    usage: kifield [-h] [--version] [--extract file.[xlsx|csv|sch|lib]
-                       [file.[xlsx|csv|sch|lib] ...]]
-                       [--insert file.[xlsx|csv|sch|lib] [file.[xlsx|csv|sch|lib]
-                       ...]] [--overwrite] [--nobackup] [--fields name [name ...]]
-                       [--debug [LEVEL]]
+    usage: kifield.py [-h] [--version]
+                      [--extract file.[xlsx|csv|sch|lib|dcm]
+                                [file.[xlsx|csv|sch|lib|dcm] ...]]
+                      [--insert file.[xlsx|csv|sch|lib|dcm]
+                               [file.[xlsx|csv|sch|lib|dcm] ...]] 
+                      [--overwrite]
+                      [--nobackup]
+                      [--fields name|/name|~name [name|/name|~name ...]]
+                      [--debug [LEVEL]]
 
     Insert fields from spreadsheets into KiCad schematics or libraries, or gather
     fields from schematics or libraries and place them into a spreadsheet.
@@ -30,18 +34,22 @@ KiField is mainly intended to be  used as a script::
     optional arguments:
       -h, --help            show this help message and exit
       --version, -v         show program's version number and exit
-      --extract file.[xlsx|csv|sch|lib] [file.[xlsx|csv|sch|lib] ...], -x file.[xlsx|csv|sch|lib] [file.[xlsx|csv|sch|lib] ...]
+      --extract file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...], 
+             -x file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...]
                             Extract field values from one or more spreadsheet or
                             schematic files.
-      --insert file.[xlsx|csv|sch|lib] [file.[xlsx|csv|sch|lib] ...], -i file.[xlsx|csv|sch|lib] [file.[xlsx|csv|sch|lib] ...]
+      --insert file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...],
+            -i file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...]
                             Insert extracted field values into one or more
                             schematic or spreadsheet files.
       --overwrite, -w       Allow field insertion into an existing file.
       --nobackup, -nb       Do *not* create backups before modifying files.
                             (Default is to make backup files.)
-      --fields name [name ...], -f name [name ...]
+      --fields name|/name|~name [name|/name|~name ...], 
+            -f name|/name|~name [name|/name|~name ...]
                             Specify the names of the fields to extract and insert.
-                            (Leave blank to extract/insert *all* fields.)
+                            Place a '/' or '~' in front of a field you wish to
+                            omit. (Leave blank to extract/insert *all* fields.)
       --debug [LEVEL], -d [LEVEL]
                             Print debugging info. (Larger LEVEL means more info.)
 
@@ -53,7 +61,7 @@ Adding Fields to a Schematic or Library
 
 To extract the fields from one or more schematics and place them in a CSV file::
 
-  kifield -x my_design.sch -i my_design_fields.sch
+  kifield -x my_design.sch -i my_design_fields.csv
 
 Or you can place them in an XLSX spreadsheet::
 
@@ -114,11 +122,16 @@ Adding fields to a schematic parts library is done in an equivalent manner.
 In this case, however, the ``Refs`` column will hold the library name of the
 component rather than its reference designator in a schematic.
 
+You can also use kifield with the description (`.dcm`) file associated with a parts library.
+However, description files only support three fields with specific names:
+``description``, ``keywords`` and ``docfile``.
+Any other fields will be ignored.
+
 
 Removing Fields from a Schematic or Library
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It's also easy to remove fields from a schematic.
+It's also easy to remove fields from a schematic or library.
 Just delete all the data for a spreadsheet column but **leave the header** like so::
 
     Refs,     datasheet, footprint, value,        manf#
@@ -158,6 +171,8 @@ or library:
 #. Use KiField's ``--fields`` option to specify the names of one or more spreadsheet columns
    whose values will be inserted into the schematic or library file.
    The values in any other column will be ignored.
+   You can also omit one or more fields by adding a '/' or '~' to the beginning
+   of their names. In that case, the values in all the other columns are inserted.
    (Omitting the ``--fields`` option or entering a blank list causes KiField to
    insert the values from **all** the columns in the spreadsheet.)
 
