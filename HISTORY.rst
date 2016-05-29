@@ -3,6 +3,10 @@
 History
 -------
 
+0.1.3 (2016-05-29)
+---------------------
+* Fixed issue where all the fields from multi-unit components in a schematic were not appearing in the csv file.
+
 0.1.2 (2016-04-13)
 ---------------------
 * Fixed issues #3 and #4 regarding incompatibilities with openpyxl 2.4.0a1.

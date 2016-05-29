@@ -388,6 +388,12 @@ def extract_part_fields_from_sch(filename, inc_field_names=None, exc_field_names
         for ref in get_component_refs(component):
             if ref[0] == '#' or ref[-1] == '?':
                 continue  # Skip pseudo-parts (e.g. power nets) and unallocated parts.
+
+            # Some components (like resistor arrays) contain multiple units.
+            # Add the fields for a unit to the part fields dict. By the end of
+            # the loop, the part fields dict will have the union of the fields
+            # of all of the units.
+            part_fields.update(part_fields_dict.get(ref,{}))
             part_fields_dict[ref] = part_fields
 
     if logger.isEnabledFor(DEBUG_DETAILED):
