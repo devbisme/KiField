@@ -55,7 +55,7 @@ def main():
         '-x',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|sch|lib|dcm]',
+        metavar='file.[xlsx|csv|tsv|sch|lib|dcm]',
         help='''Extract field values from one or more spreadsheet or
             schematic files.''')
     parser.add_argument(
@@ -63,7 +63,7 @@ def main():
         '-i',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|sch|lib|dcm]',
+        metavar='file.[xlsx|csv|tsv|sch|lib|dcm]',
         help='''Insert extracted field values into one or more schematic
             or spreadsheet files.''')
     parser.add_argument('--overwrite',

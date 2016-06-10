@@ -122,17 +122,19 @@ def csvfile_to_wb(csv_filename):
         'Converting CSV file {} into an XLSX workbook.'.format(csv_filename))
 
     with open(csv_filename) as csv_file:
-        reader = csv.reader(csv_file)
+        dialect = csv.Sniffer().sniff(csv_file.read(1024))
+        csv_file.seek(0)
+        reader = csv.reader(csv_file, dialect)
         wb = pyxl.Workbook()
         ws = wb.active
         for row_index, row in enumerate(reader, 1):
             for column_index, cell in enumerate(row, 1):
                 if cell not in ('', None):
                     ws.cell(row=row_index, column=column_index).value = cell
-    return wb
+    return (wb, dialect)
 
 
-def wb_to_csvfile(wb, csv_filename):
+def wb_to_csvfile(wb, csv_filename, dialect):
     '''Save an openpyxl workbook as a CSV file.'''
 
     logger.log(DEBUG_DETAILED,
@@ -143,7 +145,7 @@ def wb_to_csvfile(wb, csv_filename):
     if USING_PYTHON2:
         mode += 'b'
     with open(csv_filename, mode) as csv_file:
-        writer = csv.writer(csv_file, lineterminator='\n')
+        writer = csv.writer(csv_file, dialect=dialect, lineterminator='\n')
         for row in ws.rows:
             writer.writerow([cell.value for cell in row])
 
@@ -189,7 +191,7 @@ def lc_get_close_matches(lbl, possibilities, num_matches=3, cutoff=0.6):
         lc_possibilities = [str.lower(p) for p in possibilities]
     lc_matches = get_close_matches(lc_lbl, lc_possibilities, num_matches, cutoff)
     return [possibilities[lc_possibilities.index(m)] for m in lc_matches]
-    
+
 
 def find_header_column(header, lbl):
     '''Find the field header column containing the closest match to the given label.'''
@@ -260,7 +262,7 @@ def extract_part_fields_from_wb(wb, inc_field_names=None, exc_field_names=None):
         field_names.remove(refs_lbl)  # Remove the part reference field.
         cull_list(field_names, inc_field_names, exc_field_names)
         # Update the dictionary so it only has the allowed names.
-        field_cols = {f:field_cols[f] for f in field_names} 
+        field_cols = {f:field_cols[f] for f in field_names}
 
         # Get the field values for each part reference.
         for row, ref in enumerate(refs, header_row + 1):
@@ -316,7 +318,7 @@ def extract_part_fields_from_csv(filename, inc_field_names=None, exc_field_names
 
     try:
         # Convert the CSV file into an XLSX workbook object and extract fields from that.
-        wb = csvfile_to_wb(filename)
+        wb,_ = csvfile_to_wb(filename)
         return extract_part_fields_from_wb(wb, inc_field_names, exc_field_names)
     except FieldExtractionError:
         logger.warn('Field extraction failed on {}.'.format(filename))
@@ -549,6 +551,7 @@ def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None):
     # Table of extraction functions for each file type.
     extraction_functions = {
         '.xlsx': extract_part_fields_from_xlsx,
+        '.tsv': extract_part_fields_from_csv,
         '.csv': extract_part_fields_from_csv,
         '.sch': extract_part_fields_from_sch,
         '.lib': extract_part_fields_from_lib,
@@ -720,12 +723,16 @@ def insert_part_fields_into_csv(part_fields_dict, filename):
 
     # Either insert fields into an existing workbook, or use an empty one.
     try:
-        wb = csvfile_to_wb(filename)
+        wb, dialect = csvfile_to_wb(filename)
     except IOError:
         wb = None
+        if os.path.splitext(filename)[-1] == '.tsv':
+            dialect = 'excel-tab'
+        else:
+            dialect = 'excel'
 
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
-    wb_to_csvfile(wb, filename)
+    wb_to_csvfile(wb, filename, dialect)
 
 
 def insert_part_fields_into_sch(part_fields_dict, filename):
@@ -953,6 +960,7 @@ def insert_part_fields(part_fields_dict, filenames):
     # Table of insertion functions for each file type.
     insertion_functions = {
         '.xlsx': insert_part_fields_into_xlsx,
+        '.tsv': insert_part_fields_into_csv,
         '.csv': insert_part_fields_into_csv,
         '.sch': insert_part_fields_into_sch,
         '.lib': insert_part_fields_into_lib,
@@ -986,7 +994,7 @@ def insert_part_fields(part_fields_dict, filenames):
 def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None):
     '''Extract fields from a set of files and insert them into another set of files.'''
 
-    # Extract a dictionary of part field values from a set of files. 
+    # Extract a dictionary of part field values from a set of files.
     part_fields_dict = extract_part_fields(extract_filenames, inc_field_names, exc_field_names)
 
     # Insert entries from the dictionary into these files.
