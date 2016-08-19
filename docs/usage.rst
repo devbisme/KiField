@@ -18,15 +18,14 @@ Command-line Options
 
 ::
 
-    usage: kifield.py [-h] [--version]
-                      [--extract file.[xlsx|csv|sch|lib|dcm]
-                                [file.[xlsx|csv|sch|lib|dcm] ...]]
-                      [--insert file.[xlsx|csv|sch|lib|dcm]
-                               [file.[xlsx|csv|sch|lib|dcm] ...]] 
-                      [--overwrite]
-                      [--nobackup]
-                      [--fields name|/name|~name [name|/name|~name ...]]
-                      [--debug [LEVEL]]
+    usage: kifield-script.py [-h] [--version]
+                             [--extract file.[xlsx|csv|tsv|sch|lib|dcm]
+                             [file.[xlsx|csv|tsv|sch|lib|dcm] ...]]
+                             [--insert file.[xlsx|csv|tsv|sch|lib|dcm]
+                             [file.[xlsx|csv|tsv|sch|lib|dcm] ...]] [--overwrite]
+                             [--nobackup]
+                             [--fields name|/name|~name [name|/name|~name ...]]
+                             [--debug [LEVEL]]
 
     Insert fields from spreadsheets into KiCad schematics or libraries, or gather
     fields from schematics or libraries and place them into a spreadsheet.
@@ -34,19 +33,16 @@ Command-line Options
     optional arguments:
       -h, --help            show this help message and exit
       --version, -v         show program's version number and exit
-      --extract file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...], 
-             -x file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...]
+      --extract file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...], -x file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...]
                             Extract field values from one or more spreadsheet or
                             schematic files.
-      --insert file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...],
-            -i file.[xlsx|csv|sch|lib|dcm] [file.[xlsx|csv|sch|lib|dcm] ...]
+      --insert file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...], -i file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...]
                             Insert extracted field values into one or more
                             schematic or spreadsheet files.
       --overwrite, -w       Allow field insertion into an existing file.
       --nobackup, -nb       Do *not* create backups before modifying files.
                             (Default is to make backup files.)
-      --fields name|/name|~name [name|/name|~name ...], 
-            -f name|/name|~name [name|/name|~name ...]
+      --fields name|/name|~name [name|/name|~name ...], -f name|/name|~name [name|/name|~name ...]
                             Specify the names of the fields to extract and insert.
                             Place a '/' or '~' in front of a field you wish to
                             omit. (Leave blank to extract/insert *all* fields.)
