@@ -46,6 +46,9 @@ from .schlib import SchLib
 from .dcm import Dcm, Component
 import pdb
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 logger = logging.getLogger('kifield')
 
 USING_PYTHON2 = (sys.version_info.major == 2)
