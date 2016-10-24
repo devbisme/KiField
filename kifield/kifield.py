@@ -102,7 +102,7 @@ def explode(ref):
                 '^(?P<part_prefix>\D+)(?P<range_start>\d+)[-:]\1(?P<range_end>\d+)$',
                 r)
             if mtch is None:
-                individual_refs.append(r)
+                individual_refs.append(r.strip())
             else:
                 part_prefix = mtch.group('part_prefix')
                 range_start = int(mtch.group('range_start'))
