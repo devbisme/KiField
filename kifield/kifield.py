@@ -46,9 +46,6 @@ from .schlib import SchLib
 from .dcm import Dcm, Component
 import pdb
 
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 logger = logging.getLogger('kifield')
 
 USING_PYTHON2 = (sys.version_info.major == 2)
@@ -57,6 +54,10 @@ USING_PYTHON3 = not USING_PYTHON2
 DEBUG_OVERVIEW = logging.DEBUG
 DEBUG_DETAILED = logging.DEBUG - 1
 DEBUG_OBSESSIVE = logging.DEBUG - 2
+
+if USING_PYTHON2:
+    reload(sys)
+    sys.setdefaultencoding('utf8')
 
 # Assign some names to the unnamed fields in a schematic or library component.
 sch_field_id_to_name = {'1': 'value', '2': 'footprint', '3': 'datasheet'}
