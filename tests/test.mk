@@ -2,18 +2,6 @@
 PROG  = kifield
 FLAGS = -w -nb -d 1
 
-silver:
-	@rm -f cat.csv
-	@$(PROG) -x cat.sch -i cat.csv $(FLAGS)
-	@echo 'Modify cat.csv and then make gold.'
-
-gold:
-	@rm -f cat.xlsx
-	@$(PROG) -x cat.csv -i cat.xlsx $(FLAGS)
-	@cp cat.sch cat_gold.sch
-	@$(PROG) -x cat.csv -i cat_gold.sch $(FLAGS)
-	@echo 'Test cases prepared.'
-
 test: test1 test2 test3 test4
 	@echo 'All tests passed!'
 	@$(PROG) -v
@@ -32,11 +20,10 @@ test1:
 test2:
 	@rm -f $@*.* 
 	@cp hier_test.sch $@1.sch
-	@cp leaf.sch $@2.sch
-	@$(PROG) -x $@1.sch $@2.sch -i $@.csv $(FLAGS)
-	@$(PROG) -x $@.csv -i $@1.sch $@2.sch $(FLAGS)
-	@$(PROG) -x $@1.sch $@2.sch -i $@.xlsx $(FLAGS)
-	@$(PROG) -x $@.xlsx -i $@1.csv $(FLAGS)
+	@$(PROG) -x $@1.sch -i $@.csv -r $(FLAGS)
+	@$(PROG) -x $@.csv -i $@1.sch -r $(FLAGS)
+	@$(PROG) -x $@1.sch -i $@.xlsx -r $(FLAGS)
+	@$(PROG) -x $@.xlsx -i $@1.csv -r $(FLAGS)
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'
 

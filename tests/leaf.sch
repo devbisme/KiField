@@ -47,13 +47,13 @@ $Comp
 L Crystal Y1
 U 1 1 56967223
 P 4700 3400
-AR Path="/569671FB/56967223" Ref="Y1"  Part="1" 
-AR Path="/56967298/56967223" Ref="Y2"  Part="1" 
-F 0 "Y2" H 4700 3550 50  0000 C CNN
-F 1 "Crystal" H 4700 3250 50  0000 C CNN
-F 2 "my_footprint" H 4700 3400 50  0000 C CNN
-F 3 "my_datasheet" H 4700 3400 50  0000 C CNN
-F 4 "my_field" H 4700 3400 60  0001 C CNN "new_field"
+AR Path="/569671FB/56967223" Ref="Y1" Part="1"
+AR Path="/56967298/56967223" Ref="Y2" Part="1"
+F 0 "Y2" H 4700 3550 50 0000 C CNN
+F 1 "Crystal" H 4700 3250 50 0000 C CNN
+F 2 "my_footprint" H 4700 3400 50 0000 C CNN
+F 3 "my_datasheet" H 4700 3400 50 0000 C CNN
+F 4 "my_field" H 4700 3400 60 0001 C CNN "new_field"
 	1    4700 3400
 	1    0    0    -1  
 $EndComp

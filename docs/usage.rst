@@ -18,14 +18,14 @@ Command-line Options
 
 ::
 
-    usage: kifield-script.py [-h] [--version]
-                             [--extract file.[xlsx|csv|tsv|sch|lib|dcm]
-                             [file.[xlsx|csv|tsv|sch|lib|dcm] ...]]
-                             [--insert file.[xlsx|csv|tsv|sch|lib|dcm]
-                             [file.[xlsx|csv|tsv|sch|lib|dcm] ...]] [--overwrite]
-                             [--nobackup]
-                             [--fields name|/name|~name [name|/name|~name ...]]
-                             [--debug [LEVEL]]
+    usage: kifield [-h] [--version]
+                   [--extract file.[xlsx|csv|tsv|sch|lib|dcm]
+                   [file.[xlsx|csv|tsv|sch|lib|dcm] ...]]
+                   [--insert file.[xlsx|csv|tsv|sch|lib|dcm]
+                   [file.[xlsx|csv|tsv|sch|lib|dcm] ...]] [--recurse]
+                   [--overwrite] [--nobackup]
+                   [--fields name|/name|~name [name|/name|~name ...]]
+                   [--debug [LEVEL]]
 
     Insert fields from spreadsheets into KiCad schematics or libraries, or gather
     fields from schematics or libraries and place them into a spreadsheet.
@@ -39,6 +39,7 @@ Command-line Options
       --insert file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...], -i file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...]
                             Insert extracted field values into one or more
                             schematic or spreadsheet files.
+      --recurse, -r         Allow recursion from a top-level schematic into lower-level sub-schematics.
       --overwrite, -w       Allow field insertion into an existing file.
       --nobackup, -nb       Do *not* create backups before modifying files.
                             (Default is to make backup files.)

@@ -66,6 +66,12 @@ def main():
         metavar='file.[xlsx|csv|tsv|sch|lib|dcm]',
         help='''Insert extracted field values into one or more schematic
             or spreadsheet files.''')
+    parser.add_argument(
+        '--recurse',
+        '-r',
+        action='store_true',
+        help='''Allow recursion from a top-level schematic into lower-level
+            sub-schematics.''')
     parser.add_argument('--overwrite',
                         '-w',
                         action='store_true',
@@ -144,7 +150,8 @@ def main():
     kifield(extract_filenames=args.extract,
             insert_filenames=args.insert,
             inc_field_names=inc_fields,
-            exc_field_names=exc_fields)
+            exc_field_names=exc_fields,
+            recurse=args.recurse)
 
 ###############################################################################
 # Main entrypoint.

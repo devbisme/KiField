@@ -3,6 +3,12 @@
 History
 -------
 
+0.1.5 (2016-11-29)
+______________________
+
+* Added recursive operations on hierarchical schematics so everything can be handled just by processing the top-level file.
+
+
 0.1.4 (2016-05-29)
 ______________________
 

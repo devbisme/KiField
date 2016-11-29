@@ -243,7 +243,7 @@ def cull_list(fields, inc_fields=None, exc_fields=None):
         pass
 
 
-def extract_part_fields_from_wb(wb, inc_field_names=None, exc_field_names=None):
+def extract_part_fields_from_wb(wb, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Return a dictionary of part fields extracted from an XLSX workbook.'''
 
     part_fields = {}  # Start with an empty part dictionary.
@@ -303,7 +303,7 @@ def extract_part_fields_from_wb(wb, inc_field_names=None, exc_field_names=None):
     return part_fields
 
 
-def extract_part_fields_from_xlsx(filename, inc_field_names=None, exc_field_names=None):
+def extract_part_fields_from_xlsx(filename, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Return a dictionary of part fields extracted from an XLSX spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -318,7 +318,7 @@ def extract_part_fields_from_xlsx(filename, inc_field_names=None, exc_field_name
     return {}
 
 
-def extract_part_fields_from_csv(filename, inc_field_names=None, exc_field_names=None):
+def extract_part_fields_from_csv(filename, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Return a dictionary of part fields extracted from a CSV spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -361,7 +361,7 @@ def get_field_names_sch(sch):
     return list(field_names)
 
 
-def extract_part_fields_from_sch(filename, inc_field_names=None, exc_field_names=None):
+def extract_part_fields_from_sch(filename, inc_field_names=None, exc_field_names=None, recurse=False, depth=0):
     '''Return a dictionary of part fields extracted from a schematic.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -407,9 +407,20 @@ def extract_part_fields_from_sch(filename, inc_field_names=None, exc_field_names
             part_fields.update(part_fields_dict.get(ref,{}))
             part_fields_dict[ref] = part_fields
 
-    if logger.isEnabledFor(DEBUG_DETAILED):
-        print('Extracted Part Fields:')
-        pprint(part_fields_dict)
+    # If this schematic references other schematic sheets, then extract the part fields from those.
+    if recurse:
+        for sheet in sch.sheets:
+            for field in sheet.fields:
+                if field['id'] == 'F1':
+                    sheet_file = unquote(field['value'])
+                    part_fields_dict.update(extract_part_fields_from_sch(sheet_file, inc_field_names, exc_field_names, recurse, depth+1))
+                    break
+
+    # Print part fields for debugging if this is the top-level sheet of the schematic.
+    if depth == 0:
+        if logger.isEnabledFor(DEBUG_DETAILED):
+            print('Extracted Part Fields:')
+            pprint(part_fields_dict)
 
     return part_fields_dict
 
@@ -429,7 +440,7 @@ def get_field_names_lib(lib):
     return list(field_names)
 
 
-def extract_part_fields_from_lib(filename, inc_field_names=None, exc_field_names=None):
+def extract_part_fields_from_lib(filename, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Return a dictionary of part fields extracted from a library.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -483,7 +494,7 @@ def extract_part_fields_from_lib(filename, inc_field_names=None, exc_field_names
     return part_fields_dict
 
 
-def extract_part_fields_from_dcm(filename, inc_field_names=None, exc_field_names=None):
+def extract_part_fields_from_dcm(filename, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Return a dictionary of part fields extracted from a part description file.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -550,7 +561,7 @@ def combine_part_field_dicts(from_dict, to_dict, do_union=True):
     return comb_dict
 
 
-def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None):
+def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Return a dictionary of part fields extracted from a spreadsheet, part library, DCM, or schematic.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -580,7 +591,7 @@ def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None):
 
             # Call the extraction function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            f_part_fields_dict = extraction_functions[f_extension](f, inc_field_names, exc_field_names)
+            f_part_fields_dict = extraction_functions[f_extension](f, inc_field_names, exc_field_names, recurse)
 
             # Add the extracted fields to the total part dictionary.
             part_fields_dict = combine_part_field_dicts(f_part_fields_dict, part_fields_dict)
@@ -600,7 +611,7 @@ def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None):
     return part_fields_dict
 
 
-def insert_part_fields_into_wb(part_fields_dict, wb):
+def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
     '''Insert the fields in the extracted part dictionary into an XLSX workbook.'''
 
     id_label = 'Refs'
@@ -707,7 +718,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb):
     return wb
 
 
-def insert_part_fields_into_xlsx(part_fields_dict, filename):
+def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse=False):
     '''Insert the fields in the extracted part dictionary into an XLSX spreadsheet.'''
 
     logger.log(
@@ -724,7 +735,7 @@ def insert_part_fields_into_xlsx(part_fields_dict, filename):
     wb.save(filename)
 
 
-def insert_part_fields_into_csv(part_fields_dict, filename):
+def insert_part_fields_into_csv(part_fields_dict, filename, recurse=False):
     '''Insert the fields in the extracted part dictionary into a CSV spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -744,7 +755,7 @@ def insert_part_fields_into_csv(part_fields_dict, filename):
     wb_to_csvfile(wb, filename, dialect)
 
 
-def insert_part_fields_into_sch(part_fields_dict, filename):
+def insert_part_fields_into_sch(part_fields_dict, filename, recurse=False):
     '''Insert the fields in the extracted part dictionary into a schematic.'''
 
     logger.log(
@@ -849,8 +860,17 @@ def insert_part_fields_into_sch(part_fields_dict, filename):
     # Save the updated schematic.
     sch.save(filename)
 
+    # If this schematic references other schematic sheets, then insert the part fields into those, too.
+    if recurse:
+        for sheet in sch.sheets:
+            for field in sheet.fields:
+                if field['id'] == 'F1':
+                    sheet_file = unquote(field['value'])
+                    insert_part_fields_into_sch(part_fields_dict, sheet_file, recurse)
+                    break
 
-def insert_part_fields_into_lib(part_fields_dict, filename):
+
+def insert_part_fields_into_lib(part_fields_dict, filename, recurse=False):
     '''Insert the fields in the extracted part dictionary into a library.'''
 
     logger.log(
@@ -933,7 +953,7 @@ def insert_part_fields_into_lib(part_fields_dict, filename):
     lib.save(filename)
 
 
-def insert_part_fields_into_dcm(part_fields_dict, filename):
+def insert_part_fields_into_dcm(part_fields_dict, filename, recurse=False):
     '''Insert the fields in the extracted part dictionary into a DCM file.'''
 
     logger.log(
@@ -960,7 +980,7 @@ def insert_part_fields_into_dcm(part_fields_dict, filename):
     dcm.save(filename)
 
 
-def insert_part_fields(part_fields_dict, filenames):
+def insert_part_fields(part_fields_dict, filenames, recurse=False):
     '''Insert part fields from a dictionary into a spreadsheet, part library, or schematic.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -991,7 +1011,7 @@ def insert_part_fields(part_fields_dict, filenames):
 
             # Call the insertion function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            insertion_functions[f_extension](part_fields_dict, f)
+            insertion_functions[f_extension](part_fields_dict, f, recurse)
 
         except IOError:
             logger.warn('Unable to write to file: {}.'.format(f))
@@ -1000,11 +1020,11 @@ def insert_part_fields(part_fields_dict, filenames):
             logger.warn('Unknown file type for field insertion: {}'.format(f))
 
 
-def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None):
+def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None, recurse=False):
     '''Extract fields from a set of files and insert them into another set of files.'''
 
     # Extract a dictionary of part field values from a set of files.
-    part_fields_dict = extract_part_fields(extract_filenames, inc_field_names, exc_field_names)
+    part_fields_dict = extract_part_fields(extract_filenames, inc_field_names, exc_field_names, recurse)
 
     # Insert entries from the dictionary into these files.
-    insert_part_fields(part_fields_dict, insert_filenames)
+    insert_part_fields(part_fields_dict, insert_filenames, recurse)

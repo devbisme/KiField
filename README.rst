@@ -24,7 +24,7 @@ KiField is usually employed in a three-step process:
 
 
 * Free software: MIT license
-* Documentation: https://kifield.readthedocs.org.
+* Documentation: https://xesscorp.github.io/KiField.
 
 Features
 --------
