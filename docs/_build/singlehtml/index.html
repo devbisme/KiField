@@ -1,0 +1,488 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>kifield 0.1.5 documentation</title>
+    
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="None" href="index.html#document-index" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="welcome-to-kifield-s-documentation">
+<h1>Welcome to kifield&#8217;s documentation!<a class="headerlink" href="#welcome-to-kifield-s-documentation" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<span id="document-readme"></span><div class="section" id="kifield">
+<h2>kifield<a class="headerlink" href="#kifield" title="Permalink to this headline">¶</a></h2>
+<a class="reference external image-reference" href="https://pypi.python.org/pypi/kifield"><img src="https://img.shields.io/pypi/v/kifield.svg" /></a>
+<p>A utility for manipulating part fields in KiCad schematic files or libraries.
+KiField can extract all the component fields from a schematic or library
+and place them into a spreadsheet for bulk editing, after which you can insert the
+edited values from the spreadsheet back into the schematic or library.</p>
+<p>KiField is usually employed in a three-step process:</p>
+<ol class="arabic simple">
+<li>First use KiField to extract the part field labels and values from a
+schematic or library and place them into a CSV or XLSX spreadsheet file.</li>
+<li>Edit the spreadsheet file to change existing field values, add entirely
+new fields, or completely delete fields.</li>
+<li>Finally, use KiField to insert the updated field labels and values from
+the spreadsheet file into the schematic or library.</li>
+</ol>
+<ul class="simple">
+<li>Free software: MIT license</li>
+<li>Documentation: <a class="reference external" href="https://xesscorp.github.io/KiField">https://xesscorp.github.io/KiField</a>.</li>
+</ul>
+<div class="section" id="features">
+<h3>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Extracts all fields and values from one or more KiCad schematic libraries or files
+(even hierarchical designs), and inserts them into a spreadsheet (either
+CSV or XLSX format).</li>
+<li>Extracts all fields and values from one or more CSV or XLSX spreadsheet files
+and inserts them into one or more KiCad schematics or libraries.</li>
+</ul>
+</div>
+</div>
+<span id="document-installation"></span><div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>At the command line:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ easy_install kifield
+</pre></div>
+</div>
+<p>Or, if you have virtualenvwrapper installed:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ mkvirtualenv kifield
+$ pip install kifield
+</pre></div>
+</div>
+</div>
+<span id="document-usage"></span><div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>KiField is usually employed in a three-step process:</p>
+<ol class="arabic simple">
+<li>First use KiField to extract the part field labels and values from a
+schematic or library and place them into a CSV or XLSX spreadsheet file.</li>
+<li>Edit the spreadsheet file to change existing field values, add entirely
+new fields, or completely delete fields.</li>
+<li>Finally, use KiField to insert the updated field labels and values from
+the spreadsheet file into the schematic or library.</li>
+</ol>
+<div class="section" id="command-line-options">
+<h3>Command-line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">kifield</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">extract</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span>
+               <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">insert</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span>
+               <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">recurse</span><span class="p">]</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">overwrite</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">nobackup</span><span class="p">]</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">fields</span> <span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="p">[</span><span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="o">...</span><span class="p">]]</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">debug</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">]]</span>
+
+<span class="n">Insert</span> <span class="n">fields</span> <span class="kn">from</span> <span class="nn">spreadsheets</span> <span class="n">into</span> <span class="n">KiCad</span> <span class="n">schematics</span> <span class="ow">or</span> <span class="n">libraries</span><span class="p">,</span> <span class="ow">or</span> <span class="n">gather</span>
+<span class="n">fields</span> <span class="kn">from</span> <span class="nn">schematics</span> <span class="ow">or</span> <span class="n">libraries</span> <span class="ow">and</span> <span class="n">place</span> <span class="n">them</span> <span class="n">into</span> <span class="n">a</span> <span class="n">spreadsheet</span><span class="o">.</span>
+
+<span class="n">optional</span> <span class="n">arguments</span><span class="p">:</span>
+  <span class="o">-</span><span class="n">h</span><span class="p">,</span> <span class="o">--</span><span class="n">help</span>            <span class="n">show</span> <span class="n">this</span> <span class="n">help</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exit</span>
+  <span class="o">--</span><span class="n">version</span><span class="p">,</span> <span class="o">-</span><span class="n">v</span>         <span class="n">show</span> <span class="n">program</span><span class="s1">&#39;s version number and exit</span>
+  <span class="o">--</span><span class="n">extract</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">],</span> <span class="o">-</span><span class="n">x</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span>
+                        <span class="n">Extract</span> <span class="n">field</span> <span class="n">values</span> <span class="kn">from</span> <span class="nn">one</span> <span class="ow">or</span> <span class="n">more</span> <span class="n">spreadsheet</span> <span class="ow">or</span>
+                        <span class="n">schematic</span> <span class="n">files</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">insert</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">],</span> <span class="o">-</span><span class="n">i</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span>
+                        <span class="n">Insert</span> <span class="n">extracted</span> <span class="n">field</span> <span class="n">values</span> <span class="n">into</span> <span class="n">one</span> <span class="ow">or</span> <span class="n">more</span>
+                        <span class="n">schematic</span> <span class="ow">or</span> <span class="n">spreadsheet</span> <span class="n">files</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">recurse</span><span class="p">,</span> <span class="o">-</span><span class="n">r</span>         <span class="n">Allow</span> <span class="n">recursion</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">schematic</span> <span class="n">into</span> <span class="n">lower</span><span class="o">-</span><span class="n">level</span> <span class="n">sub</span><span class="o">-</span><span class="n">schematics</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">overwrite</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span>       <span class="n">Allow</span> <span class="n">field</span> <span class="n">insertion</span> <span class="n">into</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">file</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">nobackup</span><span class="p">,</span> <span class="o">-</span><span class="n">nb</span>       <span class="n">Do</span> <span class="o">*</span><span class="ow">not</span><span class="o">*</span> <span class="n">create</span> <span class="n">backups</span> <span class="n">before</span> <span class="n">modifying</span> <span class="n">files</span><span class="o">.</span>
+                        <span class="p">(</span><span class="n">Default</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">make</span> <span class="n">backup</span> <span class="n">files</span><span class="o">.</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">fields</span> <span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="p">[</span><span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="o">...</span><span class="p">],</span> <span class="o">-</span><span class="n">f</span> <span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="p">[</span><span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="o">...</span><span class="p">]</span>
+                        <span class="n">Specify</span> <span class="n">the</span> <span class="n">names</span> <span class="n">of</span> <span class="n">the</span> <span class="n">fields</span> <span class="n">to</span> <span class="n">extract</span> <span class="ow">and</span> <span class="n">insert</span><span class="o">.</span>
+                        <span class="n">Place</span> <span class="n">a</span> <span class="s1">&#39;/&#39;</span> <span class="ow">or</span> <span class="s1">&#39;~&#39;</span> <span class="ow">in</span> <span class="n">front</span> <span class="n">of</span> <span class="n">a</span> <span class="n">field</span> <span class="n">you</span> <span class="n">wish</span> <span class="n">to</span>
+                        <span class="n">omit</span><span class="o">.</span> <span class="p">(</span><span class="n">Leave</span> <span class="n">blank</span> <span class="n">to</span> <span class="n">extract</span><span class="o">/</span><span class="n">insert</span> <span class="o">*</span><span class="nb">all</span><span class="o">*</span> <span class="n">fields</span><span class="o">.</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">debug</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">],</span> <span class="o">-</span><span class="n">d</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">]</span>
+                        <span class="n">Print</span> <span class="n">debugging</span> <span class="n">info</span><span class="o">.</span> <span class="p">(</span><span class="n">Larger</span> <span class="n">LEVEL</span> <span class="n">means</span> <span class="n">more</span> <span class="n">info</span><span class="o">.</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="examples">
+<h3>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="adding-fields-to-a-schematic-or-library">
+<h4>Adding Fields to a Schematic or Library<a class="headerlink" href="#adding-fields-to-a-schematic-or-library" title="Permalink to this headline">¶</a></h4>
+<p>To extract the fields from one or more schematics and place them in a CSV file:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_design_fields</span><span class="o">.</span><span class="n">csv</span>
+</pre></div>
+</div>
+<p>Or you can place them in an XLSX spreadsheet:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_Design_fields</span><span class="o">.</span><span class="n">xlsx</span>
+</pre></div>
+</div>
+<p>The result will look something like this (I added spaces to format it into
+nice columns):</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span>
+<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="o">.</span><span class="mi">3</span><span class="n">x5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span>
+<span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">C_0805</span><span class="p">,</span>            <span class="mi">10</span><span class="n">uF</span>
+<span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">Connect</span><span class="p">:</span><span class="n">BARREL_JACK</span><span class="p">,</span>              <span class="n">BARREL_JACK</span>
+<span class="n">GPIO1</span><span class="p">,</span>    <span class="p">,</span>          <span class="n">RPi_Hat</span><span class="p">:</span><span class="n">Pin_Header_Straight_2x20</span><span class="p">,</span> <span class="n">RPi_GPIO</span>
+<span class="n">JP2</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">HDR_1x3</span><span class="p">,</span>                     <span class="n">JUMPER3</span>
+<span class="n">LED1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">LEDs</span><span class="p">:</span><span class="n">LED</span><span class="o">-</span><span class="mi">0603</span><span class="p">,</span>                    <span class="n">LED</span>
+<span class="n">LED2</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">LEDs</span><span class="p">:</span><span class="n">LED</span><span class="o">-</span><span class="mi">0603</span><span class="p">,</span>                    <span class="n">LED</span>
+<span class="n">R2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Resistors_SMD</span><span class="p">:</span><span class="n">R_0402</span><span class="p">,</span>             <span class="mi">100</span>
+<span class="n">R3</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Resistors_SMD</span><span class="p">:</span><span class="n">R_0402</span><span class="p">,</span>             <span class="mi">100</span>
+<span class="n">RN1</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">CTS_742C043</span><span class="p">,</span>                 <span class="mf">4.7</span><span class="n">K</span>
+<span class="n">RN2</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">CTS_742C043</span><span class="p">,</span>                 <span class="mi">100</span>
+<span class="n">RN5</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">CTS_742C083</span><span class="p">,</span>                 <span class="mi">100</span>
+<span class="n">U1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">SOT</span><span class="o">-</span><span class="mi">223</span><span class="p">,</span>                     <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">3.3</span>
+<span class="n">U2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">SMD_Packages</span><span class="p">:</span><span class="n">SOIC</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="n">N</span><span class="p">,</span>            <span class="n">I2C</span> <span class="n">Flash</span>
+<span class="n">U3</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">SOT</span><span class="o">-</span><span class="mi">223</span><span class="p">,</span>                     <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">1.2</span>
+</pre></div>
+</div>
+<p>Now suppose you want to add the manufacturers part number to some of the
+components. Just add a new column named <code class="docutils literal"><span class="pre">manf#</span></code> and fill in some of the
+values like so:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
+<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="o">.</span><span class="mi">3</span><span class="n">x5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span><span class="p">,</span>        <span class="n">UWX1A101MCL1GB</span>
+<span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">C_0805</span><span class="p">,</span>            <span class="mi">10</span><span class="n">uF</span><span class="p">,</span>         <span class="n">UWX1A101MCL1GB</span>
+<span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">Connect</span><span class="p">:</span><span class="n">BARREL_JACK</span><span class="p">,</span>              <span class="n">BARREL_JACK</span><span class="p">,</span>  <span class="n">PJ002A</span>
+<span class="n">GPIO1</span><span class="p">,</span>    <span class="p">,</span>          <span class="n">RPi_Hat</span><span class="p">:</span><span class="n">Pin_Header_Straight_2x20</span><span class="p">,</span> <span class="n">RPi_GPIO</span><span class="p">,</span>
+<span class="n">JP2</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">HDR_1x3</span><span class="p">,</span>                     <span class="n">JUMPER3</span><span class="p">,</span>
+<span class="n">LED1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">LEDs</span><span class="p">:</span><span class="n">LED</span><span class="o">-</span><span class="mi">0603</span><span class="p">,</span>                    <span class="n">LED</span><span class="p">,</span>          <span class="n">LTST</span><span class="o">-</span><span class="n">C190KFKT</span>
+<span class="n">LED2</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">LEDs</span><span class="p">:</span><span class="n">LED</span><span class="o">-</span><span class="mi">0603</span><span class="p">,</span>                    <span class="n">LED</span><span class="p">,</span>          <span class="n">LTST</span><span class="o">-</span><span class="n">C190KFKT</span>
+<span class="n">R2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Resistors_SMD</span><span class="p">:</span><span class="n">R_0402</span><span class="p">,</span>             <span class="mi">100</span><span class="p">,</span>
+<span class="n">R3</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Resistors_SMD</span><span class="p">:</span><span class="n">R_0402</span><span class="p">,</span>             <span class="mi">100</span><span class="p">,</span>
+<span class="n">RN1</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">CTS_742C043</span><span class="p">,</span>                 <span class="mf">4.7</span><span class="n">K</span><span class="p">,</span>
+<span class="n">RN2</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">CTS_742C043</span><span class="p">,</span>                 <span class="mi">100</span><span class="p">,</span>
+<span class="n">RN5</span><span class="p">,</span>      <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">CTS_742C083</span><span class="p">,</span>                 <span class="mi">100</span><span class="p">,</span>
+<span class="n">U1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">SOT</span><span class="o">-</span><span class="mi">223</span><span class="p">,</span>                     <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">3.3</span><span class="p">,</span> <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">3.3</span><span class="n">TRG1</span>
+<span class="n">U2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">SMD_Packages</span><span class="p">:</span><span class="n">SOIC</span><span class="o">-</span><span class="mi">8</span><span class="o">-</span><span class="n">N</span><span class="p">,</span>            <span class="n">I2C</span> <span class="n">Flash</span><span class="p">,</span>    <span class="n">CAT24C32WI</span><span class="o">-</span><span class="n">GT3</span>
+<span class="n">U3</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">XESS</span><span class="p">:</span><span class="n">SOT</span><span class="o">-</span><span class="mi">223</span><span class="p">,</span>                     <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>To insert the manufacturer&#8217;s numbers back into the schematic, just swap the roles
+of the CSV and schematic files:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design_fields</span><span class="o">.</span><span class="n">csv</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">w</span>
+</pre></div>
+</div>
+<p>Now when you examine the parts in eeschema, you should see the added manufacturer&#8217;s
+part numbers:</p>
+<img alt="_images/example1.png" src="_images/example1.png" />
+<p>Adding fields to a schematic parts library is done in an equivalent manner.
+In this case, however, the <code class="docutils literal"><span class="pre">Refs</span></code> column will hold the library name of the
+component rather than its reference designator in a schematic.</p>
+<p>You can also use kifield with the description (<cite>.dcm</cite>) file associated with a parts library.
+However, description files only support three fields with specific names:
+<code class="docutils literal"><span class="pre">description</span></code>, <code class="docutils literal"><span class="pre">keywords</span></code> and <code class="docutils literal"><span class="pre">docfile</span></code>.
+Any other fields will be ignored.</p>
+</div>
+<div class="section" id="removing-fields-from-a-schematic-or-library">
+<h4>Removing Fields from a Schematic or Library<a class="headerlink" href="#removing-fields-from-a-schematic-or-library" title="Permalink to this headline">¶</a></h4>
+<p>It&#8217;s also easy to remove fields from a schematic or library.
+Just delete all the data for a spreadsheet column but <strong>leave the header</strong> like so:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
+<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="mi">100</span><span class="n">uF</span><span class="p">,</span>
+<span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="mi">10</span><span class="n">uF</span><span class="p">,</span>
+<span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="p">,</span>          <span class="n">BARREL_JACK</span><span class="p">,</span>
+<span class="n">GPIO1</span><span class="p">,</span>    <span class="p">,</span>          <span class="p">,</span>          <span class="n">RPi_GPIO</span><span class="p">,</span>
+<span class="n">JP2</span><span class="p">,</span>      <span class="p">,</span>          <span class="p">,</span>          <span class="n">JUMPER3</span><span class="p">,</span>
+<span class="n">LED1</span><span class="p">,</span>     <span class="p">,</span>          <span class="p">,</span>          <span class="n">LED</span><span class="p">,</span>
+<span class="n">LED2</span><span class="p">,</span>     <span class="p">,</span>          <span class="p">,</span>          <span class="n">LED</span><span class="p">,</span>
+<span class="n">R2</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="mi">100</span><span class="p">,</span>
+<span class="n">R3</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="mi">100</span><span class="p">,</span>
+<span class="n">RN1</span><span class="p">,</span>      <span class="p">,</span>          <span class="p">,</span>          <span class="mf">4.7</span><span class="n">K</span><span class="p">,</span>
+<span class="n">RN2</span><span class="p">,</span>      <span class="p">,</span>          <span class="p">,</span>          <span class="mi">100</span><span class="p">,</span>
+<span class="n">RN5</span><span class="p">,</span>      <span class="p">,</span>          <span class="p">,</span>          <span class="mi">100</span><span class="p">,</span>
+<span class="n">U1</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">3.3</span><span class="p">,</span>
+<span class="n">U2</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="n">I2C</span> <span class="n">Flash</span><span class="p">,</span>
+<span class="n">U3</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="n">AZ1117EH</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span>
+</pre></div>
+</div>
+<p>After inserting the spreadsheet values into the schematic, all the PCB footprints and
+manufacturer&#8217;s part numbers will be erased.</p>
+<p>Removing fields from a schematic parts library is done in an equivalent manner.</p>
+</div>
+<div class="section" id="restricting-the-range-of-field-changes">
+<h4>Restricting the Range of Field Changes<a class="headerlink" href="#restricting-the-range-of-field-changes" title="Permalink to this headline">¶</a></h4>
+<p>There are two ways to prevent KiField from making changes in a schematic
+or library:</p>
+<ol class="arabic simple">
+<li>Clear one or more spreadsheet cells holding part references. KiField will
+not insert or change any field values for those parts because there is no way to locate
+them in the schematic or library file with the reference removed.
+You can also achieve the same result by deleting the entire row of the spreadsheet.</li>
+<li>Use KiField&#8217;s <code class="docutils literal"><span class="pre">--fields</span></code> option to specify the names of one or more spreadsheet columns
+whose values will be inserted into the schematic or library file.
+The values in any other column will be ignored.
+You can also omit one or more fields by adding a &#8216;/&#8217; or &#8216;~&#8217; to the beginning
+of their names. In that case, the values in all the other columns are inserted.
+(Omitting the <code class="docutils literal"><span class="pre">--fields</span></code> option or entering a blank list causes KiField to
+insert the values from <strong>all</strong> the columns in the spreadsheet.)</li>
+</ol>
+</div>
+<div class="section" id="preventing-disasters">
+<h4>Preventing Disasters<a class="headerlink" href="#preventing-disasters" title="Permalink to this headline">¶</a></h4>
+<p>A lot of work goes into creating a schematic or parts library.
+It would be a shame if anything happened to them.
+For this reason, KiField makes a backup of any file it is about to change.
+You can turn off this behavior using KiField&#8217;s <code class="docutils literal"><span class="pre">--nobackup</span></code> option.</p>
+<p>In addition, if KiField is inserting values into an existing schematic
+or library file, then you must use the <code class="docutils literal"><span class="pre">--overwrite</span></code> option.</p>
+</div>
+</div>
+</div>
+<span id="document-contributing"></span><div class="section" id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h2>
+<p>Contributions are welcome, and they are greatly appreciated! Every
+little bit helps, and credit will always be given.</p>
+<p>You can contribute in many ways:</p>
+<div class="section" id="types-of-contributions">
+<h3>Types of Contributions<a class="headerlink" href="#types-of-contributions" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="report-bugs">
+<h4>Report Bugs<a class="headerlink" href="#report-bugs" title="Permalink to this headline">¶</a></h4>
+<p>Report bugs at <a class="reference external" href="https://github.com/xesscorp/kifield/issues">https://github.com/xesscorp/kifield/issues</a>.</p>
+<p>If you are reporting a bug, please include:</p>
+<ul class="simple">
+<li>Your operating system name and version.</li>
+<li>Any details about your local setup that might be helpful in troubleshooting.</li>
+<li>Detailed steps to reproduce the bug.</li>
+</ul>
+</div>
+<div class="section" id="fix-bugs">
+<h4>Fix Bugs<a class="headerlink" href="#fix-bugs" title="Permalink to this headline">¶</a></h4>
+<p>Look through the GitHub issues for bugs. Anything tagged with &#8220;bug&#8221;
+is open to whoever wants to implement it.</p>
+</div>
+<div class="section" id="implement-features">
+<h4>Implement Features<a class="headerlink" href="#implement-features" title="Permalink to this headline">¶</a></h4>
+<p>Look through the GitHub issues for features. Anything tagged with &#8220;feature&#8221;
+is open to whoever wants to implement it.</p>
+</div>
+<div class="section" id="write-documentation">
+<h4>Write Documentation<a class="headerlink" href="#write-documentation" title="Permalink to this headline">¶</a></h4>
+<p>kifield could always use more documentation, whether as part of the
+official kifield docs, in docstrings, or even on the web in blog posts,
+articles, and such.</p>
+</div>
+<div class="section" id="submit-feedback">
+<h4>Submit Feedback<a class="headerlink" href="#submit-feedback" title="Permalink to this headline">¶</a></h4>
+<p>The best way to send feedback is to file an issue at <a class="reference external" href="https://github.com/xesscorp/kifield/issues">https://github.com/xesscorp/kifield/issues</a>.</p>
+<p>If you are proposing a feature:</p>
+<ul class="simple">
+<li>Explain in detail how it would work.</li>
+<li>Keep the scope as narrow as possible, to make it easier to implement.</li>
+<li>Remember that this is a volunteer-driven project, and that contributions
+are welcome :)</li>
+</ul>
+</div>
+</div>
+<div class="section" id="get-started">
+<h3>Get Started!<a class="headerlink" href="#get-started" title="Permalink to this headline">¶</a></h3>
+<p>Ready to contribute? Here&#8217;s how to set up <cite>kifield</cite> for local development.</p>
+<ol class="arabic">
+<li><p class="first">Fork the <cite>kifield</cite> repo on GitHub.</p>
+</li>
+<li><p class="first">Clone your fork locally:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/kifield.git
+</pre></div>
+</div>
+</li>
+<li><p class="first">Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ mkvirtualenv kifield
+$ cd kifield/
+$ python setup.py develop
+</pre></div>
+</div>
+</li>
+<li><p class="first">Create a branch for local development:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git checkout -b name-of-your-bugfix-or-feature
+</pre></div>
+</div>
+<p>Now you can make your changes locally.</p>
+</li>
+<li><p class="first">When you&#8217;re done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ flake8 kifield tests
+$ python setup.py test
+$ tox
+</pre></div>
+</div>
+<p>To get flake8 and tox, just pip install them into your virtualenv.</p>
+</li>
+<li><p class="first">Commit your changes and push your branch to GitHub:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ git add .
+$ git commit -m &quot;Your detailed description of your changes.&quot;
+$ git push origin name-of-your-bugfix-or-feature
+</pre></div>
+</div>
+</li>
+<li><p class="first">Submit a pull request through the GitHub website.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="pull-request-guidelines">
+<h3>Pull Request Guidelines<a class="headerlink" href="#pull-request-guidelines" title="Permalink to this headline">¶</a></h3>
+<p>Before you submit a pull request, check that it meets these guidelines:</p>
+<ol class="arabic simple">
+<li>The pull request should include tests.</li>
+<li>If the pull request adds functionality, the docs should be updated. Put
+your new functionality into a function with a docstring, and add the
+feature to the list in README.rst.</li>
+<li>The pull request should work for Python 2.6, 2.7, 3.3, and 3.4, and for PyPy. Check
+<a class="reference external" href="https://travis-ci.org/xesscorp/kifield/pull_requests">https://travis-ci.org/xesscorp/kifield/pull_requests</a>
+and make sure that the tests pass for all supported Python versions.</li>
+</ol>
+</div>
+<div class="section" id="tips">
+<h3>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h3>
+<p>To run a subset of tests:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span>$ python -m unittest tests.test_kifield
+</pre></div>
+</div>
+</div>
+</div>
+<span id="document-authors"></span><div class="section" id="credits">
+<h2>Credits<a class="headerlink" href="#credits" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="development-lead">
+<h3>Development Lead<a class="headerlink" href="#development-lead" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>XESS Corp. &lt;<a class="reference external" href="mailto:info&#37;&#52;&#48;xess&#46;com">info<span>&#64;</span>xess<span>&#46;</span>com</a>&gt;</li>
+</ul>
+</div>
+<div class="section" id="contributors">
+<h3>Contributors<a class="headerlink" href="#contributors" title="Permalink to this headline">¶</a></h3>
+<p>Kaspar Emanuel: <a class="reference external" href="https://github.com/kasbah">https://github.com/kasbah</a></p>
+</div>
+</div>
+<span id="document-history"></span><div class="section" id="history">
+<h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Hierarchical schematics can now be handled just by processing the top-level file.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added support for TSV files (thanks, <a class="reference external" href="mailto:kaspar&#46;emanuel&#37;&#52;&#48;gmail&#46;com">kaspar<span>&#46;</span>emanuel<span>&#64;</span>gmail<span>&#46;</span>com</a>).</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fixed issue where all the fields from multi-unit components in a schematic were not appearing in the csv file.</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fixed issues #3 and #4 regarding incompatibilities with openpyxl 2.4.0a1.</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added the ability to extract/insert fields in DCM files.</li>
+<li>Added the ability to explicitly exclude fields from extraction/insertion.</li>
+</ul>
+</div>
+<div class="section" id="id6">
+<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>First release on PyPI.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html#document-index">Table Of Contents</a></h3>
+  <ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-readme">kifield</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-usage">Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#command-line-options">Command-line Options</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-contributing">Contributing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#types-of-contributions">Types of Contributions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#get-started">Get Started!</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#pull-request-guidelines">Pull Request Guidelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#tips">Tips</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-authors">Credits</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#development-lead">Development Lead</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#contributors">Contributors</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="index.html#document-history">History</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.5 (2016-11-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.4 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.3 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.2 (2016-04-13)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.1 (2016-02-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.0 (2016-01-29)</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.5 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2016, XESS Corp..
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.4.4.
+    </div>
+  </body>
+</html>
