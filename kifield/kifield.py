@@ -99,7 +99,7 @@ def explode(ref):
     '''Explode references like 'C1-C3,C7,C10-C13' into [C1,C2,C3,C7,C10,C11,C12,C13]'''
 
     individual_refs = []
-    if type(ref) in (type(u''), str):
+    if isinstance(ref, str) or isinstance(ref, basestring):
         range_refs = re.split(',|;', ref)
         for r in range_refs:
             mtch = re.match(
