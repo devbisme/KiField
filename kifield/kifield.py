@@ -103,7 +103,7 @@ def explode(ref):
         range_refs = re.split(',|;', ref)
         for r in range_refs:
             mtch = re.match(
-                '^(?P<part_prefix>\D+)(?P<range_start>\d+)[-:]\1(?P<range_end>\d+)$',
+                '^(?P<part_prefix>\D+)(?P<range_start>\d+)[-:]\\1(?P<range_end>\d+)$',
                 r)
             if mtch is None:
                 individual_refs.append(r.strip())

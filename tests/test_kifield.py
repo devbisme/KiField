@@ -43,6 +43,12 @@ class TestExplode(unittest.TestCase):
         self.assertEqual(refs, ['C1', 'C2', 'C3'])
         pass
 
+    def test_range(self):
+        refs = kifield.explode('C1-C3')
+        self.assertEqual(refs, ['C1','C2','C3'])
+        pass
+
+
     def tearDown(self):
         pass
 
