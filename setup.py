@@ -24,7 +24,7 @@ requirements = [
 ]
 
 test_requirements = [
-    # TODO: put package test requirements here
+    'tox'
 ]
 
 def kifield_test_suite():
