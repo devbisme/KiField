@@ -38,7 +38,7 @@ class TestExplode(unittest.TestCase):
         self.assertEqual(refs, ['C1', 'C2', 'C3'])
         pass
 
-    def test_nospaces(self):
+    def test_no_spaces(self):
         refs = kifield.explode('C1,C2,C3')
         self.assertEqual(refs, ['C1', 'C2', 'C3'])
         pass
@@ -48,6 +48,20 @@ class TestExplode(unittest.TestCase):
         self.assertEqual(refs, ['C1','C2','C3'])
         pass
 
+    def test_range2(self):
+        refs = kifield.explode('C1-C3,C5')
+        self.assertEqual(refs, ['C1','C2','C3', 'C5'])
+        pass
+
+    def test_range_in_middle(self):
+        refs = kifield.explode('C8,C1-C3,C5')
+        self.assertEqual(refs, ['C8', 'C1','C2','C3', 'C5'])
+        pass
+
+    def test_range_colon(self):
+        refs = kifield.explode('C1:C3,C5')
+        self.assertEqual(refs, ['C1','C2','C3', 'C5'])
+        pass
 
     def tearDown(self):
         pass
