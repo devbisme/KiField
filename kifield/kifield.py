@@ -211,7 +211,8 @@ def wb_to_csvfile(wb, csv_filename, dialect):
 
 def group_wb(wb):
     ''' Group lines that have the same column values in a openpyxl workbook.
-    References are expected in the first column.'''
+    Headers are expected on the first row and references are expected in the
+    first column.'''
     ws = wb.active
     values = tuple(ws.values)
     unique_rows = []
