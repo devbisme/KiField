@@ -816,6 +816,7 @@ def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse=False):
         wb = None
 
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
+    wb = group_wb(wb)
     wb.save(filename)
 
 
@@ -836,6 +837,7 @@ def insert_part_fields_into_csv(part_fields_dict, filename, recurse=False):
             dialect = 'excel'
 
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
+    wb = group_wb(wb)
     wb_to_csvfile(wb, filename, dialect)
 
 
