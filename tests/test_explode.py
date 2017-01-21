@@ -9,6 +9,8 @@ Tests for `kifield.explode` `kifield.collapse` functions.
 """
 
 import unittest
+import hypothesis
+import hypothesis.strategies as st
 
 from kifield import kifield
 
@@ -58,16 +60,33 @@ class TestExplode(unittest.TestCase):
         refs = kifield.explode('C1, C2 :C4')
         self.assertEqual(refs, ['C1','C2','C3', 'C4'])
 
+    def test_empty(self):
+        refs = kifield.explode('')
+        self.assertEqual(refs, [])
+
 
 
 class TestCollapse(unittest.TestCase):
     def test_collapses(self):
         collapsed = kifield.collapse(['C1','C2','C3', 'C4'])
         self.assertEqual(collapsed, 'C1-C4')
+
     def test_collapses2(self):
         collapsed = kifield.collapse(['C1','C2','C3', 'C4', 'C6'])
         self.assertEqual(collapsed, 'C1-C4, C6')
+
     def test_collapses3(self):
         collapsed = kifield.collapse(['C1','C3', 'C4', 'C6'])
         self.assertEqual(collapsed, 'C1, C3, C4, C6')
+
+    def test_collapses3(self):
+        collapsed = kifield.collapse([])
+        self.assertEqual(collapsed, '')
+
+    @hypothesis.given(st.lists(st.tuples(st.characters(blacklist_characters='0123456789,-:;').filter(lambda x: x.rstrip() != ''), st.integers(min_value=0))))
+    def test_explode_is_inverse(self, parts):
+        parts.sort()
+        parts = list(map(lambda t: '{}{}'.format(t[0],t[1]), parts))
+        assert kifield.explode(kifield.collapse(parts)) == parts
+
 

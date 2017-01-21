@@ -99,6 +99,8 @@ def unquote(s):
 def explode(collapsed):
     '''Explode references like 'C1-C3,C7,C10-C13' into [C1,C2,C3,C7,C10,C11,C12,C13]'''
 
+    if collapsed == '':
+        return []
     individual_refs = []
     if isinstance(collapsed, str) or isinstance(collapsed, basestring):
         range_refs = re.split(',|;', collapsed)
@@ -121,7 +123,7 @@ def explode(collapsed):
 
 def collapse(individual_refs):
     '''
-    Collapse references like into [C1,C2,C3,C7,C10,C11,C12,C13] into
+    Collapse references like [C1,C2,C3,C7,C10,C11,C12,C13] into
     'C1-C3, C7, C10-C13'
     '''
 
