@@ -65,6 +65,16 @@ class TestExplode(unittest.TestCase):
         self.assertEqual(refs, [])
 
 
+@st.composite
+def random_parts(draw):
+    '''generates random lists of references like ['C1', 'C2', ...]'''
+    prefix = st.characters(blacklist_characters='0123456789,;-:')
+    prefix = prefix.filter(lambda x: x.rstrip() != '')
+    number = st.integers(min_value = 0)
+    parts = draw(st.lists(st.tuples(prefix, number)))
+    parts.sort()
+    return list(map(lambda t: '{}{}'.format(t[0],t[1]), parts))
+
 
 class TestCollapse(unittest.TestCase):
     def test_collapses(self):
@@ -83,10 +93,8 @@ class TestCollapse(unittest.TestCase):
         collapsed = kifield.collapse([])
         self.assertEqual(collapsed, '')
 
-    @hypothesis.given(st.lists(st.tuples(st.characters(blacklist_characters='0123456789,-:;').filter(lambda x: x.rstrip() != ''), st.integers(min_value=0))))
+    @hypothesis.given(random_parts())
     def test_explode_is_inverse(self, parts):
-        parts.sort()
-        parts = list(map(lambda t: '{}{}'.format(t[0],t[1]), parts))
         assert kifield.explode(kifield.collapse(parts)) == parts
 
 
