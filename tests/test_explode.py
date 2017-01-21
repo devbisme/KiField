@@ -107,7 +107,7 @@ def random_reference(draw, prefix = random_prefix()):
 
 @st.composite
 def totally_random_references(draw):
-    '''generates random sorted lists of references like ['IASDHAH1', 'AKJDJAD1569', ...]'''
+    '''generates random sorted lists of references like ['IASDHAH1', 'ZKJDJAD1569', ...]'''
     parts = draw(st.lists(random_reference()))
     parts.sort()
     return list(map(toRef, parts))
@@ -123,26 +123,30 @@ def random_references(draw):
 
 
 
-max_examples = 200
+settings = {
+    'max_examples': 200,
+    #generation may run slow on travis so we disable it
+    'suppress_health_check': [hypothesis.HealthCheck.too_slow],
+}
 
 class TestExplodeCollapseProperties(unittest.TestCase):
     @hypothesis.given(random_references())
-    @hypothesis.settings(max_examples = max_examples)
+    @hypothesis.settings(**settings)
     def test_explode_is_inverse(self, references):
         assert kifield.explode(kifield.collapse(references)) == references
 
     @hypothesis.given(random_references())
-    @hypothesis.settings(max_examples = max_examples)
+    @hypothesis.settings(**settings)
     def test_explode_is_inverse2(self, references):
         assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
     @hypothesis.given(totally_random_references())
-    @hypothesis.settings(max_examples = max_examples)
+    @hypothesis.settings(**settings)
     def test_explode_is_inverse(self, references):
         assert kifield.explode(kifield.collapse(references)) == references
 
     @hypothesis.given(totally_random_references())
-    @hypothesis.settings(max_examples = max_examples)
+    @hypothesis.settings(**settings)
     def test_explode_is_inverse2(self, references):
         assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
