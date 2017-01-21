@@ -96,12 +96,12 @@ def unquote(s):
         return s
 
 
-def explode(ref):
+def explode(collapsed):
     '''Explode references like 'C1-C3,C7,C10-C13' into [C1,C2,C3,C7,C10,C11,C12,C13]'''
 
     individual_refs = []
-    if isinstance(ref, str) or isinstance(ref, basestring):
-        range_refs = re.split(',|;', ref)
+    if isinstance(collapsed, str) or isinstance(collapsed, basestring):
+        range_refs = re.split(',|;', collapsed)
         for r in range_refs:
             mtch = re.match(
                 '^\s*(?P<part_prefix>\D+)(?P<range_start>\d+)\s*[-:]\s*\\1(?P<range_end>\d+)\s*$',
@@ -114,7 +114,7 @@ def explode(ref):
                 range_end = int(mtch.group('range_end'))
                 for i in range(range_start, range_end + 1):
                     individual_refs.append(part_prefix + str(i))
-    logger.log(DEBUG_OBSESSIVE, 'Exploding {} => {}.'.format(ref,
+    logger.log(DEBUG_OBSESSIVE, 'Exploding {} => {}.'.format(collapsed,
                                                              individual_refs))
     return individual_refs
 
