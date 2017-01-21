@@ -66,9 +66,10 @@ class TestExplode(unittest.TestCase):
 
 
 @st.composite
-def random_parts(draw):
-    '''generates random lists of references like ['C1', 'C2', ...]'''
-    prefix = st.characters(blacklist_characters='0123456789,;-:')
+def random_references(draw):
+    '''generates random lists of references like ['IASDHAH1', 'AKJDJAD1569', ...]'''
+    #max_codepoint was derived empirically
+    prefix = st.characters(blacklist_characters='0123456789,;-:', max_codepoint=1631)
     prefix = prefix.filter(lambda x: x.rstrip() != '')
     number = st.integers(min_value = 0)
     parts = draw(st.lists(st.tuples(prefix, number)))
@@ -93,8 +94,14 @@ class TestCollapse(unittest.TestCase):
         collapsed = kifield.collapse([])
         self.assertEqual(collapsed, '')
 
-    @hypothesis.given(random_parts())
+    @hypothesis.given(random_references())
+    @hypothesis.settings(max_examples=1000)
     def test_explode_is_inverse(self, parts):
         assert kifield.explode(kifield.collapse(parts)) == parts
+
+    @hypothesis.given(random_references())
+    @hypothesis.settings(max_examples=1000)
+    def test_explode_is_inverse2(self, references):
+        assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
 
