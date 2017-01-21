@@ -79,7 +79,7 @@ class TestCollapse(unittest.TestCase):
         collapsed = kifield.collapse(['C1','C3', 'C4', 'C6'])
         self.assertEqual(collapsed, 'C1, C3, C4, C6')
 
-    def test_collapses3(self):
+    def test_empty(self):
         collapsed = kifield.collapse([])
         self.assertEqual(collapsed, '')
 

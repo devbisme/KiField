@@ -209,6 +209,39 @@ def wb_to_csvfile(wb, csv_filename, dialect):
             writer.writerow([cell.value for cell in row])
 
 
+def group_wb(wb):
+    ''' Group lines that have the same column values in a openpyxl workbook.
+    References are expected in the first column.'''
+    ws = wb.active
+    values = tuple(ws.values)
+    unique_rows = []
+    references = []
+    header = values[0]
+    for row in values[1:]:
+        column_values = row[1:]
+        reference = row[0]
+        if column_values in unique_rows:
+            index = unique_rows.index(column_values)
+            references[index].append(reference)
+        else:
+            unique_rows.append(column_values)
+            references.append([reference])
+
+    grouped_rows = []
+    for i,ref in enumerate(references):
+        grouped_rows.append((collapse(ref),) + unique_rows[i])
+
+    grouped_wb = pyxl.Workbook()
+    grouped_ws = grouped_wb.active
+    grouped_ws.append(header)
+
+    for row in grouped_rows:
+        grouped_ws.append(row)
+
+    return grouped_wb
+
+
+
 class FieldExtractionError(Exception):
     pass
 
