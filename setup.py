@@ -23,10 +23,6 @@ requirements = [
     'openpyxl >= 2.3.2',
 ]
 
-test_requirements = [
-    'tox'
-]
-
 def kifield_test_suite():
     test_loader = unittest.TestLoader()
     test_suite = test_loader.discover('tests', pattern='test_*.py')
@@ -60,6 +56,4 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
     ],
-    test_suite='setup.kifield_test_suite',
-    tests_require=test_requirements
 )
