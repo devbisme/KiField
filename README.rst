@@ -4,6 +4,8 @@ kifield
 
 .. image:: https://img.shields.io/pypi/v/kifield.svg
         :target: https://pypi.python.org/pypi/kifield
+.. image:: https://travis-ci.org/xesscorp/KiField.svg?branch=master
+    :target: https://travis-ci.org/xesscorp/KiField
 
 
 A utility for manipulating part fields in KiCad schematic files or libraries.
@@ -20,7 +22,7 @@ KiField is usually employed in a three-step process:
    new fields, or completely delete fields.
 
 #. Finally, use KiField to insert the updated field labels and values from
-   the spreadsheet file into the schematic or library. 
+   the spreadsheet file into the schematic or library.
 
 
 * Free software: MIT license
