@@ -24,6 +24,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 from __future__ import absolute_import
+from functools import reduce
 from builtins import open
 from builtins import range
 from builtins import int
@@ -116,6 +117,53 @@ def explode(ref):
     logger.log(DEBUG_OBSESSIVE, 'Exploding {} => {}.'.format(ref,
                                                              individual_refs))
     return individual_refs
+
+
+def collapse(individual_refs):
+    '''
+    Collapse references like into [C1,C2,C3,C7,C10,C11,C12,C13] into
+    'C1-C3, C7, C10-C13'
+    '''
+
+    parts = []
+    for ref in individual_refs:
+        mtch = re.match('(?P<part_prefix>\D+)(?P<number>\d+)', ref)
+        if mtch is not None:
+            part_prefix = mtch.group('part_prefix')
+            number = int(mtch.group('number'))
+            parts.append((part_prefix, number))
+
+    parts.sort()
+
+    def toRef(part):
+        return '{}{}'.format(part[0], part[1])
+
+    def makeGroups(accumulator, part):
+        prev = None
+        if len(accumulator) > 0:
+            group = accumulator[-1]
+            if len(group) > 0:
+                prev = group[-1]
+        if (prev != None) and (prev[0] == part[0]) and ((prev[1] + 1) == part[1]):
+            group.append(part)
+            accumulator[-1] = group
+        else:
+            accumulator.append([part])
+        return accumulator
+
+    groups = reduce(makeGroups, parts, [])
+    groups = map(lambda g: tuple(map(toRef, g)), groups)
+
+    collapsed = ''
+    for group in groups:
+        if (len(collapsed) > 1) and (collapsed[-2] != ','):
+            collapsed += ', '
+        if len(group) > 2:
+            collapsed += group[0] + '-' + group[-1]
+        else:
+            collapsed += ', '.join(group)
+
+    return collapsed
 
 
 def csvfile_to_wb(csv_filename):

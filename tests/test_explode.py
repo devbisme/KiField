@@ -5,7 +5,7 @@
 test_explode
 ----------------------------------
 
-Tests for `kifield.explode` function.
+Tests for `kifield.explode` `kifield.collapse` functions.
 """
 
 import unittest
@@ -14,23 +14,17 @@ from kifield import kifield
 
 
 class TestExplode(unittest.TestCase):
-    def setUp(self):
-        pass
-
     def test_works(self):
         refs = kifield.explode('C3, C2, C1')
         self.assertEqual(refs, ['C3', 'C2', 'C1'])
-        pass
 
     def test_reversible(self):
         refs = kifield.explode('C1, C2, C3')
         self.assertEqual(refs, ['C1', 'C2', 'C3'])
-        pass
 
     def test_no_spaces(self):
         refs = kifield.explode('C1,C2,C3')
         self.assertEqual(refs, ['C1', 'C2', 'C3'])
-        pass
 
     def test_range(self):
         refs = kifield.explode('C1-C3')
@@ -64,9 +58,16 @@ class TestExplode(unittest.TestCase):
         refs = kifield.explode('C1, C2 :C4')
         self.assertEqual(refs, ['C1','C2','C3', 'C4'])
 
-    def tearDown(self):
-        pass
 
 
-if __name__ == '__main__':
-    unittest.main()
+class TestCollapse(unittest.TestCase):
+    def test_collapses(self):
+        collapsed = kifield.collapse(['C1','C2','C3', 'C4'])
+        self.assertEqual(collapsed, 'C1-C4')
+    def test_collapses2(self):
+        collapsed = kifield.collapse(['C1','C2','C3', 'C4', 'C6'])
+        self.assertEqual(collapsed, 'C1-C4, C6')
+    def test_collapses3(self):
+        collapsed = kifield.collapse(['C1','C3', 'C4', 'C6'])
+        self.assertEqual(collapsed, 'C1, C3, C4, C6')
+
