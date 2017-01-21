@@ -115,7 +115,7 @@ def totally_random_references(draw):
 
 @st.composite
 def random_references(draw):
-    '''generates random sorted lists of references width the same prefix like ['IASDHAH1', 'IASDHAH1569', ...]'''
+    '''generates random sorted lists of references with the same prefix like ['IASDHAH1', 'IASDHAH1569', ...]'''
     prefix = st.just(draw(random_prefix()))
     parts = draw(st.lists(random_reference(prefix = prefix)))
     parts.sort()
@@ -123,31 +123,29 @@ def random_references(draw):
 
 
 
-settings = {
-    'max_examples': 200,
+settings = hypothesis.settings(
+    max_examples = 200,
     #generation may run slow on travis so we disable it
-    'suppress_health_check': [hypothesis.HealthCheck.too_slow],
-}
+    #TODO make a profile for travis
+    suppress_health_check = [hypothesis.HealthCheck.too_slow],
+)
 
-class TestExplodeCollapseProperties(unittest.TestCase):
-    @hypothesis.given(random_references())
-    @hypothesis.settings(**settings)
-    def test_explode_is_inverse(self, references):
-        assert kifield.explode(kifield.collapse(references)) == references
+with settings:
+    class TestExplodeCollapseProperties(unittest.TestCase):
+        @hypothesis.given(random_references())
+        def test_explode_is_inverse(self, references):
+            assert kifield.explode(kifield.collapse(references)) == references
 
-    @hypothesis.given(random_references())
-    @hypothesis.settings(**settings)
-    def test_explode_is_inverse2(self, references):
-        assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
+        @hypothesis.given(random_references())
+        def test_explode_is_inverse2(self, references):
+            assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
-    @hypothesis.given(totally_random_references())
-    @hypothesis.settings(**settings)
-    def test_explode_is_inverse(self, references):
-        assert kifield.explode(kifield.collapse(references)) == references
+        @hypothesis.given(totally_random_references())
+        def test_explode_is_inverse(self, references):
+            assert kifield.explode(kifield.collapse(references)) == references
 
-    @hypothesis.given(totally_random_references())
-    @hypothesis.settings(**settings)
-    def test_explode_is_inverse2(self, references):
-        assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
+        @hypothesis.given(totally_random_references())
+        def test_explode_is_inverse2(self, references):
+            assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
 
