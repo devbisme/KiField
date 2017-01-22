@@ -802,7 +802,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
     return wb
 
 
-def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse=False):
+def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse, group_components):
     '''Insert the fields in the extracted part dictionary into an XLSX spreadsheet.'''
 
     logger.log(
@@ -816,11 +816,14 @@ def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse=False):
         wb = None
 
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
-    wb = group_wb(wb)
+
+    if group_components:
+        wb = group_wb(wb)
+
     wb.save(filename)
 
 
-def insert_part_fields_into_csv(part_fields_dict, filename, recurse=False):
+def insert_part_fields_into_csv(part_fields_dict, filename, recurse, group_components):
     '''Insert the fields in the extracted part dictionary into a CSV spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -837,11 +840,14 @@ def insert_part_fields_into_csv(part_fields_dict, filename, recurse=False):
             dialect = 'excel'
 
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
-    wb = group_wb(wb)
+
+    if group_components:
+        wb = group_wb(wb)
+
     wb_to_csvfile(wb, filename, dialect)
 
 
-def insert_part_fields_into_sch(part_fields_dict, filename, recurse=False):
+def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_components):
     '''Insert the fields in the extracted part dictionary into a schematic.'''
 
     logger.log(
@@ -952,11 +958,11 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse=False):
             for field in sheet.fields:
                 if field['id'] == 'F1':
                     sheet_file = unquote(field['value'])
-                    insert_part_fields_into_sch(part_fields_dict, sheet_file, recurse)
+                    insert_part_fields_into_sch(part_fields_dict, sheet_file, recurse, group_components)
                     break
 
 
-def insert_part_fields_into_lib(part_fields_dict, filename, recurse=False):
+def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_components):
     '''Insert the fields in the extracted part dictionary into a library.'''
 
     logger.log(
@@ -1039,7 +1045,7 @@ def insert_part_fields_into_lib(part_fields_dict, filename, recurse=False):
     lib.save(filename)
 
 
-def insert_part_fields_into_dcm(part_fields_dict, filename, recurse=False):
+def insert_part_fields_into_dcm(part_fields_dict, filename, recurse, group_components):
     '''Insert the fields in the extracted part dictionary into a DCM file.'''
 
     logger.log(
@@ -1066,7 +1072,7 @@ def insert_part_fields_into_dcm(part_fields_dict, filename, recurse=False):
     dcm.save(filename)
 
 
-def insert_part_fields(part_fields_dict, filenames, recurse=False):
+def insert_part_fields(part_fields_dict, filenames, recurse, group_components):
     '''Insert part fields from a dictionary into a spreadsheet, part library, or schematic.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -1097,7 +1103,7 @@ def insert_part_fields(part_fields_dict, filenames, recurse=False):
 
             # Call the insertion function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            insertion_functions[f_extension](part_fields_dict, f, recurse)
+            insertion_functions[f_extension](part_fields_dict, f, recurse, group_components)
 
         except IOError:
             logger.warn('Unable to write to file: {}.'.format(f))
@@ -1106,11 +1112,11 @@ def insert_part_fields(part_fields_dict, filenames, recurse=False):
             logger.warn('Unknown file type for field insertion: {}'.format(f))
 
 
-def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None, recurse=False):
+def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None, recurse=False, group_components=False):
     '''Extract fields from a set of files and insert them into another set of files.'''
 
     # Extract a dictionary of part field values from a set of files.
     part_fields_dict = extract_part_fields(extract_filenames, inc_field_names, exc_field_names, recurse)
 
     # Insert entries from the dictionary into these files.
-    insert_part_fields(part_fields_dict, insert_filenames, recurse)
+    insert_part_fields(part_fields_dict, insert_filenames, recurse, group_components)
