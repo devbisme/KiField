@@ -38,13 +38,13 @@ lint:
 	flake8 kifield tests
 
 test:
-	python setup.py test
+	python -m unittest discover tests
 
 test-all:
 	tox
 
 coverage:
-	coverage run --source kifield setup.py test
+	coverage run --source kifield -m unittest discover tests
 	coverage report -m
 	coverage html
 	open htmlcov/index.html

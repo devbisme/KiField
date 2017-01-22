@@ -3,6 +3,7 @@
 
 import setuptools
 import kifield
+import unittest
 
 
 try:
@@ -23,8 +24,13 @@ requirements = [
 ]
 
 test_requirements = [
-    # TODO: put package test requirements here
+    'tox'
 ]
+
+def kifield_test_suite():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover('tests', pattern='test_*.py')
+    return test_suite
 
 setup(
     name='kifield',
@@ -54,6 +60,6 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
     ],
-    test_suite='tests',
+    test_suite='setup.kifield_test_suite',
     tests_require=test_requirements
 )

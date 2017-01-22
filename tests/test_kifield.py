@@ -12,7 +12,6 @@ import unittest
 
 from kifield import kifield
 
-
 class TestKifield(unittest.TestCase):
 
     def setUp(self):
