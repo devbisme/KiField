@@ -141,11 +141,11 @@ with settings:
             assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
         @hypothesis.given(totally_random_references())
-        def test_explode_is_inverse(self, references):
+        def test_explode_is_inverse3(self, references):
             assert kifield.explode(kifield.collapse(references)) == references
 
         @hypothesis.given(totally_random_references())
-        def test_explode_is_inverse2(self, references):
+        def test_explode_is_inverse4(self, references):
             assert kifield.collapse(kifield.explode(kifield.collapse(references))) == kifield.collapse(references)
 
 
