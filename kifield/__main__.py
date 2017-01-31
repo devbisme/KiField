@@ -100,6 +100,12 @@ def main():
         default=0,
         metavar='LEVEL',
         help='Print debugging info. (Larger LEVEL means more info.)')
+    parser.add_argument(
+        '--group',
+        '-g',
+        action='store_true',
+        help='''Group components with the same field values into single lines when
+            inserting into spreadsheet and CSV/TSV. (Default is to have one component per line)''')
 
     args = parser.parse_args()
 
@@ -151,6 +157,7 @@ def main():
             insert_filenames=args.insert,
             inc_field_names=inc_fields,
             exc_field_names=exc_fields,
+            group_components=args.group,
             recurse=args.recurse)
 
 ###############################################################################
