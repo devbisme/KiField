@@ -1,5 +1,5 @@
-﻿#PROG = python -m ..\kifield
-PROG  = kifield
+PROG = kifield
+#PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
 test: test1 test2 test3 test4
@@ -7,9 +7,9 @@ test: test1 test2 test3 test4
 	@$(PROG) -v
 
 test1:
-	@rm -f $@*.* 
-    # Copy the cat schematic file.
-	@cp cat.sch $@.sch
+	@rm -f $@*.*
+    # Copy the CAT schematic file.
+	@cp CAT.sch $@.sch
     # Get the fields from the schematic into the CSV file.
 	@$(PROG) -x $@.sch -i $@.csv $(FLAGS)
     # Add some random columns of random stuff to the CSV file.
@@ -25,7 +25,7 @@ test1:
 	@echo 'Test $@ passed!'
 
 test2:
-	@rm -f $@*.* 
+	@rm -f $@*.*
     # Copy the hierarchical schematic file.
 	@cp hier_test.sch $@1.sch
     # Extract the fields from the schematic into a CSV file.
@@ -67,7 +67,7 @@ test4:
     # Make a copy of the library file.
 	@cp xess.lib $@.lib
     # Insert the DCM fields into the library.
-	@$(PROG) -x $@.csv -i $@.lib 
+	@$(PROG) -x $@.csv -i $@.lib
     # Extract the fields from the library into a DCM file.
 	@$(PROG) -x $@.lib -i $@.dcm $(FLAGS)
     # Extract the fields from the library and the DCM file into a CSV file.
