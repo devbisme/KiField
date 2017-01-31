@@ -25,7 +25,7 @@ Command-line Options
                    [file.[xlsx|csv|tsv|sch|lib|dcm] ...]] [--recurse]
                    [--overwrite] [--nobackup]
                    [--fields name|/name|~name [name|/name|~name ...]]
-                   [--debug [LEVEL]]
+                   [--debug [LEVEL]] [--group]
 
     Insert fields from spreadsheets into KiCad schematics or libraries, or gather
     fields from schematics or libraries and place them into a spreadsheet.
@@ -39,7 +39,8 @@ Command-line Options
       --insert file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...], -i file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...]
                             Insert extracted field values into one or more
                             schematic or spreadsheet files.
-      --recurse, -r         Allow recursion from a top-level schematic into lower-level sub-schematics.
+      --recurse, -r         Allow recursion from a top-level schematic into lower-
+                            level sub-schematics.
       --overwrite, -w       Allow field insertion into an existing file.
       --nobackup, -nb       Do *not* create backups before modifying files.
                             (Default is to make backup files.)
@@ -49,6 +50,10 @@ Command-line Options
                             omit. (Leave blank to extract/insert *all* fields.)
       --debug [LEVEL], -d [LEVEL]
                             Print debugging info. (Larger LEVEL means more info.)
+      --group, -g           Group components with the same field values into
+                            single lines when inserting into spreadsheet and
+                            CSV/TSV. (Default is to have one component per line)
+
 
 Examples
 ------------------------
