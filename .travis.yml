@@ -9,4 +9,4 @@ install:
 script:
   - tox
   - pip install .
-  - cd tests/ && make -f test.mk
+  - cd tests/integration && make -f test.mk

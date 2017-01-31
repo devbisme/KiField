@@ -1,5 +1,5 @@
 PROG = kifield
-#PROG = python -m ..\kifield
+#PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
 test: test1 test2 test3 test4

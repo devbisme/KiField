@@ -38,7 +38,7 @@ lint:
 	flake8 kifield tests
 
 test:
-	python -m unittest discover tests
+	python -m unittest discover tests/unit
 
 test-all:
 	tox
