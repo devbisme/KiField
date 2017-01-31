@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>kifield 0.1.5 documentation</title>
+    <title>kifield 0.1.6 documentation</title>
     
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.1.5',
+        VERSION:     '0.1.6',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -29,7 +29,7 @@
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.6 documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -45,6 +45,7 @@
 <span id="document-readme"></span><div class="section" id="kifield">
 <h2>kifield<a class="headerlink" href="#kifield" title="Permalink to this headline">¶</a></h2>
 <a class="reference external image-reference" href="https://pypi.python.org/pypi/kifield"><img src="https://img.shields.io/pypi/v/kifield.svg" /></a>
+<a class="reference external image-reference" href="https://travis-ci.org/xesscorp/KiField"><img alt="https://travis-ci.org/xesscorp/KiField.svg?branch=master" src="https://travis-ci.org/xesscorp/KiField.svg?branch=master" /></a>
 <p>A utility for manipulating part fields in KiCad schematic files or libraries.
 KiField can extract all the component fields from a schematic or library
 and place them into a spreadsheet for bulk editing, after which you can insert the
@@ -105,7 +106,7 @@ the spreadsheet file into the schematic or library.</li>
                <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">recurse</span><span class="p">]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">overwrite</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">nobackup</span><span class="p">]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">fields</span> <span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="p">[</span><span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="o">...</span><span class="p">]]</span>
-               <span class="p">[</span><span class="o">--</span><span class="n">debug</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">]]</span>
+               <span class="p">[</span><span class="o">--</span><span class="n">debug</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">group</span><span class="p">]</span>
 
 <span class="n">Insert</span> <span class="n">fields</span> <span class="kn">from</span> <span class="nn">spreadsheets</span> <span class="n">into</span> <span class="n">KiCad</span> <span class="n">schematics</span> <span class="ow">or</span> <span class="n">libraries</span><span class="p">,</span> <span class="ow">or</span> <span class="n">gather</span>
 <span class="n">fields</span> <span class="kn">from</span> <span class="nn">schematics</span> <span class="ow">or</span> <span class="n">libraries</span> <span class="ow">and</span> <span class="n">place</span> <span class="n">them</span> <span class="n">into</span> <span class="n">a</span> <span class="n">spreadsheet</span><span class="o">.</span>
@@ -119,7 +120,8 @@ the spreadsheet file into the schematic or library.</li>
   <span class="o">--</span><span class="n">insert</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">],</span> <span class="o">-</span><span class="n">i</span> <span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="p">[</span><span class="n">xlsx</span><span class="o">|</span><span class="n">csv</span><span class="o">|</span><span class="n">tsv</span><span class="o">|</span><span class="n">sch</span><span class="o">|</span><span class="n">lib</span><span class="o">|</span><span class="n">dcm</span><span class="p">]</span> <span class="o">...</span><span class="p">]</span>
                         <span class="n">Insert</span> <span class="n">extracted</span> <span class="n">field</span> <span class="n">values</span> <span class="n">into</span> <span class="n">one</span> <span class="ow">or</span> <span class="n">more</span>
                         <span class="n">schematic</span> <span class="ow">or</span> <span class="n">spreadsheet</span> <span class="n">files</span><span class="o">.</span>
-  <span class="o">--</span><span class="n">recurse</span><span class="p">,</span> <span class="o">-</span><span class="n">r</span>         <span class="n">Allow</span> <span class="n">recursion</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">schematic</span> <span class="n">into</span> <span class="n">lower</span><span class="o">-</span><span class="n">level</span> <span class="n">sub</span><span class="o">-</span><span class="n">schematics</span><span class="o">.</span>
+  <span class="o">--</span><span class="n">recurse</span><span class="p">,</span> <span class="o">-</span><span class="n">r</span>         <span class="n">Allow</span> <span class="n">recursion</span> <span class="kn">from</span> <span class="nn">a</span> <span class="n">top</span><span class="o">-</span><span class="n">level</span> <span class="n">schematic</span> <span class="n">into</span> <span class="n">lower</span><span class="o">-</span>
+                        <span class="n">level</span> <span class="n">sub</span><span class="o">-</span><span class="n">schematics</span><span class="o">.</span>
   <span class="o">--</span><span class="n">overwrite</span><span class="p">,</span> <span class="o">-</span><span class="n">w</span>       <span class="n">Allow</span> <span class="n">field</span> <span class="n">insertion</span> <span class="n">into</span> <span class="n">an</span> <span class="n">existing</span> <span class="n">file</span><span class="o">.</span>
   <span class="o">--</span><span class="n">nobackup</span><span class="p">,</span> <span class="o">-</span><span class="n">nb</span>       <span class="n">Do</span> <span class="o">*</span><span class="ow">not</span><span class="o">*</span> <span class="n">create</span> <span class="n">backups</span> <span class="n">before</span> <span class="n">modifying</span> <span class="n">files</span><span class="o">.</span>
                         <span class="p">(</span><span class="n">Default</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">make</span> <span class="n">backup</span> <span class="n">files</span><span class="o">.</span><span class="p">)</span>
@@ -129,6 +131,9 @@ the spreadsheet file into the schematic or library.</li>
                         <span class="n">omit</span><span class="o">.</span> <span class="p">(</span><span class="n">Leave</span> <span class="n">blank</span> <span class="n">to</span> <span class="n">extract</span><span class="o">/</span><span class="n">insert</span> <span class="o">*</span><span class="nb">all</span><span class="o">*</span> <span class="n">fields</span><span class="o">.</span><span class="p">)</span>
   <span class="o">--</span><span class="n">debug</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">],</span> <span class="o">-</span><span class="n">d</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">]</span>
                         <span class="n">Print</span> <span class="n">debugging</span> <span class="n">info</span><span class="o">.</span> <span class="p">(</span><span class="n">Larger</span> <span class="n">LEVEL</span> <span class="n">means</span> <span class="n">more</span> <span class="n">info</span><span class="o">.</span><span class="p">)</span>
+  <span class="o">--</span><span class="n">group</span><span class="p">,</span> <span class="o">-</span><span class="n">g</span>           <span class="n">Group</span> <span class="n">components</span> <span class="k">with</span> <span class="n">the</span> <span class="n">same</span> <span class="n">field</span> <span class="n">values</span> <span class="n">into</span>
+                        <span class="n">single</span> <span class="n">lines</span> <span class="n">when</span> <span class="n">inserting</span> <span class="n">into</span> <span class="n">spreadsheet</span> <span class="ow">and</span>
+                        <span class="n">CSV</span><span class="o">/</span><span class="n">TSV</span><span class="o">.</span> <span class="p">(</span><span class="n">Default</span> <span class="ow">is</span> <span class="n">to</span> <span class="n">have</span> <span class="n">one</span> <span class="n">component</span> <span class="n">per</span> <span class="n">line</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -381,38 +386,44 @@ and make sure that the tests pass for all supported Python versions.</li>
 <span id="document-history"></span><div class="section" id="history">
 <h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
-<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Hierarchical schematics can now be handled just by processing the top-level file.</li>
+<li>Added &#8220;grouping&#8221; option (<cite>&#8211;group</cite>) for gathering components with the same field values onto a single line of the XLSX/CSV/TSV file..</li>
 </ul>
 </div>
 <div class="section" id="id2">
-<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Added recursive operations on hierarchical schematics so everything can be handled just by processing the top-level file.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added support for TSV files (thanks, <a class="reference external" href="mailto:kaspar&#46;emanuel&#37;&#52;&#48;gmail&#46;com">kaspar<span>&#46;</span>emanuel<span>&#64;</span>gmail<span>&#46;</span>com</a>).</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed issue where all the fields from multi-unit components in a schematic were not appearing in the csv file.</li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed issues #3 and #4 regarding incompatibilities with openpyxl 2.4.0a1.</li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added the ability to extract/insert fields in DCM files.</li>
 <li>Added the ability to explicitly exclude fields from extraction/insertion.</li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>First release on PyPI.</li>
 </ul>
@@ -460,12 +471,13 @@ and make sure that the tests pass for all supported Python versions.</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-history">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.5 (2016-11-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.4 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.3 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.2 (2016-04-13)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.1 (2016-02-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.0 (2016-01-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.6 (2017-01-30)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.5 (2016-11-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.4 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.3 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.2 (2016-04-13)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.1 (2016-02-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.0 (2016-01-29)</a></li>
 </ul>
 </li>
 </ul>
@@ -477,7 +489,7 @@ and make sure that the tests pass for all supported Python versions.</li>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.5 documentation</a> &raquo;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.6 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
