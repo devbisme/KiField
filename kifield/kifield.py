@@ -903,6 +903,30 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
             # Insert the fields from the part dictionary into the component fields.
             for field_name, field_value in part_fields.items():
 
+                # Create a dict to hold the field visibility attribute.
+                field_attributes = dict()
+                INVIS_PREFIX = '[I]'
+                VISIBLE_PREFIX = '[V]'
+                INVIS_CODE = '0001'
+                VISIBLE_CODE = '0000'
+                if field_name.startswith(INVIS_PREFIX):
+                    field_attributes['attributes'] = INVIS_CODE
+                    field_name = field_name[len(INVIS_PREFIX):]
+                elif field_name.startswith(VISIBLE_PREFIX):
+                    field_attributes['attributes'] = VISIBLE_CODE
+                    field_name = field_name[len(VISIBLE_PREFIX):]
+                if field_value.startswith(INVIS_PREFIX):
+                    field_attributes['attributes'] = INVIS_CODE
+                    field_value = field_value[len(INVIS_PREFIX):]
+                elif field_value.startswith(VISIBLE_PREFIX):
+                    field_attributes['attributes'] = VISIBLE_CODE
+                    field_value = field_value[len(VISIBLE_PREFIX):]
+
+                # Also store a position for a new field based on the REF position.
+                posx = component.fields[0]['posx']
+                posy = str(int(component.fields[0]['posy']) + 100) # Place it below REF.
+                field_position = {'posx':posx, 'posy':posy}
+
                 # Get the field id associated with this field name (if there is one).
                 field_id = lib_field_name_to_id.get(field_name, None)
 
@@ -915,6 +939,9 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                                    'Updating {} field {} from {} to {}'.format(
                                        ref, f['id'], f['ref'], field_value))
                         f['ref'] = quote(field_value)
+                        # Set field attributes but don't change its position.
+                        if 'attributes' in field_attributes:
+                            f['attributes'] = field_attributes['attributes']
                         break
 
                     elif f['id'] == field_id:
@@ -923,14 +950,19 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                                    'Updating {} field {} from {} to {}'.format(
                                        ref, f['id'], f['ref'], field_value))
                         f['ref'] = quote(field_value)
+                        # Set field attributes but don't change its position.
+                        if 'attributes' in field_attributes:
+                            f['attributes'] = field_attributes['attributes']
                         break
 
                 # No existing field to update, so add a new field.
                 else:
                     if field_value not in (None, ''):
-                        # Add new named field to component.
+                        # Add new named field and value to component.
                         new_field = {'ref': quote(field_value),
                                      'name': quote(field_name)}
+                        new_field.update(field_attributes) # Set field's attributes.
+                        new_field.update(field_position) # Set new field's position.
                         component.addField(new_field)
                         logger.log(DEBUG_OBSESSIVE,
                                    'Adding {} field {} with value {}'.format(

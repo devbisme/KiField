@@ -23,7 +23,7 @@ class Component(object):
     _U_KEYS = ['unit', 'convert', 'time_stamp']
     _P_KEYS = ['posx', 'posy']
     _AR_KEYS = ['path', 'ref', 'part']
-    _F_KEYS = ['id', 'ref', 'orient', 'posx', 'posy', 'size', 'attributs', 'hjust', 'props', 'name']
+    _F_KEYS = ['id', 'ref', 'orient', 'posx', 'posy', 'size', 'attributes', 'hjust', 'props', 'name']
 
     _KEYS = {'L':_L_KEYS, 'U':_U_KEYS, 'P':_P_KEYS, 'AR':_AR_KEYS, 'F':_F_KEYS}
     def __init__(self, data):
@@ -70,7 +70,7 @@ class Component(object):
     # * 'value' could be used instead of 'ref'
     def addField(self, field_data):
         def_field = {'id':None, 'ref':None, 'orient':'H', 'posx':'0', 'posy':'0', 'size':'50',
-                     'attributs':'0001', 'hjust':'C', 'props':'CNN', 'name':'~'}
+                     'attributes':'0001', 'hjust':'C', 'props':'CNN', 'name':'~'}
 
         # merge dictionaries and set the id value
         field = dict(list(def_field.items()) + list(field_data.items()))
