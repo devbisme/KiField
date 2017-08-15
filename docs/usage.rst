@@ -18,42 +18,37 @@ Command-line Options
 
 ::
 
-    usage: kifield [-h] [--version]
-                   [--extract file.[xlsx|csv|tsv|sch|lib|dcm]
-                   [file.[xlsx|csv|tsv|sch|lib|dcm] ...]]
-                   [--insert file.[xlsx|csv|tsv|sch|lib|dcm]
-                   [file.[xlsx|csv|tsv|sch|lib|dcm] ...]] [--recurse]
-                   [--overwrite] [--nobackup]
-                   [--fields name|/name|~name [name|/name|~name ...]]
-                   [--debug [LEVEL]] [--group]
+    usage: kifield [-h] [--extract file [file ...]] [--insert file [file ...]]
+                   [--recurse] [--fields name|/name|~name [name|/name|~name ...]]
+                   [--overwrite] [--nobackup] [--group] [--debug [LEVEL]]
+                   [--version]
 
     Insert fields from spreadsheets into KiCad schematics or libraries, or gather
     fields from schematics or libraries and place them into a spreadsheet.
 
     optional arguments:
       -h, --help            show this help message and exit
-      --version, -v         show program's version number and exit
-      --extract file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...], -x file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...]
-                            Extract field values from one or more spreadsheet or
-                            schematic files.
-      --insert file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...], -i file.[xlsx|csv|tsv|sch|lib|dcm] [file.[xlsx|csv|tsv|sch|lib|dcm] ...]
-                            Insert extracted field values into one or more
-                            schematic or spreadsheet files.
+      --extract file [file ...], -x file [file ...]
+                            Extract field values from one or more XLSX, CSV, TSV,
+                            SCH, LIB or DCM files.
+      --insert file [file ...], -i file [file ...]
+                            Insert field values into one or more XLSX, CSV, TSV,
+                            SCH, LIB or DCM files.
       --recurse, -r         Allow recursion from a top-level schematic into lower-
                             level sub-schematics.
-      --overwrite, -w       Allow field insertion into an existing file.
-      --nobackup, -nb       Do *not* create backups before modifying files.
-                            (Default is to make backup files.)
       --fields name|/name|~name [name|/name|~name ...], -f name|/name|~name [name|/name|~name ...]
                             Specify the names of the fields to extract and insert.
                             Place a '/' or '~' in front of a field you wish to
                             omit. (Leave blank to extract/insert *all* fields.)
+      --overwrite, -w       Allow field insertion into an existing file.
+      --nobackup, -nb       Do *not* create backups before modifying files.
+                            (Default is to make backup files.)
+      --group, -g           Group components with the same field values into
+                            single lines when inserting into a spreadsheet or
+                            CSV/TSV. (Default is to have one component per line)
       --debug [LEVEL], -d [LEVEL]
                             Print debugging info. (Larger LEVEL means more info.)
-      --group, -g           Group components with the same field values into
-                            single lines when inserting into spreadsheet and
-                            CSV/TSV. (Default is to have one component per line)
-
+      --version, -v         show program's version number and exit
 
 Examples
 ------------------------
@@ -124,10 +119,25 @@ Adding fields to a schematic parts library is done in an equivalent manner.
 In this case, however, the ``Refs`` column will hold the library name of the
 component rather than its reference designator in a schematic.
 
-You can also use kifield with the description (`.dcm`) file associated with a parts library.
+You can also use KiField with the description (``.dcm``) file associated with a parts library.
 However, description files only support three fields with specific names:
 ``description``, ``keywords`` and ``docfile``.
 Any other fields will be ignored.
+
+
+Making Fields Visible or Invisible
+...................................
+
+To manage the visual clutter of a schematic, you can set the visibility or 
+invisibility of inserted fields as follows:
+
+* Prefixing the header of a column with ``[I]`` will make every entry in that 
+  column invisible. 
+  Prefix with a ``[V]`` to make them all visible. 
+* Any values in the column prefixed with ``[I]`` or ``[V]`` will override
+  the column heading.
+* Without prefixes, any new field is invisible by default.
+* Existing fields retain whatever their original visibility/invisibility was.
 
 
 Removing Fields from a Schematic or Library

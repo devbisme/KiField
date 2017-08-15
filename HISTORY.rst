@@ -3,10 +3,16 @@
 History
 -------
 
+0.1.7 (2017-08-14)
+______________________
+
+* Added visibility/invisibility option for fields.
+
+
 0.1.6 (2017-01-30)
 ______________________
 
-* Added "grouping" option (`--group`) for gathering components with the same field values onto a single line of the XLSX/CSV/TSV file..
+* Added "grouping" option (`--group`) for gathering components with the same field values onto a single line of the XLSX/CSV/TSV file.
 
 
 0.1.5 (2016-11-29)
