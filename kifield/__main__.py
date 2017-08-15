@@ -39,39 +39,41 @@ from . import __version__
 # Command-line interface.
 ###############################################################################
 
-
 def main():
     parser = argparse.ArgumentParser(
-        description=
-        '''Insert fields from spreadsheets into KiCad schematics or libraries,
-            or gather fields from schematics or libraries and place them into
-            a spreadsheet.''')
-    parser.add_argument('--version',
-                        '-v',
-                        action='version',
-                        version='KiField ' + __version__)
+        description=(
+        'Insert fields from spreadsheets into KiCad schematics or libraries, '
+        'or gather fields from schematics or libraries and place them into '
+        'a spreadsheet.'))
     parser.add_argument(
         '--extract',
         '-x',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|tsv|sch|lib|dcm]',
-        help='''Extract field values from one or more spreadsheet or
-            schematic files.''')
+        metavar='file',
+        help='Extract field values from one or more XLSX, CSV, TSV, SCH, LIB or DCM files.')
     parser.add_argument(
         '--insert',
         '-i',
         nargs='+',
         type=str,
-        metavar='file.[xlsx|csv|tsv|sch|lib|dcm]',
-        help='''Insert extracted field values into one or more schematic
-            or spreadsheet files.''')
+        metavar='file',
+        help='Insert field values into one or more XLSX, CSV, TSV, SCH, LIB or DCM files.')
     parser.add_argument(
         '--recurse',
         '-r',
         action='store_true',
-        help='''Allow recursion from a top-level schematic into lower-level
-            sub-schematics.''')
+        help='Allow recursion from a top-level schematic into lower-level sub-schematics.')
+    parser.add_argument(
+        '--fields',
+        '-f',
+        nargs='+',
+        type=str,
+        default=[],
+        metavar='name|/name|~name',
+        help=('Specify the names of the fields to extract and insert. '
+            "Place a '/' or '~' in front of a field you wish to omit. "
+            '(Leave blank to extract/insert *all* fields.)'))
     parser.add_argument('--overwrite',
                         '-w',
                         action='store_true',
@@ -80,18 +82,14 @@ def main():
         '--nobackup',
         '-nb',
         action='store_true',
-        help='''Do *not* create backups before modifying files.
-            (Default is to make backup files.)''')
+        help='Do *not* create backups before modifying files. (Default is to make backup files.)')
     parser.add_argument(
-        '--fields',
-        '-f',
-        nargs='+',
-        type=str,
-        default=[],
-        metavar='name|/name|~name',
-        help='''Specify the names of the fields to extract and insert.
-            Place a '/' or '~' in front of a field you wish to omit.
-            (Leave blank to extract/insert *all* fields.)''')
+        '--group',
+        '-g',
+        action='store_true',
+        help=('Group components with the same field values into single lines when '
+            'inserting into a spreadsheet or CSV/TSV. '
+            '(Default is to have one component per line)'))
     parser.add_argument(
         '--debug',
         '-d',
@@ -100,12 +98,10 @@ def main():
         default=0,
         metavar='LEVEL',
         help='Print debugging info. (Larger LEVEL means more info.)')
-    parser.add_argument(
-        '--group',
-        '-g',
-        action='store_true',
-        help='''Group components with the same field values into single lines when
-            inserting into spreadsheet and CSV/TSV. (Default is to have one component per line)''')
+    parser.add_argument('--version',
+                        '-v',
+                        action='version',
+                        version='KiField ' + __version__)
 
     args = parser.parse_args()
 
