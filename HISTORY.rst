@@ -3,6 +3,12 @@
 History
 -------
 
+0.1.8 (2017-09-23)
+______________________
+
+* Catch exception caused by numeric fields that aren't strings interacting with vis/invis option.
+
+
 0.1.7 (2017-08-14)
 ______________________
 
