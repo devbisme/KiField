@@ -904,23 +904,31 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
             for field_name, field_value in part_fields.items():
 
                 # Create a dict to hold the field visibility attribute.
-                field_attributes = dict()
-                INVIS_PREFIX = '[I]'
-                VISIBLE_PREFIX = '[V]'
-                INVIS_CODE = '0001'
-                VISIBLE_CODE = '0000'
-                if field_name.startswith(INVIS_PREFIX):
-                    field_attributes['attributes'] = INVIS_CODE
-                    field_name = field_name[len(INVIS_PREFIX):]
-                elif field_name.startswith(VISIBLE_PREFIX):
-                    field_attributes['attributes'] = VISIBLE_CODE
-                    field_name = field_name[len(VISIBLE_PREFIX):]
-                if field_value.startswith(INVIS_PREFIX):
-                    field_attributes['attributes'] = INVIS_CODE
-                    field_value = field_value[len(INVIS_PREFIX):]
-                elif field_value.startswith(VISIBLE_PREFIX):
-                    field_attributes['attributes'] = VISIBLE_CODE
-                    field_value = field_value[len(VISIBLE_PREFIX):]
+                try:
+                    field_attributes = dict()
+                    INVIS_PREFIX = '[I]'
+                    VISIBLE_PREFIX = '[V]'
+                    INVIS_CODE = '0001'
+                    VISIBLE_CODE = '0000'
+                    if field_name.startswith(INVIS_PREFIX):
+                        field_attributes['attributes'] = INVIS_CODE
+                        field_name = field_name[len(INVIS_PREFIX):]
+                    elif field_name.startswith(VISIBLE_PREFIX):
+                        field_attributes['attributes'] = VISIBLE_CODE
+                        field_name = field_name[len(VISIBLE_PREFIX):]
+                    if field_value.startswith(INVIS_PREFIX):
+                        field_attributes['attributes'] = INVIS_CODE
+                        field_value = field_value[len(INVIS_PREFIX):]
+                    elif field_value.startswith(VISIBLE_PREFIX):
+                        field_attributes['attributes'] = VISIBLE_CODE
+                        field_value = field_value[len(VISIBLE_PREFIX):]
+                except AttributeError:
+                    # If we get here, it's probably because field_value is not a
+                    # string so the startswith() method wasn't found. Because it's
+                    # not a string, there's no way for it to have a prefix string
+                    # so we can just ignore the exception because the action never
+                    # would have happened anyway.
+                    pass
 
                 # Also store a position for a new field based on the REF position.
                 posx = component.fields[0]['posx']
