@@ -395,7 +395,7 @@ def extract_part_fields_from_xlsx(filename, inc_field_names=None, exc_field_name
                                                                    filename))
 
     try:
-        wb = pyxl.load_workbook(filename)
+        wb = pyxl.load_workbook(filename, data_only=True)
         return extract_part_fields_from_wb(wb, inc_field_names, exc_field_names)
     except FieldExtractionError:
         logger.warn('Field extraction failed on {}.'.format(filename))
@@ -811,7 +811,7 @@ def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse, group_comp
 
     # Either insert fields into an existing workbook, or use an empty one.
     try:
-        wb = pyxl.load_workbook(filename)
+        wb = pyxl.load_workbook(filename, data_only=True)
     except IOError:
         wb = None
 
