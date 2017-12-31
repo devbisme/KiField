@@ -5,7 +5,8 @@
 # It's covered by GPL3.
 #
 
-import sys, shlex
+import sys
+import re
 import os.path
 
 class Documentation(object):
@@ -84,12 +85,21 @@ class Component(object):
         building_fplist = False
         building_draw = False
         for line in data:
+
             line = line.replace('\n', '')
-            s = shlex.shlex(line)
-            s.whitespace_split = True
-            s.commenters = ''
-            s.quotes = '"'
-            line = list(s)
+
+            # Extract all the non-quoted and quoted text pieces, accounting for escaped quotes. 
+            pieces = re.findall(r'[^\s"]+|(?<!\\)".*?(?<!\\)"', line)
+
+            line = []
+            for i in range(len(pieces)):
+                # Merge a piece ending with equals sign with the next piece.
+                if pieces[i] and pieces[i][-1] == '=':
+                    pieces[i] = pieces[i] + pieces[i+1]
+                    pieces[i+1] = ''  # Empty the next piece because it was merged with this one.
+                # Append any non-empty piece.
+                if pieces[i]:
+                    line.append(pieces[i])
 
             if line[0] in self._KEYS:
                 key_list = self._KEYS[line[0]]
