@@ -3,6 +3,12 @@
 History
 -------
 
+0.1.9 (2017-12-31)
+______________________
+
+* Fixed mishandling of quoted strings containing escaped quotation marks.
+
+
 0.1.8 (2017-09-23)
 ______________________
 
