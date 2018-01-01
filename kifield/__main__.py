@@ -130,16 +130,6 @@ def main():
                     allow modifications to it or allow backups.'''
                     .format(file))
                 sys.exit(1)
-            if not args.nobackup:
-                # Create a backup file.
-                index = 1  # Start with this backup file suffix.
-                while True:
-                    backup_file = file + '.{}.bak'.format(index, file)
-                    if not os.path.isfile(backup_file):
-                        # Found an unused backup file name, so make backup.
-                        shutil.copy(file, backup_file)
-                        break  # Backup done, so break out of loop.
-                    index += 1  # Else keep looking for an unused backup file name.
 
     inc_fields = []
     exc_fields = []
@@ -154,7 +144,8 @@ def main():
             inc_field_names=inc_fields,
             exc_field_names=exc_fields,
             group_components=args.group,
-            recurse=args.recurse)
+            recurse=args.recurse,
+            backup = not args.nobackup)
 
 ###############################################################################
 # Main entrypoint.

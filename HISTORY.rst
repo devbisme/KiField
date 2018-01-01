@@ -3,6 +3,12 @@
 History
 -------
 
+0.1.10 (2018-01-01)
+______________________
+
+* File backup now works on all files in a hierarchical schematic.
+
+
 0.1.9 (2017-12-31)
 ______________________
 
