@@ -3,6 +3,13 @@
 History
 -------
 
+0.1.11 (2018-01-04)
+______________________
+
+* Line-feeds and carriage-returns are stripped from strings inserted into .sch or .lib files.
+* Fixed error where reading .lib files was ignoring the first line after the EESchema-LIBRARY header and missing a part DEF.
+
+
 0.1.10 (2018-01-01)
 ______________________
 
