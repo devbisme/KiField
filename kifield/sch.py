@@ -320,7 +320,7 @@ class Schematic(object):
 
         # Remove all CR, LF from each line and re-append LF to the line.
         # This prevents errors caused by an internal CR, LF breaking a line.
-        to_write = [l.translate(str.maketrans('','','\n\r')) + '\n' for l in to_write]
+        to_write = [re.sub(r'[\n\r]', '', l) + '\n' for l in to_write]
 
         f = open(filename, 'w')
         f.writelines(to_write)

@@ -24,6 +24,9 @@ from __future__ import print_function
 from __future__ import unicode_literals
 from __future__ import division
 from __future__ import absolute_import
+from builtins import map
+from builtins import dict
+from builtins import bytes
 from functools import reduce
 from builtins import open
 from builtins import range
@@ -1151,7 +1154,8 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
     '''Insert part fields from a dictionary into a spreadsheet, part library, or schematic.'''
 
     # No files backed-up yet, so clear list of file names.
-    backedup_files.clear()
+    global backedup_files
+    backedup_files = []
 
     logger.log(DEBUG_OVERVIEW,
                'Inserting extracted fields into files {}.'.format(filenames))
