@@ -229,7 +229,6 @@ class SchLib(object):
             sys.stderr.write('The file is not a KiCad Schematic Library File\n')
             return
 
-        self.header.append(f.readline())
         building_component = False
 
         comments = []
