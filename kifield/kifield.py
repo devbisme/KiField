@@ -180,6 +180,9 @@ def create_backup(file):
     if file in backedup_files:
         return
 
+    if not os.path.isfile(file):
+        return
+
     index = 1  # Start with this backup file suffix.
     while True:
         backup_file = '{}.{}.bak'.format(file, index)
