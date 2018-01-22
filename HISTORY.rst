@@ -3,6 +3,13 @@
 History
 -------
 
+
+0.1.12 (2018-01-22)
+______________________
+
+* Fixed error where output was not produced because KiField was first trying to backup a non-existent output file.
+
+
 0.1.11 (2018-01-04)
 ______________________
 
