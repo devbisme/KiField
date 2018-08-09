@@ -522,7 +522,8 @@ def extract_part_fields_from_sch(filename, inc_field_names=None, exc_field_names
         for sheet in sch.sheets:
             for field in sheet.fields:
                 if field['id'] == 'F1':
-                    sheet_file = unquote(field['value'])
+                    #sheet_file = unquote(field['value'])
+                    sheet_file = os.path.join(os.path.dirname(filename),unquote(field['value']))
                     part_fields_dict.update(extract_part_fields_from_sch(sheet_file, inc_field_names, exc_field_names, recurse, depth+1))
                     break
 
