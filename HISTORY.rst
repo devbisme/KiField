@@ -4,6 +4,14 @@ History
 -------
 
 
+0.1.13 (2018-10-28)
+______________________
+
+* Now works on files outside the current directory.
+* Clearer error explanation when part field extraction fails.
+* Simplified installation instructions.
+
+
 0.1.12 (2018-01-22)
 ______________________
 

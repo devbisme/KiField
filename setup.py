@@ -42,13 +42,14 @@ setup(
     install_requires=requirements,
     license="MIT",
     zip_safe=False,
-    keywords='kifield',
+    keywords='kifield KiCad',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3',
+        'Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)',
     ],
 )
