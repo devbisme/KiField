@@ -718,6 +718,10 @@ def extract_part_fields(filenames, inc_field_names=None, exc_field_names=None, r
         print('Total Extracted Part Fields:')
         pprint(part_fields_dict)
 
+    if part_fields_dict is None or len(part_fields_dict) == 0:
+        logger.warn("No part fields were extracted from these files: {}\n  * Did you provide a list of files?\n  * Do these files exist?\n  * Did you annotate your components in the schematic?".format(', '.join(filenames)))
+        return
+
     return part_fields_dict
 
 
@@ -1174,7 +1178,7 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
     }
 
     if part_fields_dict is None or len(part_fields_dict) == 0:
-        logger.warn("There are no field values to insert!")
+        logger.warn("There are no part field values to insert!")
         return
 
     # If inserting into a single file, make a one-entry list.
