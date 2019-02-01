@@ -1030,12 +1030,12 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
     # If this schematic references other schematic sheets, then insert the part fields into those, too.
     if recurse:
         for sheet in sch.sheets:
-            # If filename includes path, save this path
+            # If filename includes a path, save this path to prepend below
             if filename.count('/') > 0:
               prepend_dir = filename.rsplit('/', 1)[0] + '/'
             for field in sheet.fields:
                 if field['id'] == 'F1':
-                    # Prepend path to recursive sheets
+                    # Prepend path for sheets which are nested more than once
                     sheet_file = prepend_dir + unquote(field['value'])
                     insert_part_fields_into_sch(part_fields_dict, sheet_file, recurse, group_components, backup, prepend_dir)
                     break
