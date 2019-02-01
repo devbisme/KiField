@@ -61,6 +61,7 @@ DEBUG_OVERVIEW = logging.DEBUG
 DEBUG_DETAILED = logging.DEBUG - 1
 DEBUG_OBSESSIVE = logging.DEBUG - 2
 
+
 if USING_PYTHON2:
     reload(sys)
     sys.setdefaultencoding('utf8')
@@ -828,7 +829,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
     return wb
 
 
-def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse, group_components, backup):
+def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse, group_components, backup, prepend_dir):
     '''Insert the fields in the extracted part dictionary into an XLSX spreadsheet.'''
 
     logger.log(
@@ -852,7 +853,7 @@ def insert_part_fields_into_xlsx(part_fields_dict, filename, recurse, group_comp
     wb.save(filename)
 
 
-def insert_part_fields_into_csv(part_fields_dict, filename, recurse, group_components, backup):
+def insert_part_fields_into_csv(part_fields_dict, filename, recurse, group_components, backup, prepend_dir):
     '''Insert the fields in the extracted part dictionary into a CSV spreadsheet.'''
 
     logger.log(DEBUG_OVERVIEW,
@@ -879,7 +880,7 @@ def insert_part_fields_into_csv(part_fields_dict, filename, recurse, group_compo
     wb_to_csvfile(wb, filename, dialect)
 
 
-def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_components, backup):
+def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_components, backup, prepend_dir):
     '''Insert the fields in the extracted part dictionary into a schematic.'''
 
     logger.log(
@@ -907,6 +908,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
     # Get an existing schematic or abort. (There's no way we can create
     # a viable schematic file just from part field values.)
     try:
+        print('sch: ' + str(filename))
         sch = Schematic(filename)
     except IOError:
         logger.warn('Schematic file {} not found.'.format(filename))
@@ -921,7 +923,9 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
         # For each reference for this component, search in the dictionary
         # for new or updated fields for this part.
         refs = get_component_refs(component)
+        print('Test0: ' + str(refs))
         for ref in refs:
+            print('Test1: ' + str(ref))
 
             # Get the part fields for the given part reference (or an empty list).
             part_fields = part_fields_dict.get(ref, {})
@@ -937,6 +941,8 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
 
             # Insert the fields from the part dictionary into the component fields.
             for field_name, field_value in part_fields.items():
+
+                print('Test2: ' + str(ref))
 
                 # Create a dict to hold the field visibility attribute.
                 try:
@@ -957,7 +963,10 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                     elif field_value.startswith(VISIBLE_PREFIX):
                         field_attributes['attributes'] = VISIBLE_CODE
                         field_value = field_value[len(VISIBLE_PREFIX):]
+                    print('Test3: ' + str(ref))
                 except AttributeError:
+                    print('AttributeError')
+                    print(str(ref))
                     # If we get here, it's probably because field_value is not a
                     # string so the startswith() method wasn't found. Because it's
                     # not a string, there's no way for it to have a prefix string
@@ -973,10 +982,12 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                 # Get the field id associated with this field name (if there is one).
                 field_id = lib_field_name_to_id.get(field_name, None)
 
+                print('Test4: ' + str(ref))
                 # Search for an existing field with a matching name in the component.
                 for f in component.fields:
 
                     if unquote(f['name']).lower() == field_name.lower():
+                        print('Test5: ' + str(ref))
                         # Update existing named field in component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
@@ -988,6 +999,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                         break
 
                     elif f['id'] == field_id:
+                        print('Test6: ' + str(ref))
                         # Update one of the default, unnamed fields in component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
@@ -1030,14 +1042,18 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
     # If this schematic references other schematic sheets, then insert the part fields into those, too.
     if recurse:
         for sheet in sch.sheets:
+            # If filename includes path, save this path
+            if filename.count('/') > 0:
+              prepend_dir = filename.rsplit('/', 1)[0] + '/'
             for field in sheet.fields:
                 if field['id'] == 'F1':
-                    sheet_file = unquote(field['value'])
-                    insert_part_fields_into_sch(part_fields_dict, sheet_file, recurse, group_components, backup)
+                    # Prepend path to recursive sheets
+                    sheet_file = prepend_dir + unquote(field['value'])
+                    insert_part_fields_into_sch(part_fields_dict, sheet_file, recurse, group_components, backup, prepend_dir)
                     break
 
 
-def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_components, backup):
+def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_components, backup, prepend_dir):
     '''Insert the fields in the extracted part dictionary into a library.'''
 
     logger.log(
@@ -1123,7 +1139,7 @@ def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_compo
     lib.save(filename)
 
 
-def insert_part_fields_into_dcm(part_fields_dict, filename, recurse, group_components, backup):
+def insert_part_fields_into_dcm(part_fields_dict, filename, recurse, group_components, backup, prepend_dir):
     '''Insert the fields in the extracted part dictionary into a DCM file.'''
 
     logger.log(
@@ -1153,7 +1169,7 @@ def insert_part_fields_into_dcm(part_fields_dict, filename, recurse, group_compo
     dcm.save(filename)
 
 
-def insert_part_fields(part_fields_dict, filenames, recurse, group_components, backup):
+def insert_part_fields(part_fields_dict, filenames, recurse, group_components, backup, prepend_dir):
     '''Insert part fields from a dictionary into a spreadsheet, part library, or schematic.'''
 
     # No files backed-up yet, so clear list of file names.
@@ -1188,7 +1204,7 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
 
             # Call the insertion function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            insertion_functions[f_extension](part_fields_dict, f, recurse, group_components, backup)
+            insertion_functions[f_extension](part_fields_dict, f, recurse, group_components, backup, prepend_dir)
 
         except IOError:
             logger.warn('Unable to write to file: {}.'.format(f))
@@ -1197,11 +1213,11 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
             logger.warn('Unknown file type for field insertion: {}'.format(f))
 
 
-def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None, recurse=False, group_components=False, backup=True):
+def kifield(extract_filenames, insert_filenames, inc_field_names=None, exc_field_names=None, recurse=False, group_components=False, backup=True, prepend_dir='./'):
     '''Extract fields from a set of files and insert them into another set of files.'''
 
     # Extract a dictionary of part field values from a set of files.
     part_fields_dict = extract_part_fields(extract_filenames, inc_field_names, exc_field_names, recurse)
 
     # Insert entries from the dictionary into these files.
-    insert_part_fields(part_fields_dict, insert_filenames, recurse, group_components, backup)
+    insert_part_fields(part_fields_dict, insert_filenames, recurse, group_components, backup, prepend_dir)
