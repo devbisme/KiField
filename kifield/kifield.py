@@ -61,7 +61,6 @@ DEBUG_OVERVIEW = logging.DEBUG
 DEBUG_DETAILED = logging.DEBUG - 1
 DEBUG_OBSESSIVE = logging.DEBUG - 2
 
-
 if USING_PYTHON2:
     reload(sys)
     sys.setdefaultencoding('utf8')
@@ -908,7 +907,6 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
     # Get an existing schematic or abort. (There's no way we can create
     # a viable schematic file just from part field values.)
     try:
-        print('sch: ' + str(filename))
         sch = Schematic(filename)
     except IOError:
         logger.warn('Schematic file {} not found.'.format(filename))
@@ -923,9 +921,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
         # For each reference for this component, search in the dictionary
         # for new or updated fields for this part.
         refs = get_component_refs(component)
-        print('Test0: ' + str(refs))
         for ref in refs:
-            print('Test1: ' + str(ref))
 
             # Get the part fields for the given part reference (or an empty list).
             part_fields = part_fields_dict.get(ref, {})
@@ -941,8 +937,6 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
 
             # Insert the fields from the part dictionary into the component fields.
             for field_name, field_value in part_fields.items():
-
-                print('Test2: ' + str(ref))
 
                 # Create a dict to hold the field visibility attribute.
                 try:
@@ -963,10 +957,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                     elif field_value.startswith(VISIBLE_PREFIX):
                         field_attributes['attributes'] = VISIBLE_CODE
                         field_value = field_value[len(VISIBLE_PREFIX):]
-                    print('Test3: ' + str(ref))
                 except AttributeError:
-                    print('AttributeError')
-                    print(str(ref))
                     # If we get here, it's probably because field_value is not a
                     # string so the startswith() method wasn't found. Because it's
                     # not a string, there's no way for it to have a prefix string
@@ -982,12 +973,10 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                 # Get the field id associated with this field name (if there is one).
                 field_id = lib_field_name_to_id.get(field_name, None)
 
-                print('Test4: ' + str(ref))
                 # Search for an existing field with a matching name in the component.
                 for f in component.fields:
 
                     if unquote(f['name']).lower() == field_name.lower():
-                        print('Test5: ' + str(ref))
                         # Update existing named field in component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
@@ -999,7 +988,6 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                         break
 
                     elif f['id'] == field_id:
-                        print('Test6: ' + str(ref))
                         # Update one of the default, unnamed fields in component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
