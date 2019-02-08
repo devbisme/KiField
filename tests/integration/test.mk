@@ -2,7 +2,7 @@ PROG = kifield
 #PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
-test: test1 test2 test3 test4
+test: test1 test2 test3 test4 test5
 	@echo 'All tests passed!'
 	@$(PROG) -v
 
@@ -76,6 +76,22 @@ test4:
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'
 
+test5:
+	@rm -f $@*.*
+    # Copy the hierarchical schematic file.
+	@cp hier_test2.sch $@1.sch
+    # Extract the fields from the schematic into a CSV file.
+	@$(PROG) -x $@1.sch -i $@.csv -r $(FLAGS)
+    # Restore the fields from the CSV file back into the schematic.
+	@$(PROG) -x $@.csv -i $@1.sch -r $(FLAGS)
+    # Extract the schematic fields into an XLSX file.
+	@$(PROG) -x $@1.sch -i $@.xlsx -r $(FLAGS)
+    # Extract the contents of the XLSX file into a CSV file.
+	@$(PROG) -x $@.xlsx -i $@1.csv -r $(FLAGS)
+    # The extracted CSV file should match the original CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
 clean:
-	@rm -f test1*.* test2*.* test3*.* test4*.*
+	@rm -f test1*.* test2*.* test3*.* test4*.* test5*.*
 	@echo 'Cleanup complete.'
