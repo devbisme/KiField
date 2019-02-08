@@ -64,6 +64,9 @@ DEBUG_OBSESSIVE = logging.DEBUG - 2
 if USING_PYTHON2:
     reload(sys)
     sys.setdefaultencoding('utf8')
+else:
+    # Python3 doesn't have basestring, so create one.
+    basestring = type('')
 
 # Assign some names to the unnamed fields in a schematic or library component.
 sch_field_id_to_name = {'1': 'value', '2': 'footprint', '3': 'datasheet'}
@@ -89,12 +92,8 @@ def quote(s):
 def unquote(s):
     '''Remove any quote marks around a string.'''
 
-    if USING_PYTHON2:
-        if not isinstance(s, basestring):
-            return s  # Not a string, so just return it.
-    else:
-        if not isinstance(s, str):
-            return s  # Not a string, so just return it.
+    if not isinstance(s, basestring):
+        return s  # Not a string, so just return it.
     try:
         # This returns inner part of "..." or '...' strings.
         return re.match('^([\'"])(.*)\\1$', s).group(2)
@@ -109,7 +108,7 @@ def explode(collapsed):
     if collapsed == '':
         return []
     individual_refs = []
-    if isinstance(collapsed, str) or isinstance(collapsed, basestring):
+    if isinstance(collapsed, basestring):
         range_refs = re.split(',|;', collapsed)
         for r in range_refs:
             mtch = re.match(
@@ -301,6 +300,9 @@ def find_header(ws):
 
 def lc_get_close_matches(lbl, possibilities, num_matches=3, cutoff=0.6):
     '''Return list of closest matches to lbl from possibilities (case-insensitive).'''
+
+    # Strip any non-strings so str.lower() doesn't crash.
+    possibilities = [p for p in possibilities if isinstance(p, basestring)]
 
     if USING_PYTHON2:
         lc_lbl = str.lower(unicode(lbl))
