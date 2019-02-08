@@ -4,6 +4,13 @@ History
 -------
 
 
+0.1.14 (2019-01-08)
+______________________
+
+* Fixed handling of relative sheetpaths in hierarchical schematics.
+* Fixed string problems that occur under Anaconda.
+
+
 0.1.13 (2018-10-28)
 ______________________
 

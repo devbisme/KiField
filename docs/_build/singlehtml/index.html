@@ -4,31 +4,24 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>kifield 0.1.12 documentation</title>
+    <title>kifield 0.1.14 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.1.12',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
+    
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
-  </head>
-  <body>
+  </head><body>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.12 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.14 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -76,12 +69,7 @@ and inserts them into one or more KiCad schematics or libraries.</li>
 <span id="document-installation"></span><div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
 <p>At the command line:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ easy_install kifield
-</pre></div>
-</div>
-<p>Or, if you have virtualenvwrapper installed:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ mkvirtualenv kifield
-$ pip install kifield
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ pip install kifield
 </pre></div>
 </div>
 </div>
@@ -98,7 +86,7 @@ the spreadsheet file into the schematic or library.</li>
 </ol>
 <div class="section" id="command-line-options">
 <h3>Command-line Options<a class="headerlink" href="#command-line-options" title="Permalink to this headline">¶</a></h3>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">kifield</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">extract</span> <span class="n">file</span> <span class="p">[</span><span class="n">file</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">insert</span> <span class="n">file</span> <span class="p">[</span><span class="n">file</span> <span class="o">...</span><span class="p">]]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">kifield</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">extract</span> <span class="n">file</span> <span class="p">[</span><span class="n">file</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">insert</span> <span class="n">file</span> <span class="p">[</span><span class="n">file</span> <span class="o">...</span><span class="p">]]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">recurse</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">fields</span> <span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="p">[</span><span class="n">name</span><span class="o">|/</span><span class="n">name</span><span class="o">|~</span><span class="n">name</span> <span class="o">...</span><span class="p">]]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">overwrite</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">nobackup</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">group</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">debug</span> <span class="p">[</span><span class="n">LEVEL</span><span class="p">]]</span>
                <span class="p">[</span><span class="o">--</span><span class="n">version</span><span class="p">]</span>
@@ -137,16 +125,16 @@ the spreadsheet file into the schematic or library.</li>
 <div class="section" id="adding-fields-to-a-schematic-or-library">
 <h4>Adding Fields to a Schematic or Library<a class="headerlink" href="#adding-fields-to-a-schematic-or-library" title="Permalink to this headline">¶</a></h4>
 <p>To extract the fields from one or more schematics and place them in a CSV file:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_design_fields</span><span class="o">.</span><span class="n">csv</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_design_fields</span><span class="o">.</span><span class="n">csv</span>
 </pre></div>
 </div>
 <p>Or you can place them in an XLSX spreadsheet:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_Design_fields</span><span class="o">.</span><span class="n">xlsx</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_Design_fields</span><span class="o">.</span><span class="n">xlsx</span>
 </pre></div>
 </div>
 <p>The result will look something like this (I added spaces to format it into
 nice columns):</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span>
 <span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="o">.</span><span class="mi">3</span><span class="n">x5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span>
 <span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">C_0805</span><span class="p">,</span>            <span class="mi">10</span><span class="n">uF</span>
 <span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">Connect</span><span class="p">:</span><span class="n">BARREL_JACK</span><span class="p">,</span>              <span class="n">BARREL_JACK</span>
@@ -165,9 +153,9 @@ nice columns):</p>
 </pre></div>
 </div>
 <p>Now suppose you want to add the manufacturers part number to some of the
-components. Just add a new column named <code class="docutils literal"><span class="pre">manf#</span></code> and fill in some of the
+components. Just add a new column named <code class="docutils literal notranslate"><span class="pre">manf#</span></code> and fill in some of the
 values like so:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
 <span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="o">.</span><span class="mi">3</span><span class="n">x5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span><span class="p">,</span>        <span class="n">UWX1A101MCL1GB</span>
 <span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">C_0805</span><span class="p">,</span>            <span class="mi">10</span><span class="n">uF</span><span class="p">,</span>         <span class="n">UWX1A101MCL1GB</span>
 <span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">Connect</span><span class="p">:</span><span class="n">BARREL_JACK</span><span class="p">,</span>              <span class="n">BARREL_JACK</span><span class="p">,</span>  <span class="n">PJ002A</span>
@@ -187,28 +175,28 @@ values like so:</p>
 </div>
 <p>To insert the manufacturer’s numbers back into the schematic, just swap the roles
 of the CSV and schematic files:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design_fields</span><span class="o">.</span><span class="n">csv</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">w</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">kifield</span> <span class="o">-</span><span class="n">x</span> <span class="n">my_design_fields</span><span class="o">.</span><span class="n">csv</span> <span class="o">-</span><span class="n">i</span> <span class="n">my_design</span><span class="o">.</span><span class="n">sch</span> <span class="o">-</span><span class="n">w</span>
 </pre></div>
 </div>
 <p>Now when you examine the parts in eeschema, you should see the added manufacturer’s
 part numbers:</p>
 <img alt="_images/example1.png" src="_images/example1.png" />
 <p>Adding fields to a schematic parts library is done in an equivalent manner.
-In this case, however, the <code class="docutils literal"><span class="pre">Refs</span></code> column will hold the library name of the
+In this case, however, the <code class="docutils literal notranslate"><span class="pre">Refs</span></code> column will hold the library name of the
 component rather than its reference designator in a schematic.</p>
-<p>You can also use KiField with the description (<code class="docutils literal"><span class="pre">.dcm</span></code>) file associated with a parts library.
+<p>You can also use KiField with the description (<code class="docutils literal notranslate"><span class="pre">.dcm</span></code>) file associated with a parts library.
 However, description files only support three fields with specific names:
-<code class="docutils literal"><span class="pre">description</span></code>, <code class="docutils literal"><span class="pre">keywords</span></code> and <code class="docutils literal"><span class="pre">docfile</span></code>.
+<code class="docutils literal notranslate"><span class="pre">description</span></code>, <code class="docutils literal notranslate"><span class="pre">keywords</span></code> and <code class="docutils literal notranslate"><span class="pre">docfile</span></code>.
 Any other fields will be ignored.</p>
 <div class="section" id="making-fields-visible-or-invisible">
 <h5>Making Fields Visible or Invisible<a class="headerlink" href="#making-fields-visible-or-invisible" title="Permalink to this headline">¶</a></h5>
 <p>To manage the visual clutter of a schematic, you can set the visibility or
 invisibility of inserted fields as follows:</p>
 <ul class="simple">
-<li>Prefixing the header of a column with <code class="docutils literal"><span class="pre">[I]</span></code> will make every entry in that
+<li>Prefixing the header of a column with <code class="docutils literal notranslate"><span class="pre">[I]</span></code> will make every entry in that
 column invisible.
-Prefix with a <code class="docutils literal"><span class="pre">[V]</span></code> to make them all visible.</li>
-<li>Any values in the column prefixed with <code class="docutils literal"><span class="pre">[I]</span></code> or <code class="docutils literal"><span class="pre">[V]</span></code> will override
+Prefix with a <code class="docutils literal notranslate"><span class="pre">[V]</span></code> to make them all visible.</li>
+<li>Any values in the column prefixed with <code class="docutils literal notranslate"><span class="pre">[I]</span></code> or <code class="docutils literal notranslate"><span class="pre">[V]</span></code> will override
 the column heading.</li>
 <li>Without prefixes, any new field is invisible by default.</li>
 <li>Existing fields retain whatever their original visibility/invisibility was.</li>
@@ -219,7 +207,7 @@ the column heading.</li>
 <h4>Removing Fields from a Schematic or Library<a class="headerlink" href="#removing-fields-from-a-schematic-or-library" title="Permalink to this headline">¶</a></h4>
 <p>It’s also easy to remove fields from a schematic or library.
 Just delete all the data for a spreadsheet column but <strong>leave the header</strong> like so:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
 <span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="mi">100</span><span class="n">uF</span><span class="p">,</span>
 <span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="p">,</span>          <span class="mi">10</span><span class="n">uF</span><span class="p">,</span>
 <span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="p">,</span>          <span class="n">BARREL_JACK</span><span class="p">,</span>
@@ -250,12 +238,12 @@ or library:</p>
 not insert or change any field values for those parts because there is no way to locate
 them in the schematic or library file with the reference removed.
 You can also achieve the same result by deleting the entire row of the spreadsheet.</li>
-<li>Use KiField’s <code class="docutils literal"><span class="pre">--fields</span></code> option to specify the names of one or more spreadsheet columns
+<li>Use KiField’s <code class="docutils literal notranslate"><span class="pre">--fields</span></code> option to specify the names of one or more spreadsheet columns
 whose values will be inserted into the schematic or library file.
 The values in any other column will be ignored.
 You can also omit one or more fields by adding a ‘/’ or ‘~’ to the beginning
 of their names. In that case, the values in all the other columns are inserted.
-(Omitting the <code class="docutils literal"><span class="pre">--fields</span></code> option or entering a blank list causes KiField to
+(Omitting the <code class="docutils literal notranslate"><span class="pre">--fields</span></code> option or entering a blank list causes KiField to
 insert the values from <strong>all</strong> the columns in the spreadsheet.)</li>
 </ol>
 </div>
@@ -264,9 +252,9 @@ insert the values from <strong>all</strong> the columns in the spreadsheet.)</li
 <p>A lot of work goes into creating a schematic or parts library.
 It would be a shame if anything happened to them.
 For this reason, KiField makes a backup of any file it is about to change.
-You can turn off this behavior using KiField’s <code class="docutils literal"><span class="pre">--nobackup</span></code> option.</p>
+You can turn off this behavior using KiField’s <code class="docutils literal notranslate"><span class="pre">--nobackup</span></code> option.</p>
 <p>In addition, if KiField is inserting values into an existing schematic
-or library file, then you must use the <code class="docutils literal"><span class="pre">--overwrite</span></code> option.</p>
+or library file, then you must use the <code class="docutils literal notranslate"><span class="pre">--overwrite</span></code> option.</p>
 </div>
 </div>
 </div>
@@ -322,25 +310,25 @@ are welcome :)</li>
 <li><p class="first">Fork the <cite>kifield</cite> repo on GitHub.</p>
 </li>
 <li><p class="first">Clone your fork locally:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/kifield.git
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git clone git@github.com:your_name_here/kifield.git
 </pre></div>
 </div>
 </li>
 <li><p class="first">Install your local copy into a virtualenv. Assuming you have virtualenvwrapper installed, this is how you set up your fork for local development:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ mkvirtualenv kifield
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ mkvirtualenv kifield
 $ cd kifield/
 $ python setup.py develop
 </pre></div>
 </div>
 </li>
 <li><p class="first">Create a branch for local development:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git checkout -b name-of-your-bugfix-or-feature
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git checkout -b name-of-your-bugfix-or-feature
 </pre></div>
 </div>
 <p>Now you can make your changes locally.</p>
 </li>
 <li><p class="first">When you’re done making changes, check that your changes pass flake8 and the tests, including testing other Python versions with tox:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ flake8 kifield tests
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ flake8 kifield tests
 $ python setup.py test
 $ tox
 </pre></div>
@@ -348,7 +336,7 @@ $ tox
 <p>To get flake8 and tox, just pip install them into your virtualenv.</p>
 </li>
 <li><p class="first">Commit your changes and push your branch to GitHub:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ git add .
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ git add .
 $ git commit -m &quot;Your detailed description of your changes.&quot;
 $ git push origin name-of-your-bugfix-or-feature
 </pre></div>
@@ -374,7 +362,7 @@ and make sure that the tests pass for all supported Python versions.</li>
 <div class="section" id="tips">
 <h3>Tips<a class="headerlink" href="#tips" title="Permalink to this headline">¶</a></h3>
 <p>To run a subset of tests:</p>
-<div class="highlight-default"><div class="highlight"><pre><span></span>$ python -m unittest tests.test_kifield
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python -m unittest tests.test_kifield
 </pre></div>
 </div>
 </div>
@@ -395,81 +383,96 @@ and make sure that the tests pass for all supported Python versions.</li>
 <span id="document-history"></span><div class="section" id="history">
 <h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
-<h3>0.1.12 (2018-01-22)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>0.1.14 (2019-01-08)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
-<li>Fixed error where output was not produced because kifield was trying to backup a non-existent output file.</li>
+<li>Fixed handling of relative sheetpaths in hierarchical schematics.</li>
+<li>Fixed string problems that occur under Anaconda.</li>
 </ul>
 </div>
 <div class="section" id="id2">
-<h3>0.1.11 (2018-01-04)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>0.1.13 (2018-10-28)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Now works on files outside the current directory.</li>
+<li>Clearer error explanation when part field extraction fails.</li>
+<li>Simplified installation instructions.</li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>0.1.12 (2018-01-22)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fixed error where output was not produced because KiField was first trying to backup a non-existent output file.</li>
+</ul>
+</div>
+<div class="section" id="id4">
+<h3>0.1.11 (2018-01-04)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Line-feeds and carriage-returns are stripped from strings inserted into .sch or .lib files.</li>
 <li>Fixed error where reading .lib files was ignoring the first line after the EESchema-LIBRARY header and missing a part DEF.</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>0.1.10 (2018-01-01)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>0.1.10 (2018-01-01)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>File backup now works on all files in a hierarchical schematic.</li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>0.1.9 (2017-12-31)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>0.1.9 (2017-12-31)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed mishandling of quoted strings containing escaped quotation marks.</li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>0.1.8 (2017-09-23)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>0.1.8 (2017-09-23)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Catch exception caused by numeric fields that aren’t strings interacting with vis/invis option.</li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>0.1.7 (2017-08-14)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>0.1.7 (2017-08-14)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added visibility/invisibility option for fields.</li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added “grouping” option (<cite>–group</cite>) for gathering components with the same field values onto a single line of the XLSX/CSV/TSV file.</li>
 </ul>
 </div>
-<div class="section" id="id8">
-<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added recursive operations on hierarchical schematics so everything can be handled just by processing the top-level file.</li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added support for TSV files (thanks, <a class="reference external" href="mailto:kaspar&#46;emanuel&#37;&#52;&#48;gmail&#46;com">kaspar<span>&#46;</span>emanuel<span>&#64;</span>gmail<span>&#46;</span>com</a>).</li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed issue where all the fields from multi-unit components in a schematic were not appearing in the csv file.</li>
 </ul>
 </div>
-<div class="section" id="id11">
-<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed issues #3 and #4 regarding incompatibilities with openpyxl 2.4.0a1.</li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added the ability to extract/insert fields in DCM files.</li>
 <li>Added the ability to explicitly exclude fields from extraction/insertion.</li>
 </ul>
 </div>
-<div class="section" id="id13">
-<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>First release on PyPI.</li>
 </ul>
@@ -492,7 +495,7 @@ and make sure that the tests pass for all supported Python versions.</li>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html#document-index">Table Of Contents</a></h3>
+  <h3><a href="index.html#document-index">Table of Contents</a></h3>
   <ul>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-readme">kifield</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="index.html#features">Features</a></li>
@@ -517,19 +520,21 @@ and make sure that the tests pass for all supported Python versions.</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-history">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.12 (2018-01-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.11 (2018-01-04)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.10 (2018-01-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.9 (2017-12-31)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.8 (2017-09-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.7 (2017-08-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.6 (2017-01-30)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id8">0.1.5 (2016-11-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id9">0.1.4 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id10">0.1.3 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id11">0.1.2 (2016-04-13)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id12">0.1.1 (2016-02-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id13">0.1.0 (2016-01-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.14 (2019-01-08)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.13 (2018-10-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.12 (2018-01-22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.11 (2018-01-04)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.10 (2018-01-01)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.9 (2017-12-31)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.8 (2017-09-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id8">0.1.7 (2017-08-14)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id9">0.1.6 (2017-01-30)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id10">0.1.5 (2016-11-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id11">0.1.4 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id12">0.1.3 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id13">0.1.2 (2016-04-13)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id14">0.1.1 (2016-02-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id15">0.1.0 (2016-01-29)</a></li>
 </ul>
 </li>
 </ul>
@@ -541,12 +546,12 @@ and make sure that the tests pass for all supported Python versions.</li>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.12 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.14 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, XESS Corp..
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.6.3.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.8.2.
     </div>
   </body>
 </html>
