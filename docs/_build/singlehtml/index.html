@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>kifield 0.1.14 documentation</title>
+    <title>kifield 0.1.15 documentation</title>
     <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
@@ -21,7 +21,7 @@
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.14 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.15 documentation</a> &#187;</li> 
       </ul>
     </div>  
 
@@ -383,96 +383,102 @@ and make sure that the tests pass for all supported Python versions.</li>
 <span id="document-history"></span><div class="section" id="history">
 <h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
-<h3>0.1.14 (2019-01-08)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>0.1.15 (2019-02-17)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li>Fixed problems caused by new 2.6.0 version of openpyxl.</li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>0.1.14 (2019-01-08)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed handling of relative sheetpaths in hierarchical schematics.</li>
 <li>Fixed string problems that occur under Anaconda.</li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h3>0.1.13 (2018-10-28)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>0.1.13 (2018-10-28)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Now works on files outside the current directory.</li>
 <li>Clearer error explanation when part field extraction fails.</li>
 <li>Simplified installation instructions.</li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>0.1.12 (2018-01-22)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>0.1.12 (2018-01-22)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed error where output was not produced because KiField was first trying to backup a non-existent output file.</li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>0.1.11 (2018-01-04)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>0.1.11 (2018-01-04)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Line-feeds and carriage-returns are stripped from strings inserted into .sch or .lib files.</li>
 <li>Fixed error where reading .lib files was ignoring the first line after the EESchema-LIBRARY header and missing a part DEF.</li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>0.1.10 (2018-01-01)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>0.1.10 (2018-01-01)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>File backup now works on all files in a hierarchical schematic.</li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>0.1.9 (2017-12-31)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>0.1.9 (2017-12-31)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed mishandling of quoted strings containing escaped quotation marks.</li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>0.1.8 (2017-09-23)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>0.1.8 (2017-09-23)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Catch exception caused by numeric fields that aren’t strings interacting with vis/invis option.</li>
 </ul>
 </div>
-<div class="section" id="id8">
-<h3>0.1.7 (2017-08-14)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>0.1.7 (2017-08-14)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added visibility/invisibility option for fields.</li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added “grouping” option (<cite>–group</cite>) for gathering components with the same field values onto a single line of the XLSX/CSV/TSV file.</li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added recursive operations on hierarchical schematics so everything can be handled just by processing the top-level file.</li>
 </ul>
 </div>
-<div class="section" id="id11">
-<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added support for TSV files (thanks, <a class="reference external" href="mailto:kaspar&#46;emanuel&#37;&#52;&#48;gmail&#46;com">kaspar<span>&#46;</span>emanuel<span>&#64;</span>gmail<span>&#46;</span>com</a>).</li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed issue where all the fields from multi-unit components in a schematic were not appearing in the csv file.</li>
 </ul>
 </div>
-<div class="section" id="id13">
-<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Fixed issues #3 and #4 regarding incompatibilities with openpyxl 2.4.0a1.</li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>Added the ability to extract/insert fields in DCM files.</li>
 <li>Added the ability to explicitly exclude fields from extraction/insertion.</li>
 </ul>
 </div>
-<div class="section" id="id15">
-<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li>First release on PyPI.</li>
 </ul>
@@ -520,21 +526,22 @@ and make sure that the tests pass for all supported Python versions.</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-history">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.14 (2019-01-08)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.13 (2018-10-28)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.12 (2018-01-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.11 (2018-01-04)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.10 (2018-01-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.9 (2017-12-31)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.8 (2017-09-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id8">0.1.7 (2017-08-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id9">0.1.6 (2017-01-30)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id10">0.1.5 (2016-11-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id11">0.1.4 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id12">0.1.3 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id13">0.1.2 (2016-04-13)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id14">0.1.1 (2016-02-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id15">0.1.0 (2016-01-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.15 (2019-02-17)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.14 (2019-01-08)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.13 (2018-10-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.12 (2018-01-22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.11 (2018-01-04)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.10 (2018-01-01)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.9 (2017-12-31)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id8">0.1.8 (2017-09-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id9">0.1.7 (2017-08-14)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id10">0.1.6 (2017-01-30)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id11">0.1.5 (2016-11-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id12">0.1.4 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id13">0.1.3 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id14">0.1.2 (2016-04-13)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id15">0.1.1 (2016-02-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id16">0.1.0 (2016-01-29)</a></li>
 </ul>
 </li>
 </ul>
@@ -546,7 +553,7 @@ and make sure that the tests pass for all supported Python versions.</li>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.14 documentation</a> &#187;</li> 
+        <li class="nav-item nav-item-0"><a href="index.html#document-index">kifield 0.1.15 documentation</a> &#187;</li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">

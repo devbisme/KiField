@@ -20,7 +20,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'future >= 0.15.0',
-    'openpyxl >= 2.3.2',
+    'openpyxl >= 2.6.0',
 ]
 
 setup(
