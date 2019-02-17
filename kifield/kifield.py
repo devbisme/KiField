@@ -324,10 +324,7 @@ def find_header_column(header, lbl):
             logger.log(DEBUG_OBSESSIVE,
                        'Found {} on header column {}.'.format(lbl,
                                                               cell.column))
-            try:
-                return pyxl.utils.cell.column_index_from_string(cell.column), lbl_match
-            except AttributeError:
-                return pyxl.cell.column_index_from_string(cell.column), lbl_match
+            return cell.column, lbl_match
     raise FindLabelError('{} not found in spreadsheet'.format(lbl))
 
 
@@ -373,10 +370,8 @@ def extract_part_fields_from_wb(wb, inc_field_names=None, exc_field_names=None, 
         refs = [r.value for r in list(ws.columns)[refs_c - 1][header_row:]]
 
         # Make a dict of spreadsheet column indexes keyed by their field name.
-        try:
-            field_cols = {c.value: pyxl.utils.cell.column_index_from_string(c.column) for c in header}
-        except AttributeError:
-            field_cols = {c.value: pyxl.cell.column_index_from_string(c.column) for c in header}
+        field_cols = {c.value: c.column for c in header}
+
         # Get the field names.
         field_names = list(field_cols.keys())
         # Keep only the allowed field names.
@@ -760,12 +755,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
     header_labels = [cell.value for cell in headers]
 
     # Get column for each header field.
-    try:
-        header_columns = {h.value: pyxl.utils.cell.column_index_from_string(h.column)
-                      for h in headers}
-    except AttributeError:
-        header_columns = {h.value: pyxl.cell.column_index_from_string(h.column)
-                      for h in headers}
+    header_columns = {h.value: h.column for h in headers}
 
     # Next open column. Combine with [0] in case there are no headers.
     next_header_column = max(list(header_columns.values()) + [0]) + 1
