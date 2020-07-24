@@ -86,7 +86,12 @@ def quote(s):
 
     if s is None:
         return s
-    return '"' + str(s) + '"'
+    # Place a backslash before every double-quote.
+    escq = re.sub(r'"', r'\"', s)
+    # Any double-quote with two backslashes already had a backslash, so remove one.
+    escq = re.sub(r'\\"', r'\"', s)
+    # Surround with double quotes.
+    return '"' + escq + '"'
 
 
 def unquote(s):
