@@ -86,10 +86,12 @@ def quote(s):
 
     if s is None:
         return s
-    # Place a backslash before every double-quote.
+
+    # Place a backslash before every double-quote and then remove a backslash
+    # from any quote with two backslashes because it already had one.
     escq = re.sub(r'"', r'\"', s)
-    # Any double-quote with two backslashes already had a backslash, so remove one.
-    escq = re.sub(r'\\"', r'\"', s)
+    escq = re.sub(r'\\\\"', r'\"', escq)
+
     # Surround with double quotes.
     return '"' + escq + '"'
 
@@ -981,7 +983,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                         # Update existing named field in component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
-                                       ref, f['id'], f['ref'], field_value))
+                                       ref, f['id'], f['ref'], quote(field_value)))
                         f['ref'] = quote(field_value)
                         # Set field attributes but don't change its position.
                         if 'attributes' in field_attributes:
@@ -992,7 +994,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                         # Update one of the default, unnamed fields in component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
-                                       ref, f['id'], f['ref'], field_value))
+                                       ref, f['id'], f['ref'], quote(field_value)))
                         f['ref'] = quote(field_value)
                         # Set field attributes but don't change its position.
                         if 'attributes' in field_attributes:
@@ -1011,7 +1013,7 @@ def insert_part_fields_into_sch(part_fields_dict, filename, recurse, group_compo
                         logger.log(DEBUG_OBSESSIVE,
                                    'Adding {} field {} with value {}'.format(
                                        ref, component.fields[-1]['id'],
-                                       field_value))
+                                       quote(field_value)))
 
                 # Remove any named fields with empty values.
                 component.fields = [
@@ -1084,7 +1086,7 @@ def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_compo
                     logger.log(DEBUG_OBSESSIVE,
                                'Updating {} field {} from {} to {}'.format(
                                    component_name, field_name, f['name'],
-                                   field_value))
+                                   quote(field_value)))
                     f['name'] = quote(field_value)
                     break
 
@@ -1094,14 +1096,14 @@ def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_compo
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
                                        component_name, field_id,
-                                       f['reference'], field_value))
+                                       f['reference'], quote(field_value)))
                         f['reference'] = quote(field_value)
                     else:
                         # Update one of the F1, F2, or F3 fields in the component.
                         logger.log(DEBUG_OBSESSIVE,
                                    'Updating {} field {} from {} to {}'.format(
                                        component_name, field_id, f['name'],
-                                       field_value))
+                                       quote(field_value)))
                         f['name'] = quote(field_value)
                     break
 
@@ -1116,7 +1118,7 @@ def insert_part_fields_into_lib(part_fields_dict, filename, recurse, group_compo
                     component.fields.append(new_field)
                     logger.log(DEBUG_OBSESSIVE,
                                'Adding {} field {} with value {}'.format(
-                                   component_name, field_name, field_value))
+                                   component_name, field_name, quote(field_value)))
 
         # Remove any named fields with empty values.
         component.fields = [
