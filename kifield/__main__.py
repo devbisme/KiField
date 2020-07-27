@@ -33,7 +33,7 @@ import shutil
 import sys
 import logging
 from .kifield import *
-from . import __version__
+from .pckg_info import __version__
 
 ###############################################################################
 # Command-line interface.

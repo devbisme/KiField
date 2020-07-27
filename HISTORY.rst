@@ -4,6 +4,12 @@ History
 -------
 
 
+0.1.16 (2020-07-26)
+______________________
+
+* Fixed problem with unescaped quote being inserted into schematics/libraries.
+
+
 0.1.15 (2019-02-17)
 ______________________
 
