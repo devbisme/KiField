@@ -1308,10 +1308,11 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
 
 
 def clean_part_fields(part_fields_dict):
-    """Clean field values (i.e., replace any newlines with spaces."""
+    """Clean field values (i.e., remove or replace any newlines with spaces.)"""
     for part, fields in part_fields_dict.items():
         for k, v in fields.items():
-            fields[k] = re.sub("[\n\r]+", " ", v)
+            v = re.sub("[\n\r]+$", "", v) # Remove newlines at end of field.
+            fields[k] = re.sub("[\n\r]+", " ", v) # Replace newlines within field.
 
 
 def kifield(
