@@ -203,10 +203,18 @@ class Schematic(object):
 
         building_block = False
 
+        full_line = ""
+
         while True:
             line = f.readline()
             if not line:
                 break
+
+            full_line += line
+            if len(re.findall(r'(?<!\\)"', full_line))%2:
+                continue
+            line = full_line
+            full_line = ""
 
             if line.startswith("LIBS:"):
                 self.libs.append(line)
