@@ -798,15 +798,24 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
 
     ws = wb.active  # Get the active sheet from the workbook.
 
+    def set_cell_format(cell):
+        """Set cell to TEXT format if it contains a string."""
+        if cell.data_type == 's':
+            cell.number_format = '@'
+
     if ws.min_column == ws.max_column:
         # If the given worksheet is empty, then create one using the part field labels.
         # Create header row with a column for each part field.
         for c, lbl in enumerate(field_labels, 1):
-            ws.cell(row=1, column=c).value = lbl
+            cell = ws.cell(row=1, column=c)
+            cell.value = lbl
+            set_cell_format(cell)
 
         # Enter the part references into the part reference column.
         for row, ref in enumerate(sorted(part_fields_dict.keys()), 2):
-            ws.cell(row=row, column=1).value = ref
+            cell = ws.cell(row=row, column=1)
+            cell.value = ref
+            set_cell_format(cell)
 
     # Get the header row from the worksheet.
     header_row, headers = find_header(ws)
@@ -831,7 +840,9 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
     row = ws.max_row + 1
     for ref in sorted(part_fields_dict.keys()):
         if ref not in refs:
-            ws.cell(row=row, column=ref_col).value = ref
+            cell = ws.cell(row=row, column=ref_col)
+            cell.value = ref
+            set_cell_format(cell)
             refs.add(ref)
             row += 1
 
@@ -850,16 +861,21 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
                         # Match the field name to one of the headers and overwrite the
                         # cell value with the dictionary value.
                         header = lc_get_close_matches(field, header_labels, 1, 0.3)[0]
-                        cell_value = ws.cell(
-                            row=row, column=header_columns[header]
-                        ).value
+                        cell = ws.cell(row=row, column=header_columns[header])
                         logger.log(
                             DEBUG_OBSESSIVE,
                             "Updating {} field {} from {} to {}".format(
-                                ref, field, cell_value, value
+                                ref, field, cell.value, value
                             ),
                         )
-                        ws.cell(row=row, column=header_columns[header]).value = value
+                        cell.value = value
+                        set_cell_format(cell)
+                        logger.log(
+                            DEBUG_OBSESSIVE,
+                            "Type of {} field {} containing {} is {}".format(
+                                ref, field, cell.value, cell.data_type
+                            ),
+                        )
 
                     except IndexError:
                         # The dictionary field didn't match any sheet header closely enough,
@@ -870,7 +886,9 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
                                 ref, field, value
                             ),
                         )
-                        ws.cell(row=row, column=next_header_column).value = value
+                        cell = ws.cell(row=row, column=next_header_column)
+                        cell.value = value
+                        set_cell_format(cell)
                         new_header_cell = ws.cell(
                             row=header_row, column=next_header_column
                         )

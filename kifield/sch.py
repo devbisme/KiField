@@ -203,18 +203,23 @@ class Schematic(object):
 
         building_block = False
 
-        full_line = ""
+        full_line = ""  # Buffer for collecting concatenated lines.
 
         while True:
             line = f.readline()
             if not line:
                 break
 
+            # Concatenate lines until the number of non-escaped quotes is even.
+            # This means no quoted string is broken across multiple lines.
             full_line += line
             if len(re.findall(r'(?<!\\)"', full_line))%2:
+                # A quote is broken across lines, so get the next line.
                 continue
+
+            # No quotes broken across lines, so process the completed line.
             line = full_line
-            full_line = ""
+            full_line = ""  # Clear the concatenated line buffer.
 
             if line.startswith("LIBS:"):
                 self.libs.append(line)
