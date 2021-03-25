@@ -4,6 +4,14 @@ History
 -------
 
 
+0.1.17 (2021-03-25)
+______________________
+
+* Part fields are cleaned up if they contain newlines.
+* Lines in a schematic file which were broken by a newline within a quoted string are rejoined.
+* Generated spreadsheet cells have their format set to TEXT if they contain a string.
+
+
 0.1.16 (2020-07-26)
 ______________________
 
