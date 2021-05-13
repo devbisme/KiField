@@ -1329,7 +1329,8 @@ def clean_part_fields(part_fields_dict):
     """Clean field values (i.e., remove or replace any newlines with spaces.)"""
     for part, fields in part_fields_dict.items():
         for k, v in fields.items():
-            v = re.sub("[\n\r]+$", "", v) # Remove newlines at end of field.
+            print("{}: {}".format(part, type(v)))
+            v = re.sub("[\n\r]+$", "", str(v)) # Remove newlines at end of field.
             fields[k] = re.sub("[\n\r]+", " ", v) # Replace newlines within field.
 
 
