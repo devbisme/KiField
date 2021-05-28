@@ -5,8 +5,23 @@
 # It's covered by GPL3.
 #
 
-import re
+# -*- coding: utf-8 -*-
+
 import sys
+import shlex
+import re
+
+
+def ensure_quoted(s):
+    """
+    Returns a quoted version of string 's' if that's not already the case
+    """
+    rx = r"^\"(.+)\"$"
+
+    if re.match(rx, s) is not None:
+        return s
+    else:
+        return "\"{}\"".format(s)
 
 
 class Description(object):
@@ -14,7 +29,6 @@ class Description(object):
     A class to parse description information of Schematic Files Format of the KiCad
     TODO: Need to be done, currently just stores the raw data read from file
     """
-
     def __init__(self, data):
         self.raw_data = data
 
@@ -23,25 +37,15 @@ class Component(object):
     """
     A class to parse components of Schematic Files Format of the KiCad
     """
+    _L_KEYS = ['name', 'ref']
+    _U_KEYS = ['unit', 'convert', 'time_stamp']
+    _P_KEYS = ['posx', 'posy']
+    _AR_KEYS = ['path', 'ref', 'part']
+    _F_KEYS = ['id', 'ref', 'orient', 'posx', 'posy', 'size', 'attributs',
+               'hjust', 'props', 'name']
 
-    _L_KEYS = ["name", "ref"]
-    _U_KEYS = ["unit", "convert", "time_stamp"]
-    _P_KEYS = ["posx", "posy"]
-    _AR_KEYS = ["path", "ref", "part"]
-    _F_KEYS = [
-        "id",
-        "ref",
-        "orient",
-        "posx",
-        "posy",
-        "size",
-        "attributes",
-        "hjust",
-        "props",
-        "name",
-    ]
-
-    _KEYS = {"L": _L_KEYS, "U": _U_KEYS, "P": _P_KEYS, "AR": _AR_KEYS, "F": _F_KEYS}
+    _KEYS = {'L': _L_KEYS, 'U': _U_KEYS, 'P': _P_KEYS,
+             'AR': _AR_KEYS, 'F': _F_KEYS}
 
     def __init__(self, data):
         self.labels = {}
@@ -52,66 +56,51 @@ class Component(object):
         self.old_stuff = []
 
         for line in data:
-            if line[0] == "\t":
+            if line[0] == '\t':
                 self.old_stuff.append(line)
                 continue
 
-            line = line.replace("\n", "")
-
-            # Extract all the non-quoted and quoted text pieces, accounting for escaped quotes.
-            pieces = re.findall(r'[^\s"]+|(?<!\\)".*?(?<!\\)"', line)
-
-            line = []
-            for i in range(len(pieces)):
-                # Merge a piece ending with equals sign with the next piece.
-                if pieces[i] and pieces[i][-1] == "=":
-                    pieces[i] = pieces[i] + pieces[i + 1]
-                    pieces[
-                        i + 1
-                    ] = ""  # Empty the next piece because it was merged with this one.
-                # Append any non-empty piece.
-                if pieces[i]:
-                    line.append(pieces[i])
+            line = line.replace('\n', '')
+            s = shlex.shlex(line)
+            s.whitespace_split = True
+            s.commenters = ''
+            s.quotes = '"'
+            line = list(s)
 
             # select the keys list and default values array
             if line[0] in self._KEYS:
                 key_list = self._KEYS[line[0]]
-                values = line[1:] + ["" for n in range(len(key_list) - len(line[1:]))]
+                values = line[1:] + ['']*(len(key_list) - len(line[1:]))
 
-            if line[0] == "L":
+            if line[0] == 'L':
                 self.labels = dict(zip(key_list, values))
-            elif line[0] == "U":
+            elif line[0] == 'U':
                 self.unit = dict(zip(key_list, values))
-            elif line[0] == "P":
+            elif line[0] == 'P':
                 self.position = dict(zip(key_list, values))
-            elif line[0] == "AR":
+            elif line[0] == 'AR':
                 self.references.append(dict(zip(key_list, values)))
-            elif line[0] == "F":
+            elif line[0] == 'F':
                 self.fields.append(dict(zip(key_list, values)))
 
-    # TODO: error checking
-    # * check if field_data is a dictionary
-    # * check if at least 'ref' and 'name' were passed
-    # * ignore invalid items of field_data on merging
     # TODO: enhancements
     # * 'value' could be used instead of 'ref'
-    def addField(self, field_data):
-        def_field = {
-            "id": None,
-            "ref": None,
-            "orient": "H",
-            "posx": "0",
-            "posy": "0",
-            "size": "50",
-            "attributes": "0001",
-            "hjust": "C",
-            "props": "CNN",
-            "name": "~",
-        }
+    def addField(self, *, ref, name, **field_data):
+        field = {'id': None, 'ref': None, 'orient': 'H', 'posx': '0',
+                 'posy': '0', 'size': '50', 'attributs': '0001',
+                 'hjust': 'C', 'props': 'CNN', 'name': '~'}
+
+        # 'ref' and 'name' must be quoted
+        ref = ensure_quoted(ref)
+        name = ensure_quoted(name)
+
+        # ignore invalid items in field_data
+        field_data = {key: val for (key, val) in field_data.items()
+                      if key in self._F_KEYS}
 
         # merge dictionaries and set the id value
-        field = dict(list(def_field.items()) + list(field_data.items()))
-        field["id"] = str(len(self.fields))
+        field.update(field_data, ref=ref, name=name)
+        field['id'] = str(len(self.fields))
 
         self.fields.append(field)
         return field
@@ -121,47 +110,34 @@ class Sheet(object):
     """
     A class to parse sheets of Schematic Files Format of the KiCad
     """
+    _S_KEYS = ['topLeftPosx', 'topLeftPosy', 'botRightPosx', 'botRightPosy']
+    _U_KEYS = ['uniqID']
+    _F_KEYS = ['id', 'value', 'IOState', 'side', 'posx', 'posy', 'size']
 
-    _S_KEYS = ["topLeftPosx", "topLeftPosy", "botRightPosx", "botRightPosy"]
-    _U_KEYS = ["uniqID"]
-    _F_KEYS = ["id", "value", "IOState", "side", "posx", "posy", "size"]
-
-    _KEYS = {"S": _S_KEYS, "U": _U_KEYS, "F": _F_KEYS}
+    _KEYS = {'S': _S_KEYS, 'U': _U_KEYS, 'F': _F_KEYS}
 
     def __init__(self, data):
         self.shape = {}
         self.unit = {}
         self.fields = []
         for line in data:
-
-            line = line.replace("\n", "")
-
-            # Extract all the non-quoted and quoted text pieces, accounting for escaped quotes.
-            pieces = re.findall(r'[^\s"]+|(?<!\\)".*?(?<!\\)"', line)
-
-            line = []
-            for i in range(len(pieces)):
-                # Merge a piece ending with equals sign with the next piece.
-                if pieces[i] and pieces[i][-1] == "=":
-                    pieces[i] = pieces[i] + pieces[i + 1]
-                    pieces[
-                        i + 1
-                    ] = ""  # Empty the next piece because it was merged with this one.
-                # Append any non-empty piece.
-                if pieces[i]:
-                    line.append(pieces[i])
-
+            line = line.replace('\n', '')
+            s = shlex.shlex(line)
+            s.whitespace_split = True
+            s.commenters = ''
+            s.quotes = '"'
+            line = list(s)
             # select the keys list and default values array
             if line[0] in self._KEYS:
                 key_list = self._KEYS[line[0]]
-                values = line[1:] + ["" for n in range(len(key_list) - len(line[1:]))]
-            if line[0] == "S":
+                values = line[1:] + ['']*(len(key_list) - len(line[1:]))
+            if line[0] == 'S':
                 self.shape = dict(zip(key_list, values))
-            elif line[0] == "U":
+            elif line[0] == 'U':
                 self.unit = dict(zip(key_list, values))
-            elif line[0][0] == "F":
+            elif line[0][0] == 'F':
                 key_list = self._F_KEYS
-                values = line + ["" for n in range(len(key_list) - len(line))]
+                values = line + ['' for n in range(len(key_list) - len(line))]
                 self.fields.append(dict(zip(key_list, values)))
 
 
@@ -170,7 +146,6 @@ class Bitmap(object):
     A class to parse bitmaps of Schematic Files Format of the KiCad
     TODO: Need to be done, currently just stores the raw data read from file
     """
-
     def __init__(self, data):
         self.raw_data = data
 
@@ -179,7 +154,6 @@ class Schematic(object):
     """
     A class to parse Schematic Files Format of the KiCad
     """
-
     def __init__(self, filename):
         f = open(filename)
         self.filename = filename
@@ -196,72 +170,59 @@ class Schematic(object):
         self.conns = []
         self.noconns = []
 
-        if not "EESchema Schematic File" in self.header:
+        if 'EESchema Schematic File' not in self.header:
             self.header = None
-            sys.stderr.write("The file is not a KiCad Schematic File\n")
+            sys.stderr.write('The file is not a KiCad Schematic File\n')
             return
 
         building_block = False
-
-        full_line = ""  # Buffer for collecting concatenated lines.
 
         while True:
             line = f.readline()
             if not line:
                 break
 
-            # Concatenate lines until the number of non-escaped quotes is even.
-            # This means no quoted string is broken across multiple lines.
-            full_line += line
-            if len(re.findall(r'(?<!\\)"', full_line))%2:
-                # A quote is broken across lines, so get the next line.
-                continue
-
-            # No quotes broken across lines, so process the completed line.
-            line = full_line
-            full_line = ""  # Clear the concatenated line buffer.
-
-            if line.startswith("LIBS:"):
+            if line.startswith('LIBS:'):
                 self.libs.append(line)
 
-            elif line.startswith("EELAYER END"):
+            elif line.startswith('EELAYER END'):
                 pass
-            elif line.startswith("EELAYER"):
+            elif line.startswith('EELAYER'):
                 self.eelayer = line
 
             elif not building_block:
-                if line.startswith("$"):
+                if line.startswith('$'):
                     building_block = True
                     block_data = []
                     block_data.append(line)
-                elif line.startswith("Text"):
-                    data = {"desc": line, "data": f.readline()}
+                elif line.startswith('Text'):
+                    data = {'desc': line, 'data': f.readline()}
                     self.texts.append(data)
-                elif line.startswith("Wire"):
-                    data = {"desc": line, "data": f.readline()}
+                elif line.startswith('Wire'):
+                    data = {'desc': line, 'data': f.readline()}
                     self.wires.append(data)
-                elif line.startswith("Entry"):
-                    data = {"desc": line, "data": f.readline()}
+                elif line.startswith('Entry'):
+                    data = {'desc': line, 'data': f.readline()}
                     self.entries.append(data)
-                elif line.startswith("Connection"):
-                    data = {"desc": line}
+                elif line.startswith('Connection'):
+                    data = {'desc': line}
                     self.conns.append(data)
-                elif line.startswith("NoConn"):
-                    data = {"desc": line}
+                elif line.startswith('NoConn'):
+                    data = {'desc': line}
                     self.noconns.append(data)
 
             elif building_block:
                 block_data.append(line)
-                if line.startswith("$End"):
+                if line.startswith('$End'):
                     building_block = False
 
-                    if line.startswith("$EndDescr"):
+                    if line.startswith('$EndDescr'):
                         self.description = Description(block_data)
-                    if line.startswith("$EndComp"):
+                    if line.startswith('$EndComp'):
                         self.components.append(Component(block_data))
-                    if line.startswith("$EndSheet"):
+                    if line.startswith('$EndSheet'):
                         self.sheets.append(Sheet(block_data))
-                    if line.startswith("$EndBitmap"):
+                    if line.startswith('$EndBitmap'):
                         self.bitmaps.append(Bitmap(block_data))
 
     def save(self, filename=None):
@@ -280,70 +241,70 @@ class Schematic(object):
         to_write += self.libs
 
         # EELAYER
-        to_write += [self.eelayer, "EELAYER END\n"]
+        to_write += [self.eelayer, 'EELAYER END\n']
 
         # Description
         to_write += self.description.raw_data
 
         # Sheets
         for sheet in self.sheets:
-            to_write += ["$Sheet\n"]
+            to_write += ['$Sheet\n']
             if sheet.shape:
-                line = "S "
+                line = 'S '
                 for key in sheet._S_KEYS:
-                    line += sheet.shape[key] + " "
-                to_write += [line.rstrip() + "\n"]
+                    line += sheet.shape[key] + ' '
+                to_write += [line.rstrip() + '\n']
             if sheet.unit:
-                line = "U "
+                line = 'U '
                 for key in sheet._U_KEYS:
-                    line += sheet.unit[key] + " "
-                to_write += [line.rstrip() + "\n"]
+                    line += sheet.unit[key] + ' '
+                to_write += [line.rstrip() + '\n']
 
             for field in sheet.fields:
-                line = ""
+                line = ''
                 for key in sheet._F_KEYS:
-                    line += field[key] + " "
-                to_write += [line.rstrip() + "\n"]
-            to_write += ["$EndSheet\n"]
+                    line += field[key] + ' '
+                to_write += [line.rstrip() + '\n']
+            to_write += ['$EndSheet\n']
 
         # Components
         for component in self.components:
-            to_write += ["$Comp\n"]
+            to_write += ['$Comp\n']
             if component.labels:
-                line = "L "
+                line = 'L '
                 for key in component._L_KEYS:
-                    line += component.labels[key] + " "
-                to_write += [line.rstrip() + "\n"]
+                    line += component.labels[key] + ' '
+                to_write += [line.rstrip() + '\n']
 
             if component.unit:
-                line = "U "
+                line = 'U '
                 for key in component._U_KEYS:
-                    line += component.unit[key] + " "
-                to_write += [line.rstrip() + "\n"]
+                    line += component.unit[key] + ' '
+                to_write += [line.rstrip() + '\n']
 
             if component.position:
-                line = "P "
+                line = 'P '
                 for key in component._P_KEYS:
-                    line += component.position[key] + " "
-                to_write += [line.rstrip() + "\n"]
+                    line += component.position[key] + ' '
+                to_write += [line.rstrip() + '\n']
 
             for reference in component.references:
                 if component.references:
-                    line = "AR "
+                    line = 'AR '
                     for key in component._AR_KEYS:
-                        line += reference[key] + " "
-                    to_write += [line.rstrip() + "\n"]
+                        line += reference[key] + ' '
+                    to_write += [line.rstrip() + '\n']
 
             for field in component.fields:
-                line = "F "
+                line = 'F '
                 for key in component._F_KEYS:
-                    line += field[key] + " "
-                to_write += [line.rstrip() + "\n"]
+                    line += field[key] + ' '
+                to_write += [line.rstrip() + '\n']
 
             if component.old_stuff:
                 to_write += component.old_stuff
 
-            to_write += ["$EndComp\n"]
+            to_write += ['$EndComp\n']
 
         # Bitmaps
         for bitmap in self.bitmaps:
@@ -351,29 +312,25 @@ class Schematic(object):
 
         # Texts
         for text in self.texts:
-            to_write += [text["desc"], text["data"]]
+            to_write += [text['desc'], text['data']]
 
         # Wires
         for wire in self.wires:
-            to_write += [wire["desc"], wire["data"]]
+            to_write += [wire['desc'], wire['data']]
 
         # Entries
         for entry in self.entries:
-            to_write += [entry["desc"], entry["data"]]
+            to_write += [entry['desc'], entry['data']]
 
         # Connections
         for conn in self.conns:
-            to_write += [conn["desc"]]
+            to_write += [conn['desc']]
 
         # No Connetions
         for noconn in self.noconns:
-            to_write += [noconn["desc"]]
+            to_write += [noconn['desc']]
 
-        to_write += ["$EndSCHEMATC\n"]
+        to_write += ['$EndSCHEMATC\n']
 
-        # Remove all CR, LF from each line and re-append LF to the line.
-        # This prevents errors caused by an internal CR, LF breaking a line.
-        to_write = [re.sub(r"[\n\r]", "", l) + "\n" for l in to_write]
-
-        f = open(filename, "w")
+        f = open(filename, 'w')
         f.writelines(to_write)
