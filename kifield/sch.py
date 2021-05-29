@@ -12,7 +12,7 @@ import re
 from .common import *
 
 
-sch_field_id_to_name = {"1": "value", "2": "footprint", "3": "datasheet"}
+sch_field_id_to_name = {"0": "reference", "1": "value", "2": "footprint", "3": "datasheet"}
 
 
 
@@ -100,7 +100,7 @@ class Component(object):
                 self.fields.append(dict(zip(key_list, values)))
 
     def get_field_names(self):
-        """Return a list all the field names found in a component."""
+        """Return the set of all the field names found in a component."""
 
         field_names = set()
         for f in self.fields:
@@ -109,7 +109,18 @@ class Component(object):
             except KeyError:
                 pass
         field_names.discard("")
-        return list(field_names)
+        return field_names
+
+    def get_refs(self):
+        """Return a list of references for a component."""
+
+        # Get the references of the component. (There may be more than one
+        # if the component is replicated over multiple hierarchical sheets.)
+        refs = [r["ref"] for r in self.references]
+        refs = [re.search(r'="(.*)"', ref).group(1) for ref in refs]
+        refs = set(refs)  # Remove any duplicate references.
+        refs.add(self.labels["ref"])  # Non-hierarchical ref.
+        return refs
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -259,7 +270,7 @@ class Schematic(object):
 
         field_names = set(sch_field_id_to_name.values())
         for component in self.components:
-            field_names.update(set(component.get_field_names()))
+            field_names.update(component.get_field_names())
         return list(field_names)
 
     def save(self, filename=None):
@@ -377,6 +388,9 @@ def find_by_keys(key, array):
     return [e for e in array[1:] if e[0].value == key]
 
 
+class Field_V6(object):
+    def __init__(self, data):
+        pass
 class Component_V6(object):
     """
     A class to parse components of Schematic Files Format of the KiCad
@@ -388,16 +402,16 @@ class Component_V6(object):
         self.field_array = [Field_V6(e) for e in find_by_keys('property', data)]
 
     def get_field_names(self):
-        """Return a list all the field names found in a component."""
+        """Return the set of all the field names found in a component."""
 
         field_names = set()
-        for f in component.fields:
+        for f in self.fields:
             try:
                 field_names.add(unquote(f["name"]))
             except KeyError:
                 pass
         field_names.discard("")
-        return list(field_names)
+        return field_names
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -480,10 +494,10 @@ class Schematic_V6(object):
     def get_field_names(self):
         """Return a list all the field names found in a schematic's components."""
 
-        field_names = sch_field_id_to_name.values()
+        field_names = set(sch_field_id_to_name.values())
         for component in self.components:
-            field_names.extend(component.get_field_names())
-        return list(set(field_names))
+            field_names.update(component.get_field_names())
+        return list(field_names)
 
     def save(self, filename=None):
         # check whether it has header, what means that sch file was loaded fine

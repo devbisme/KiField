@@ -23,7 +23,7 @@ from future import standard_library
 
 from .common import *
 from .dcm import Component, Dcm
-from .sch import Schematic, sch_field_id_to_name
+from .sch import Schematic
 from .schlib import SchLib
 
 standard_library.install_aliases()
@@ -115,7 +115,7 @@ def collapse(individual_refs):
     def toRef(part):
         return "{}{}".format(part[0], part[1])
 
-    def makeGroups(accumulator, part):
+    def make_groups(accumulator, part):
         prev = None
         if len(accumulator) > 0:
             group = accumulator[-1]
@@ -128,7 +128,7 @@ def collapse(individual_refs):
             accumulator.append([part])
         return accumulator
 
-    groups = reduce(makeGroups, parts, [])
+    groups = reduce(make_groups, parts, [])
     groups = map(lambda g: tuple(map(toRef, g)), groups)
 
     collapsed = ""
@@ -303,7 +303,7 @@ def find_header_column(header, lbl):
 def cull_list(fields, inc_fields=None, exc_fields=None):
     """Update the list by keeping only items in inc_fields and deleting items in exc_fields."""
 
-    # Only keep these fields unless list is empty, in which case keep all of them.
+    # Remove any fields not in include list unless this list is empty, in which case keep all fields.
     try:
         if len(inc_fields) > 0:
             for field in fields[:]:
@@ -425,18 +425,6 @@ def extract_part_fields_from_csv(
     return {}
 
 
-def get_component_refs(component):
-    """Return a list of references for a component."""
-
-    # Get the references of the component. (There may be more than one
-    # if the component is part of a hierarchical sheet that's replicated.)
-    refs = [r["ref"] for r in component.references]
-    refs = [re.search(r'="(.*)"', ref).group(1) for ref in refs]
-    refs = set(refs)  # Remove any duplicate references.
-    refs.add(component.labels["ref"])  # Non-hierarchical ref.
-    return refs
-
-
 def extract_part_fields_from_sch(
     filename, inc_field_names=None, exc_field_names=None, recurse=False, depth=0
 ):
@@ -454,7 +442,9 @@ def extract_part_fields_from_sch(
     sch = Schematic(filename)  # Read in the schematic.
 
     # Get all the part fields in the schematic and keep only the desired ones.
+    # Remove the reference field (F0) from the list because that's used as as the dict key.
     field_names = sch.get_field_names()
+    cull_list(field_names, None, ['reference'])
     cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component of the schematic, extracting its fields.
@@ -463,13 +453,8 @@ def extract_part_fields_from_sch(
         # Get the fields and their values from the component.
         part_fields = {}
         for f in component.fields:
-            id = unquote(f["id"])
             value = unquote(f["ref"])
-
-            # Assign a name for the unnamed fields (F1, F2 & F3).
-            # Use the already-assigned name for the higher fields (F4...).
-            # Don't use the reference field (F0) because that's already used as the dict key.
-            name = sch_field_id_to_name.get(id, unquote(f["name"]))
+            name = unquote(f["name"])
 
             # Store the field and its value if the field name is in the list of
             # allowed fields.
@@ -477,7 +462,7 @@ def extract_part_fields_from_sch(
                 part_fields[name] = value
 
         # Create a dictionary entry for each ref and assign the part fields to it.
-        for ref in get_component_refs(component):
+        for ref in component.get_refs():
             if ref[0] == "#" or ref[-1] == "?":
                 continue  # Skip pseudo-parts (e.g. power nets) and unallocated parts.
 
@@ -955,7 +940,7 @@ def insert_part_fields_into_sch(
 
         # For each reference for this component, search in the dictionary
         # for new or updated fields for this part.
-        refs = get_component_refs(component)
+        refs = component.get_refs()
         for ref in refs:
 
             # Get the part fields for the given part reference (or an empty list).
