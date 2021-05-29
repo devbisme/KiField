@@ -1,30 +1,18 @@
 # -*- coding: utf-8 -*-
 
 #
-# This code was taken without change from https://github.com/KiCad/kicad-library-utils/tree/master/sch.
-# It's covered by GPL3.
+# This code was taken from https://github.com/KiCad/kicad-library-utils/tree/master/sch.
+# It's covered by GPL3. Some changes/additions were made by XESS Corp.
 #
-
-# -*- coding: utf-8 -*-
 
 import sys
 import shlex
 import re
 
-
-USING_PYTHON2 = sys.version_info.major == 2
-USING_PYTHON3 = not USING_PYTHON2
-
-if USING_PYTHON2:
-    reload(sys)
-    sys.setdefaultencoding("utf8")
-else:
-    # Python3 doesn't have basestring, so create one.
-    basestring = type("")
+from .common import *
 
 
 sch_field_id_to_name = {"1": "value", "2": "footprint", "3": "datasheet"}
-sch_field_name_to_id = {v: k for k, v in sch_field_id_to_name.items()}
 
 
 

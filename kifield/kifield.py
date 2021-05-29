@@ -1,29 +1,10 @@
-# MIT license
-#
-# Copyright (C) 2016 by XESS Corporation
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# -*- coding: utf-8 -*-
+
+# MIT License / Copyright (c) 2021 by XESS Corporation.
 
 from __future__ import absolute_import, division, print_function, unicode_literals
 
 import csv
-import logging
 import operator
 import os
 import os.path
@@ -40,8 +21,9 @@ from pprint import pprint
 import openpyxl as pyxl
 from future import standard_library
 
+from .common import *
 from .dcm import Component, Dcm
-from .sch import Schematic
+from .sch import Schematic, sch_field_id_to_name
 from .schlib import SchLib
 
 standard_library.install_aliases()
@@ -49,23 +31,7 @@ standard_library.install_aliases()
 
 logger = logging.getLogger("kifield")
 
-USING_PYTHON2 = sys.version_info.major == 2
-USING_PYTHON3 = not USING_PYTHON2
-
-DEBUG_OVERVIEW = logging.DEBUG
-DEBUG_DETAILED = logging.DEBUG - 1
-DEBUG_OBSESSIVE = logging.DEBUG - 2
-
-if USING_PYTHON2:
-    reload(sys)
-    sys.setdefaultencoding("utf8")
-else:
-    # Python3 doesn't have basestring, so create one.
-    basestring = type("")
-
 # Assign some names to the unnamed fields in a schematic or library component.
-sch_field_id_to_name = {"1": "value", "2": "footprint", "3": "datasheet"}
-sch_field_name_to_id = {v: k for k, v in sch_field_id_to_name.items()}
 lib_field_id_to_name = {"0": "prefix", "1": "value", "2": "footprint", "3": "datasheet"}
 lib_field_name_to_id = {v: k for k, v in lib_field_id_to_name.items()}
 dcm_field_names = ["description", "keywords", "docfile"]
@@ -469,21 +435,6 @@ def get_component_refs(component):
     refs = set(refs)  # Remove any duplicate references.
     refs.add(component.labels["ref"])  # Non-hierarchical ref.
     return refs
-
-
-# def get_field_names_sch(sch):
-#     """Return a list all the field names found in a schematic's components."""
-
-#     field_names = set(sch_field_id_to_name.values())
-#     for component in sch.components:
-#         for f in component.fields:
-#             try:
-#                 field_names.add(unquote(f["name"]))
-#             except KeyError:
-#                 pass
-
-#     field_names.discard("")
-#     return list(field_names)
 
 
 def extract_part_fields_from_sch(
