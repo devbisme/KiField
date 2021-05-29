@@ -471,19 +471,19 @@ def get_component_refs(component):
     return refs
 
 
-def get_field_names_sch(sch):
-    """Return a list all the field names found in a schematic's components."""
+# def get_field_names_sch(sch):
+#     """Return a list all the field names found in a schematic's components."""
 
-    field_names = set(sch_field_id_to_name.values())
-    for component in sch.components:
-        for f in component.fields:
-            try:
-                field_names.add(unquote(f["name"]))
-            except KeyError:
-                pass
+#     field_names = set(sch_field_id_to_name.values())
+#     for component in sch.components:
+#         for f in component.fields:
+#             try:
+#                 field_names.add(unquote(f["name"]))
+#             except KeyError:
+#                 pass
 
-    field_names.discard("")
-    return list(field_names)
+#     field_names.discard("")
+#     return list(field_names)
 
 
 def extract_part_fields_from_sch(
@@ -503,7 +503,7 @@ def extract_part_fields_from_sch(
     sch = Schematic(filename)  # Read in the schematic.
 
     # Get all the part fields in the schematic and keep only the desired ones.
-    field_names = get_field_names_sch(sch)
+    field_names = sch.get_field_names()
     cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component of the schematic, extracting its fields.
@@ -1102,7 +1102,7 @@ def insert_part_fields_into_sch(
                         }
                         new_field.update(field_attributes)  # Set field's attributes.
                         new_field.update(field_position)  # Set new field's position.
-                        component.addField(new_field)
+                        component.add_field(new_field)
                         logger.log(
                             DEBUG_OBSESSIVE,
                             "Adding {} field {} with value {}".format(
