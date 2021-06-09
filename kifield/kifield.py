@@ -23,7 +23,7 @@ from future import standard_library
 
 from .common import *
 from .dcm import Component, Dcm
-from .sch import Schematic
+from .sch import Schematic, Schematic_V6
 from .schlib import SchLib
 
 standard_library.install_aliases()
@@ -501,19 +501,82 @@ def extract_part_fields_from_sch(
     return part_fields_dict
 
 
-def get_field_names_lib(lib):
-    """Return a list all the field names found in a library's components."""
 
-    field_names = set(lib_field_id_to_name.values())
-    field_names.add("prefix")
-    for component in lib.components:
+
+def extract_part_fields_from_sch_V6(
+    filename, inc_field_names=None, exc_field_names=None, recurse=False, depth=0
+):
+    """Return a dictionary of part fields extracted from a schematic."""
+
+    logger.log(
+        DEBUG_OVERVIEW,
+        "Extracting fields {}, -{} from schematic file {}.".format(
+            inc_field_names, exc_field_names, filename
+        ),
+    )
+
+    part_fields_dict = {}  # Start with an empty part fields dictionary.
+
+    sch = Schematic_V6(filename)  # Read in the schematic.
+
+    # Get all the part fields in the schematic and keep only the desired ones.
+    # Remove the reference field (F0) from the list because that's used as as the dict key.
+    field_names = sch.get_field_names()
+    cull_list(field_names, None, ['reference'])
+    cull_list(field_names, inc_field_names, exc_field_names)
+
+    # Go through each component of the schematic, extracting its fields.
+    for component in sch.components:
+
+        # Get the fields and their values from the component.
+        part_fields = {}
         for f in component.fields:
-            try:
-                field_names.add(unquote(f["fieldname"]))
-            except KeyError:
-                pass
-    field_names.discard("")
-    return list(field_names)
+            value = unquote(f["ref"])
+            name = unquote(f["name"])
+
+            # Store the field and its value if the field name is in the list of
+            # allowed fields.
+            if name in field_names:
+                part_fields[name] = value
+
+        # Create a dictionary entry for each ref and assign the part fields to it.
+        for ref in component.get_refs():
+            if ref[0] == "#" or ref[-1] == "?":
+                continue  # Skip pseudo-parts (e.g. power nets) and unallocated parts.
+
+            # Some components (like resistor arrays) contain multiple units.
+            # Add the fields for a unit to the part fields dict. By the end of
+            # the loop, the part fields dict will have the union of the fields
+            # of all of the units.
+            part_fields.update(part_fields_dict.get(ref, {}))
+            part_fields_dict[ref] = part_fields
+
+    # If this schematic references other schematic sheets, then extract the part fields from those.
+    if recurse:
+        for sheet in sch.sheets:
+            for field in sheet.fields:
+                if field["id"] == "F1":
+                    sheet_file = os.path.join(
+                        os.path.dirname(filename), unquote(field["value"])
+                    )
+                    part_fields_dict.update(
+                        extract_part_fields_from_sch(
+                            sheet_file,
+                            inc_field_names,
+                            exc_field_names,
+                            recurse,
+                            depth + 1,
+                        )
+                    )
+                    break
+
+    # Print part fields for debugging if this is the top-level sheet of the schematic.
+    if depth == 0:
+        if logger.isEnabledFor(DEBUG_DETAILED):
+            print("Extracted Part Fields:")
+            pprint(part_fields_dict)
+
+    return part_fields_dict
 
 
 def extract_part_fields_from_lib(
@@ -527,6 +590,20 @@ def extract_part_fields_from_lib(
             inc_field_names, exc_field_names, filename
         ),
     )
+
+    def get_field_names_lib(lib):
+        """Return a list all the field names found in a library's components."""
+
+        field_names = set(lib_field_id_to_name.values())
+        field_names.add("prefix")
+        for component in lib.components:
+            for f in component.fields:
+                try:
+                    field_names.add(unquote(f["fieldname"]))
+                except KeyError:
+                    pass
+        field_names.discard("")
+        return list(field_names)
 
     part_fields_dict = {}  # Start with an empty part dictionary.
 
@@ -669,6 +746,7 @@ def extract_part_fields(
         ".tsv": extract_part_fields_from_csv,
         ".csv": extract_part_fields_from_csv,
         ".sch": extract_part_fields_from_sch,
+        ".kicad_sch": extract_part_fields_from_sch_V6,
         ".lib": extract_part_fields_from_lib,
         ".dcm": extract_part_fields_from_dcm,
     }

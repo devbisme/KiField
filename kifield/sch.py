@@ -8,6 +8,7 @@
 import sys
 import shlex
 import re
+import sexpdata
 
 from .common import *
 
@@ -384,13 +385,10 @@ class Schematic(object):
         f.writelines(to_write)
 
 
-def find_by_keys(key, array):
-    return [e for e in array[1:] if e[0].value == key]
+def find_by_key(key, array):
+    return [e for e in array[1:] if e[0].value().lower() == key]
 
 
-class Field_V6(object):
-    def __init__(self, data):
-        pass
 class Component_V6(object):
     """
     A class to parse components of Schematic Files Format of the KiCad
@@ -398,8 +396,8 @@ class Component_V6(object):
 
     def __init__(self, data):
         self.data = data
-        self.lib_id = find_by_keys('lib_id', data)[1]
-        self.field_array = [Field_V6(e) for e in find_by_keys('property', data)]
+        self.lib_id = find_by_key('lib_id', data)[0][1] # Should be just one lib_id (index 0).
+        self.fields = [{'ref':prop[2], 'name':prop[1]} for prop in find_by_key('property', data)]
 
     def get_field_names(self):
         """Return the set of all the field names found in a component."""
@@ -412,6 +410,23 @@ class Component_V6(object):
                 pass
         field_names.discard("")
         return field_names
+
+    def get_refs(self):
+        """Return a list of references for a component."""
+
+        refs = []
+        for field in self.fields:
+            if field['name'] in ('Reference', 'Label'):
+                refs.append(field['ref'])
+        return refs
+        
+        # Get the references of the component. (There may be more than one
+        # if the component is replicated over multiple hierarchical sheets.)
+        refs = [r["ref"] for r in self.references]
+        refs = [re.search(r'="(.*)"', ref).group(1) for ref in refs]
+        refs = set(refs)  # Remove any duplicate references.
+        refs.add(self.labels["ref"])  # Non-hierarchical ref.
+        return refs
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -477,19 +492,17 @@ class Schematic_V6(object):
     A class to parse KiCad V6 schematic files.
     """
     def __init__(self, filename):
-        f = open(filename)
-
-        try:
-            self.sch_array = sexpdata.loads('\n'.join(fp.readlines()))
-        except AssertionError:
-            sys.stderr.write('The file is not a KiCad Schematic File\n')
-            return
+        with open(filename) as fp:
+            try:
+                self.sch_array = sexpdata.loads('\n'.join(fp.readlines()))
+            except AssertionError:
+                sys.stderr.write('The file is not a KiCad Schematic File\n')
+                return
 
         self.filename = filename
         self.description = None
-
-        self.components = [Component_V6(comp) for comp in find_by_keys('symbol', self.sch_array)]
-        self.sheets = [Sheet_V6(sheet) for sht in find_by_keys('sheet', self.sch_array)]
+        self.components = [Component_V6(comp) for comp in find_by_key('symbol', self.sch_array)]
+        self.sheets = [Sheet_V6(sheet) for sht in find_by_key('sheet', self.sch_array)]
 
     def get_field_names(self):
         """Return a list all the field names found in a schematic's components."""
