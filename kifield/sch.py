@@ -8,6 +8,7 @@
 import sys
 import shlex
 import re
+import os
 import sexpdata
 
 from .common import *
@@ -394,9 +395,11 @@ class Component_V6(object):
     A class to parse components of Schematic Files Format of the KiCad
     """
 
-    def __init__(self, data):
+    def __init__(self, data, path=''):
         self.data = data
         self.lib_id = find_by_key('lib_id', data)[0][1] # Should be just one lib_id (index 0).
+        self.uuid = find_by_key('uuid', data)[0][1].value() # Should be just one uuid (index 0).
+        self.path = '/'.join((path, self.uuid))
         self.fields = [{'ref':prop[2], 'name':prop[1]} for prop in find_by_key('property', data)]
 
     def get_field_names(self):
@@ -419,14 +422,11 @@ class Component_V6(object):
             if field['name'] in ('Reference', 'Label'):
                 refs.append(field['ref'])
         return refs
-        
-        # Get the references of the component. (There may be more than one
-        # if the component is replicated over multiple hierarchical sheets.)
-        refs = [r["ref"] for r in self.references]
-        refs = [re.search(r'="(.*)"', ref).group(1) for ref in refs]
-        refs = set(refs)  # Remove any duplicate references.
-        refs.add(self.labels["ref"])  # Non-hierarchical ref.
-        return refs
+
+    def set_ref(self, ref):
+        for field in self.fields:
+            if field['name'] in ('Reference', 'Label'):
+                field['ref'] = ref
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -456,60 +456,68 @@ class Sheet_V6(object):
     """
     A class to parse sheets of Schematic Files Format of the KiCad
     """
-    _S_KEYS = ['topLeftPosx', 'topLeftPosy', 'botRightPosx', 'botRightPosy']
-    _U_KEYS = ['uniqID']
-    _F_KEYS = ['id', 'value', 'IOState', 'side', 'posx', 'posy', 'size']
-
-    _KEYS = {'S': _S_KEYS, 'U': _U_KEYS, 'F': _F_KEYS}
-
     def __init__(self, data):
-        self.shape = {}
-        self.unit = {}
-        self.fields = []
-        for line in data:
-            line = line.replace('\n', '')
-            s = shlex.shlex(line)
-            s.whitespace_split = True
-            s.commenters = ''
-            s.quotes = '"'
-            line = list(s)
-            # select the keys list and default values array
-            if line[0] in self._KEYS:
-                key_list = self._KEYS[line[0]]
-                values = line[1:] + ['']*(len(key_list) - len(line[1:]))
-            if line[0] == 'S':
-                self.shape = dict(zip(key_list, values))
-            elif line[0] == 'U':
-                self.unit = dict(zip(key_list, values))
-            elif line[0][0] == 'F':
-                key_list = self._F_KEYS
-                values = line + ['' for n in range(len(key_list) - len(line))]
-                self.fields.append(dict(zip(key_list, values)))
-
+        self.uuid = find_by_key('uuid', data)[0][1].value()
+        properties = find_by_key('property', data)
+        for property in properties:
+            if property[1].lower() == 'sheet file':
+                self.sheet_file = property[2]
+                break
 
 class Schematic_V6(object):
     """
     A class to parse KiCad V6 schematic files.
     """
-    def __init__(self, filename):
-        with open(filename) as fp:
+    def __init__(self, filename, path=''):
+
+        def get_components(self, filename, path):
+            with open(filename) as fp:
+                try:
+                    sch_array = sexpdata.loads('\n'.join(fp.readlines()))
+                except AssertionError:
+                    sys.stderr.write('The file is not a KiCad Schematic File\n')
+                    return
+
             try:
-                self.sch_array = sexpdata.loads('\n'.join(fp.readlines()))
-            except AssertionError:
-                sys.stderr.write('The file is not a KiCad Schematic File\n')
-                return
+                comp_insts = find_by_key('symbol_instances', sch_array)[0]
+            except (TypeError, IndexError):
+                pass
+            else:
+                comp_insts = find_by_key('path', comp_insts)
+                for inst in comp_insts:
+                    inst_path = inst[1]
+                    ref = find_by_key('reference', inst[1:])[0][1]
+                    self.path_refs[inst_path] = ref
+
+            components = [Component_V6(comp, path) for comp in find_by_key('symbol', sch_array)]
+            for comp in components:
+                comp.set_ref(self.path_refs[comp.path])
+            self.components.extend(components)
+
+            sheets = [Sheet_V6 (sheet) for sheet in find_by_key('sheet', sch_array)]
+            parent_dir = os.path.dirname(filename)
+            for sheet in sheets:
+                sheet_file = sheet.sheet_file
+                if not os.path.isabs(sheet_file):
+                    sheet_file = os.path.join(parent_dir, sheet_file)
+                get_components(self, sheet_file, path+'/'+sheet.uuid)
 
         self.filename = filename
         self.description = None
-        self.components = [Component_V6(comp) for comp in find_by_key('symbol', self.sch_array)]
-        self.sheets = [Sheet_V6(sheet) for sht in find_by_key('sheet', self.sch_array)]
+        self.components = []
+        self.path_refs = {}
+        get_components(self, filename, path)
 
     def get_field_names(self):
         """Return a list all the field names found in a schematic's components."""
 
+        # Add names of fields every component will have.
         field_names = set(sch_field_id_to_name.values())
+
+        # Add any extra field names from each component.
         for component in self.components:
             field_names.update(component.get_field_names())
+
         return list(field_names)
 
     def save(self, filename=None):

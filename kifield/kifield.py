@@ -551,31 +551,6 @@ def extract_part_fields_from_sch_V6(
             part_fields.update(part_fields_dict.get(ref, {}))
             part_fields_dict[ref] = part_fields
 
-    # If this schematic references other schematic sheets, then extract the part fields from those.
-    if recurse:
-        for sheet in sch.sheets:
-            for field in sheet.fields:
-                if field["id"] == "F1":
-                    sheet_file = os.path.join(
-                        os.path.dirname(filename), unquote(field["value"])
-                    )
-                    part_fields_dict.update(
-                        extract_part_fields_from_sch(
-                            sheet_file,
-                            inc_field_names,
-                            exc_field_names,
-                            recurse,
-                            depth + 1,
-                        )
-                    )
-                    break
-
-    # Print part fields for debugging if this is the top-level sheet of the schematic.
-    if depth == 0:
-        if logger.isEnabledFor(DEBUG_DETAILED):
-            print("Extracted Part Fields:")
-            pprint(part_fields_dict)
-
     return part_fields_dict
 
 
@@ -768,16 +743,17 @@ def extract_part_fields(
                 f, inc_field_names, exc_field_names, recurse
             )
 
-            # Add the extracted fields to the total part dictionary.
-            part_fields_dict = combine_part_field_dicts(
-                f_part_fields_dict, part_fields_dict
-            )
-
         except IOError:
             logger.warn("File not found: {}.".format(f))
 
         except KeyError:
             logger.warn("Unknown file type for field extraction: {}.".format(f))
+
+        else:
+            # Add the extracted fields to the total part dictionary.
+            part_fields_dict = combine_part_field_dicts(
+                f_part_fields_dict, part_fields_dict
+            )
 
     if logger.isEnabledFor(DEBUG_DETAILED):
         print("Total Extracted Part Fields:")
