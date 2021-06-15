@@ -1487,15 +1487,18 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
 
             # Call the insertion function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            insertion_functions[f_extension](
-                part_fields_dict, f, recurse, group_components, backup
-            )
+            insertion_function = insertion_functions[f_extension]
 
         except IOError:
             logger.warn("Unable to write to file: {}.".format(f))
 
         except KeyError:
             logger.warn("Unknown file type for field insertion: {}".format(f))
+
+        else:
+            insertion_function(
+                part_fields_dict, f, recurse, group_components, backup
+            )
 
 
 def clean_part_fields(part_fields_dict):
