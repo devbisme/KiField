@@ -1223,13 +1223,6 @@ def insert_part_fields_into_sch_V6(
                     # would have happened anyway.
                     pass
 
-                # Also store a position for a new field based on the REF position.
-                posx = component.fields[0]["posx"]
-                posy = str(
-                    int(component.fields[0]["posy"]) + 100
-                )  # Place it below REF.
-                field_position = {"posx": posx, "posy": posy}
-
                 # Get the field id associated with this field name (if there is one).
                 field_id = lib_field_name_to_id.get(field_name, None)
 
@@ -1268,6 +1261,14 @@ def insert_part_fields_into_sch_V6(
                 else:
                     if field_value not in (None, ""):
                         # Add new named field and value to component.
+
+                        # Position new field based on the REF position.
+                        posx = component.fields[0]["posx"]
+                        posy = str(
+                            int(component.fields[0]["posy"]) + 100
+                        )  # Place it below REF.
+                        field_position = {"posx": posx, "posy": posy}
+
                         new_field = {
                             "ref": quote(field_value),
                             "name": quote(field_name),
