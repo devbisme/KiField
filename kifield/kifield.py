@@ -736,23 +736,28 @@ def extract_part_fields(
         try:
             logger.log(DEBUG_DETAILED, "Extracting fields from {}.".format(f))
 
-            # Call the extraction function based on the file extension.
+            # Set the extraction function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
-            f_part_fields_dict = extraction_functions[f_extension](
-                f, inc_field_names, exc_field_names, recurse
-            )
-
-        except IOError:
-            logger.warn("File not found: {}.".format(f))
+            extraction_function = extraction_functions[f_extension]
 
         except KeyError:
             logger.warn("Unknown file type for field extraction: {}.".format(f))
 
         else:
-            # Add the extracted fields to the total part dictionary.
-            part_fields_dict = combine_part_field_dicts(
-                f_part_fields_dict, part_fields_dict
-            )
+            # Call the extraction function.
+            try:
+                f_part_fields_dict = extraction_function(
+                    f, inc_field_names, exc_field_names, recurse
+                )
+
+            except IOError:
+                logger.warn("File not found: {}.".format(f))
+
+            else:
+                # Add the extracted fields to the total part dictionary.
+                part_fields_dict = combine_part_field_dicts(
+                    f_part_fields_dict, part_fields_dict
+                )
 
     if logger.isEnabledFor(DEBUG_DETAILED):
         print("Total Extracted Part Fields:")
@@ -1486,20 +1491,22 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
         try:
             logger.log(DEBUG_DETAILED, "Inserting fields into {}.".format(f))
 
-            # Call the insertion function based on the file extension.
+            # Set the insertion function based on the file extension.
             f_extension = os.path.splitext(f)[1].lower()
             insertion_function = insertion_functions[f_extension]
-
-        except IOError:
-            logger.warn("Unable to write to file: {}.".format(f))
 
         except KeyError:
             logger.warn("Unknown file type for field insertion: {}".format(f))
 
         else:
-            insertion_function(
-                part_fields_dict, f, recurse, group_components, backup
-            )
+            try:
+                insertion_function(
+                    part_fields_dict, f, recurse, group_components, backup
+                )
+
+            except IOError:
+                logger.warn("Unable to write to file: {}.".format(f))
+
 
 
 def clean_part_fields(part_fields_dict):
