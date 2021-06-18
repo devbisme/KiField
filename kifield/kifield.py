@@ -1203,6 +1203,7 @@ def insert_part_fields_into_sch_V6(
 
                 # Create a dict to hold the field visibility attribute.
                 try:
+                    raise AttributeError  # TODO: Remove this!
                     field_attributes = dict()
                     INVIS_PREFIX = "[I]"
                     VISIBLE_PREFIX = "[V]"
@@ -1234,7 +1235,7 @@ def insert_part_fields_into_sch_V6(
                 # Search for an existing field with a matching name in the component.
                 for f in component.fields:
 
-                    if unquote(f["name"]).lower() == field_name.lower():
+                    if f["id"] == field_id or unquote(f["name"]).lower() == field_name.lower():
                         # Update existing named field in component.
                         logger.log(
                             DEBUG_OBSESSIVE,
@@ -1243,24 +1244,24 @@ def insert_part_fields_into_sch_V6(
                             ),
                         )
                         f["ref"] = quote(field_value)
-                        # Set field attributes but don't change its position.
-                        if "attributes" in field_attributes:
-                            f["attributes"] = field_attributes["attributes"]
-                        break
+                        # # Set field attributes but don't change its position.
+                        # if "attributes" in field_attributes:
+                        #     f["attributes"] = field_attributes["attributes"]
+                        # break
 
-                    elif f["id"] == field_id:
-                        # Update one of the default, unnamed fields in component.
-                        logger.log(
-                            DEBUG_OBSESSIVE,
-                            "Updating {} field {} from {} to {}".format(
-                                ref, f["id"], f["ref"], quote(field_value)
-                            ),
-                        )
-                        f["ref"] = quote(field_value)
-                        # Set field attributes but don't change its position.
-                        if "attributes" in field_attributes:
-                            f["attributes"] = field_attributes["attributes"]
-                        break
+                    # elif f["id"] == field_id:
+                    #     # Update one of the default, unnamed fields in component.
+                    #     logger.log(
+                    #         DEBUG_OBSESSIVE,
+                    #         "Updating {} field {} from {} to {}".format(
+                    #             ref, f["id"], f["ref"], quote(field_value)
+                    #         ),
+                    #     )
+                    #     f["ref"] = quote(field_value)
+                    #     # Set field attributes but don't change its position.
+                    #     if "attributes" in field_attributes:
+                    #         f["attributes"] = field_attributes["attributes"]
+                    #     break
 
                 # No existing field to update, so add a new field.
                 else:
@@ -1288,7 +1289,7 @@ def insert_part_fields_into_sch_V6(
                             ),
                         )
 
-                # Remove any named fields with empty values.
+                # Only keep unnamed fields or named fields with non-empty values.
                 component.fields = [
                     f
                     for f in component.fields
@@ -1298,7 +1299,7 @@ def insert_part_fields_into_sch_V6(
 
                 # Canonically order the fields to make schematic comparisons
                 # easier during acceptance testing.
-                component.fields = reorder_sch_fields(component.fields)
+                # component.fields = reorder_sch_fields(component.fields)
 
     # Save the updated schematic.
     sch.save(filename)
@@ -1306,19 +1307,21 @@ def insert_part_fields_into_sch_V6(
     # If this schematic references other schematic sheets, then insert the part fields into those, too.
     if recurse:
         for sheet in sch.sheets:
-            # If filename includes a path, save this path to prepend below
-            if filename.count("/") > 0:
-                prepend_dir = filename.rsplit("/", 1)[0] + "/"
-            else:
-                prepend_dir = "./"
-            for field in sheet.fields:
-                if field["id"] == "F1":
-                    # Prepend path for sheets which are nested more than once
-                    sheet_file = prepend_dir + unquote(field["value"])
-                    insert_part_fields_into_sch_V6(
-                        part_fields_dict, sheet_file, recurse, group_components, backup
-                    )
-                    break
+            insert_part_fields_into_sch_V6(part_fields_dict, sheet.filename, recurse, group_components, backup)
+
+            # # If filename includes a path, save this path to prepend below
+            # if filename.count("/") > 0:
+            #     prepend_dir = filename.rsplit("/", 1)[0] + "/"
+            # else:
+            #     prepend_dir = "./"
+            # for field in sheet.fields:
+            #     if field["id"] == "F1":
+            #         # Prepend path for sheets which are nested more than once
+            #         sheet_file = prepend_dir + unquote(field["value"])
+            #         insert_part_fields_into_sch_V6(
+            #             part_fields_dict, sheet_file, recurse, group_components, backup
+            #         )
+            #         break
 
 
 def insert_part_fields_into_lib(

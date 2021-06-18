@@ -480,10 +480,19 @@ class Component_V6(object):
                 refs.append(field["ref"])
         return refs
 
-    def set_ref(self, ref):
+    # def set_ref(self, ref):
+    #     for field in self.fields:
+    #         if field["name"] in ("Reference", "Label"):
+    #             field["ref"] = ref
+
+    def set_field_values(self, names, value):
         for field in self.fields:
-            if field["name"] in ("Reference", "Label"):
-                field["ref"] = ref
+            if field['name'] in names:
+                field['ref'] = value
+
+    def set_ref(self, ref):
+        self.set_field_value(('Reference', 'Label'), ref)
+
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -586,8 +595,8 @@ class Schematic_V6(object):
         else:
             for inst in find_by_key("path", comp_insts):
                 inst_uuid_path = inst[1]
-                ref = get_value_by_key("reference", inst)
-                self.uuid_path_refs[inst_uuid_path] = ref
+                inst_ref = get_value_by_key("reference", inst)
+                self.uuid_path_refs[inst_uuid_path] = inst_ref
             for component in self.components:
                 component.set_ref(self.uuid_path_refs[component.uuid_path])
 
