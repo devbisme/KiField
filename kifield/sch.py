@@ -415,7 +415,30 @@ class Schematic(object):
 
 
 def find_by_key(key, array):
-    return [e for e in array[1:] if e[0].value().lower() == key]
+    """Return list elements in an array whose first element matches the key."""
+    found_elements = []
+    for e in array:
+        try:
+            k = e[0].value().lower()
+        except (IndexError, AttributeError, TypeError):
+            pass
+        else:
+            if k == key:
+                found_elements.append(e)
+    return found_elements
+    # return [e for e in array[1:] if e[0].value().lower() == key]
+
+
+def get_value_by_key(key, array):
+    try:
+        value = find_by_key(key, array)[0][1]
+    except IndexError:
+        return None
+    else:
+        try:
+            return value.value()
+        except AttributeError:
+            return value
 
 
 class Component_V6(object):
@@ -427,14 +450,14 @@ class Component_V6(object):
         self.data = data
 
         # Should be just one lib_id and one uuid.
-        self.lib_id = find_by_key("lib_id", data)[0][1]
-        self.uuid = find_by_key("uuid", data)[0][1].value()
+        self.lib_id = get_value_by_key("lib_id", data)
+        self.uuid = get_value_by_key("uuid", data)
         self.uuid_path = "/".join((uuid_path, self.uuid))
 
         self.fields = []
         for prop in find_by_key("property", data):
-            id = find_by_key("id", prop[2:])[0][1]
-            self.fields.append({"name": prop[1], "ref": prop[2], "id": id} )
+            id = get_value_by_key("id", prop)
+            self.fields.append({"name": prop[1], "ref": prop[2], "id": id})
 
     def get_field_names(self):
         """Return the set of all the field names found in a component."""
@@ -501,7 +524,7 @@ class Sheet_V6(object):
     """
 
     def __init__(self, data, parent_filename, uuid_path):
-        self.uuid = find_by_key("uuid", data)[0][1].value()
+        self.uuid = get_value_by_key("uuid", data)
         self.uuid_path = "/".join((uuid_path, self.uuid))
 
         properties = find_by_key("property", data)
@@ -561,10 +584,9 @@ class Schematic_V6(object):
         except (TypeError, IndexError):
             pass
         else:
-            comp_insts = find_by_key("path", comp_insts)
-            for inst in comp_insts:
+            for inst in find_by_key("path", comp_insts):
                 inst_uuid_path = inst[1]
-                ref = find_by_key("reference", inst[1:])[0][1]
+                ref = get_value_by_key("reference", inst)
                 self.uuid_path_refs[inst_uuid_path] = ref
             for component in self.components:
                 component.set_ref(self.uuid_path_refs[component.uuid_path])
