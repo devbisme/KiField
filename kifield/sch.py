@@ -457,7 +457,7 @@ class Component_V6(object):
         self.fields = []
         for prop in find_by_key("property", data):
             id = get_value_by_key("id", prop)
-            self.fields.append({"name": prop[1], "ref": prop[2], "id": id})
+            self.fields.append({"name": prop[1], "ref": prop[2], "id": id, "prop": prop})
 
     def get_field_names(self):
         """Return the set of all the field names found in a component."""
@@ -480,19 +480,14 @@ class Component_V6(object):
                 refs.append(field["ref"])
         return refs
 
-    # def set_ref(self, ref):
-    #     for field in self.fields:
-    #         if field["name"] in ("Reference", "Label"):
-    #             field["ref"] = ref
-
-    def set_field_values(self, names, value):
+    def set_field_value(self, name, value):
         for field in self.fields:
-            if field['name'] in names:
+            if field['name'] == name:
                 field['ref'] = value
+                field['prop'][2] = value
 
     def set_ref(self, ref):
-        self.set_field_value(('Reference', 'Label'), ref)
-
+        self.set_field_value('Reference', ref)
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -613,6 +608,11 @@ class Schematic_V6(object):
         return list(field_names)
 
     def save(self, filename=None):
+        print(f"Saving V6 schematic to {filename}")
+        with open(filename, "w") as fp:
+            sexpdata.dump(self.sexpdata, fp)
+        return
+
         # check whether it has header, what means that sch file was loaded fine
         if not self.header:
             return

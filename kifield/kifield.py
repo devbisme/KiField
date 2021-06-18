@@ -1244,6 +1244,8 @@ def insert_part_fields_into_sch_V6(
                             ),
                         )
                         f["ref"] = quote(field_value)
+                        component.set_field_value(f['name'], quote(field_value))
+                        break
                         # # Set field attributes but don't change its position.
                         # if "attributes" in field_attributes:
                         #     f["attributes"] = field_attributes["attributes"]
@@ -1306,7 +1308,7 @@ def insert_part_fields_into_sch_V6(
 
     # If this schematic references other schematic sheets, then insert the part fields into those, too.
     if recurse:
-        for sheet in sch.sheets:
+        for sheet in sch.children:
             insert_part_fields_into_sch_V6(part_fields_dict, sheet.filename, recurse, group_components, backup)
 
             # # If filename includes a path, save this path to prepend below
