@@ -608,9 +608,36 @@ class Schematic_V6(object):
         return list(field_names)
 
     def save(self, filename=None):
-        print(f"Saving V6 schematic to {filename}")
+
+        def indent(s):
+            out_s = ''
+            tab = '    '
+            indent = ''
+            nl = ''
+            in_quote = False
+            backslash = False
+
+            for c in s:
+                if c == '(' and not in_quote:
+                    out_s += nl + indent
+                    nl = '\n'
+                    indent += tab
+                elif c ==')' and not in_quote:
+                    indent = indent[len(tab):]
+                elif c == '"' and not backslash:
+                    in_quote = not in_quote
+                
+                if c == '\\':
+                    backslash = True
+                else:
+                    backslash = False
+
+                out_s += c
+            
+            return out_s
+
         with open(filename, "w") as fp:
-            sexpdata.dump(self.sexpdata, fp)
+            fp.write(indent(sexpdata.dumps(self.sexpdata)))
         return
 
         # check whether it has header, what means that sch file was loaded fine
