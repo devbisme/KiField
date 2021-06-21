@@ -457,37 +457,50 @@ class Component_V6(object):
         self.fields = []
         for prop in find_by_key("property", data):
             id = get_value_by_key("id", prop)
-            self.fields.append({"name": prop[1], "ref": prop[2], "id": id, "prop": prop})
+            self.fields.append({"name": unquote(prop[1]), "ref": unquote(prop[2]), "id": id, "prop": prop})
 
     def get_field_names(self):
         """Return the set of all the field names found in a component."""
 
-        field_names = set()
-        for f in self.fields:
-            try:
-                field_names.add(unquote(f["name"]))
-            except KeyError:
-                pass
-        field_names.discard("")
-        return field_names
+        return {f["name"] for f in self.fields}
 
     def get_refs(self):
         """Return a list of references for a component."""
 
-        refs = []
-        for field in self.fields:
-            if field["name"] in ("Reference", "Label"):
-                refs.append(field["ref"])
-        return refs
+        return [f['ref'] for f in self.fields if f['name'] == 'Reference']
 
-    def set_field_value(self, name, value):
+    def get_field(self, name):
         for field in self.fields:
             if field['name'] == name:
-                field['ref'] = value
-                field['prop'][2] = value
+                return field
+        return None
+
+    def set_field_value(self, name, value):
+        field = self.get_field(name)
+        field['ref'] = value
+        field['prop'][2] = value
 
     def set_ref(self, ref):
         self.set_field_value('Reference', ref)
+
+    def copy_field(self, src, dst):
+        from copy import deepcopy
+        src_field = self.get_field(src)
+        if not src_field:
+            return
+        dst_field = self.get_field(dst)
+        if not dst_field:
+            dst_field = deepcopy(src_field)
+            dst_field["name"] = dst
+            dst_field["id"] = len(self.fields)
+            dst_field["prop"][1] = dst
+            id = find_by_key("id", dst_field["prop"])[0]
+            id[1] = dst_field["id"]
+            self.fields.append(dst_field)
+        else:
+            dst_field["prop"] = deepcopy(src_field["prop"])
+        self.set_field_value(dst, src_field['ref'])
+        self.data.append(dst_field['prop'])
 
     def add_field(self, field_data):
         """Add a new field to a component."""
@@ -608,144 +621,8 @@ class Schematic_V6(object):
         return list(field_names)
 
     def save(self, filename=None):
-
-        def indent(s):
-            out_s = ''
-            tab = '    '
-            indent = ''
-            nl = ''
-            in_quote = False
-            backslash = False
-
-            for c in s:
-                if c == '(' and not in_quote:
-                    out_s += nl + indent
-                    nl = '\n'
-                    indent += tab
-                elif c ==')' and not in_quote:
-                    indent = indent[len(tab):]
-                elif c == '"' and not backslash:
-                    in_quote = not in_quote
-                
-                if c == '\\':
-                    backslash = True
-                else:
-                    backslash = False
-
-                out_s += c
-            
-            return out_s
-
+        """Save schematic in a file."""
+        
         with open(filename, "w") as fp:
-            fp.write(indent(sexpdata.dumps(self.sexpdata)))
+            fp.write(sexp_indent(sexpdata.dumps(self.sexpdata)))
         return
-
-        # check whether it has header, what means that sch file was loaded fine
-        if not self.header:
-            return
-
-        if not filename:
-            filename = self.filename
-
-        # insert the header
-        to_write = []
-        to_write += [self.header]
-
-        # LIBS
-        to_write += self.libs
-
-        # EELAYER
-        to_write += [self.eelayer, "EELAYER END\n"]
-
-        # Description
-        to_write += self.description.raw_data
-
-        # Sheets
-        for sheet in self.sheets:
-            to_write += ["$Sheet\n"]
-            if sheet.shape:
-                line = "S "
-                for key in sheet._S_KEYS:
-                    line += sheet.shape[key] + " "
-                to_write += [line.rstrip() + "\n"]
-            if sheet.unit:
-                line = "U "
-                for key in sheet._U_KEYS:
-                    line += sheet.unit[key] + " "
-                to_write += [line.rstrip() + "\n"]
-
-            for field in sheet.fields:
-                line = ""
-                for key in sheet._F_KEYS:
-                    line += field[key] + " "
-                to_write += [line.rstrip() + "\n"]
-            to_write += ["$EndSheet\n"]
-
-        # Components
-        for component in self.components:
-            to_write += ["$Comp\n"]
-            if component.labels:
-                line = "L "
-                for key in component._L_KEYS:
-                    line += component.labels[key] + " "
-                to_write += [line.rstrip() + "\n"]
-
-            if component.unit:
-                line = "U "
-                for key in component._U_KEYS:
-                    line += component.unit[key] + " "
-                to_write += [line.rstrip() + "\n"]
-
-            if component.position:
-                line = "P "
-                for key in component._P_KEYS:
-                    line += component.position[key] + " "
-                to_write += [line.rstrip() + "\n"]
-
-            for reference in component.references:
-                if component.references:
-                    line = "AR "
-                    for key in component._AR_KEYS:
-                        line += reference[key] + " "
-                    to_write += [line.rstrip() + "\n"]
-
-            for field in component.fields:
-                line = "F "
-                for key in component._F_KEYS:
-                    line += field[key] + " "
-                to_write += [line.rstrip() + "\n"]
-
-            if component.old_stuff:
-                to_write += component.old_stuff
-
-            to_write += ["$EndComp\n"]
-
-        # Bitmaps
-        for bitmap in self.bitmaps:
-            to_write += bitmap.raw_data
-
-        # Texts
-        for text in self.texts:
-            to_write += [text["desc"], text["data"]]
-
-        # Wires
-        for wire in self.wires:
-            to_write += [wire["desc"], wire["data"]]
-
-        # Entries
-        for entry in self.entries:
-            to_write += [entry["desc"], entry["data"]]
-
-        # Connections
-        for conn in self.conns:
-            to_write += [conn["desc"]]
-
-        # No Connetions
-        for noconn in self.noconns:
-            to_write += [noconn["desc"]]
-
-        to_write += ["$EndSCHEMATC\n"]
-
-        f = open(filename, "w")
-        f.writelines(to_write)
-

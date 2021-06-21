@@ -19,3 +19,32 @@ else:
 DEBUG_OVERVIEW = logging.DEBUG
 DEBUG_DETAILED = logging.DEBUG - 1
 DEBUG_OBSESSIVE = logging.DEBUG - 2
+
+
+def sexp_indent(s, tab="    "):
+    """Add linebreaks and indents to an S-expression."""
+
+    out_s = ""
+    indent = ""
+    nl = ""  # First '(' will not be preceded by a newline.
+    in_quote = False
+    backslash = False
+
+    for c in s:
+        if c == "(" and not in_quote:
+            out_s += nl + indent
+            nl = "\n"  # Every '(' from now on gets preceded by a newline.
+            indent += tab
+        elif c == ")" and not in_quote:
+            indent = indent[len(tab) :]
+        elif c == '"' and not backslash:
+            in_quote = not in_quote
+
+        if c == "\\":
+            backslash = True
+        else:
+            backslash = False
+
+        out_s += c
+
+    return out_s
