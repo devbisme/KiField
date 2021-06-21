@@ -5,14 +5,15 @@
 # It's covered by GPL3. Some changes/additions were made by XESS Corp.
 #
 
-import sys
-import shlex
-import re
 import os
+import re
+import shlex
+import sys
+from copy import deepcopy
+
 import sexpdata
 
 from .common import *
-
 
 sch_field_id_to_name = {
     "0": "reference",
@@ -426,7 +427,6 @@ def find_by_key(key, array):
             if k == key:
                 found_elements.append(e)
     return found_elements
-    # return [e for e in array[1:] if e[0].value().lower() == key]
 
 
 def get_value_by_key(key, array):
@@ -457,7 +457,14 @@ class Component_V6(object):
         self.fields = []
         for prop in find_by_key("property", data):
             id = get_value_by_key("id", prop)
-            self.fields.append({"name": unquote(prop[1]), "ref": unquote(prop[2]), "id": id, "prop": prop})
+            self.fields.append(
+                {
+                    "name": unquote(prop[1]),
+                    "ref": unquote(prop[2]),
+                    "id": id,
+                    "prop": prop,
+                }
+            )
 
     def get_field_names(self):
         """Return the set of all the field names found in a component."""
@@ -467,24 +474,23 @@ class Component_V6(object):
     def get_refs(self):
         """Return a list of references for a component."""
 
-        return [f['ref'] for f in self.fields if f['name'] == 'Reference']
+        return [f["ref"] for f in self.fields if f["name"] == "Reference"]
 
     def get_field(self, name):
         for field in self.fields:
-            if field['name'] == name:
+            if field["name"] == name:
                 return field
         return None
 
     def set_field_value(self, name, value):
         field = self.get_field(name)
-        field['ref'] = value
-        field['prop'][2] = value
+        field["ref"] = value
+        field["prop"][2] = value
 
     def set_ref(self, ref):
-        self.set_field_value('Reference', ref)
+        self.set_field_value("Reference", ref)
 
     def copy_field(self, src, dst):
-        from copy import deepcopy
         src_field = self.get_field(src)
         if not src_field:
             return
@@ -499,40 +505,8 @@ class Component_V6(object):
             self.fields.append(dst_field)
         else:
             dst_field["prop"] = deepcopy(src_field["prop"])
-        self.set_field_value(dst, src_field['ref'])
-        self.data.append(dst_field['prop'])
-
-    def add_field(self, field_data):
-        """Add a new field to a component."""
-
-        # Start with default field settings.
-        field = {
-            "id": None,
-            "ref": None,
-            "orient": "H",
-            "posx": "0",
-            "posy": "0",
-            "size": "50",
-            "attributs": "0001",
-            "hjust": "C",
-            "props": "CNN",
-            "name": "~",
-        }
-
-        # Merge new field data into default field data.
-        field.update(field_data)
-
-        # Make sure ref and name are quoted.
-        field["ref"] = ensure_quoted(field["ref"])
-        field["name"] = ensure_quoted(field["name"])
-
-        # Set id for new field to be its index in the list of fields.
-        field["id"] = str(len(self.fields))
-
-        # Add new field to list of fields.
-        self.fields.append(field)
-
-        return field
+        self.set_field_value(dst, src_field["ref"])
+        self.data.append(dst_field["prop"])
 
 
 class Sheet_V6(object):
@@ -622,7 +596,10 @@ class Schematic_V6(object):
 
     def save(self, filename=None):
         """Save schematic in a file."""
-        
+
+        if not filename:
+            filename = self.filename
+
         with open(filename, "w") as fp:
             fp.write(sexp_indent(sexpdata.dumps(self.sexpdata)))
         return

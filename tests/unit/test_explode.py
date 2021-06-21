@@ -12,6 +12,7 @@ import unittest
 
 import hypothesis
 import hypothesis.strategies as st
+
 from kifield import kifield
 
 

@@ -7,10 +7,10 @@ Tests for the `kifield.group_wb` function
 
 import unittest
 
-import openpyxl as pyxl
-
 import hypothesis
 import hypothesis.strategies as st
+import openpyxl as pyxl
+
 from kifield import kifield
 
 

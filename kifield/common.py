@@ -2,8 +2,8 @@
 
 # MIT License / Copyright (c) 2021 by XESS Corporation.
 
-import sys
 import logging
+import sys
 
 USING_PYTHON2 = sys.version_info.major == 2
 USING_PYTHON3 = not USING_PYTHON2

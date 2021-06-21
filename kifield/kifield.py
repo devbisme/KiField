@@ -447,7 +447,7 @@ def extract_part_fields_from_sch(
     # Get all the part fields in the schematic and keep only the desired ones.
     # Remove the reference field (F0) from the list because that's used as as the dict key.
     field_names = sch.get_field_names()
-    cull_list(field_names, None, ['reference'])
+    cull_list(field_names, None, ["reference"])
     cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component of the schematic, extracting its fields.
@@ -504,8 +504,6 @@ def extract_part_fields_from_sch(
     return part_fields_dict
 
 
-
-
 def extract_part_fields_from_sch_V6(
     filename, inc_field_names=None, exc_field_names=None, recurse=False, depth=0
 ):
@@ -525,7 +523,7 @@ def extract_part_fields_from_sch_V6(
     # Get all the part fields in the schematic and keep only the desired ones.
     # Remove the reference field (F0) from the list because that's used as as the dict key.
     field_names = sch.get_field_names()
-    cull_list(field_names, None, ['reference'])
+    cull_list(field_names, None, ["reference"])
     cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component of the schematic, extracting its fields.
@@ -797,8 +795,8 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
 
     def set_cell_format(cell):
         """Set cell to TEXT format if it contains a string."""
-        if cell.data_type == 's':
-            cell.number_format = '@'
+        if cell.data_type == "s":
+            cell.number_format = "@"
 
     if ws.min_column == ws.max_column:
         # If the given worksheet is empty, then create one using the part field labels.
@@ -1239,7 +1237,7 @@ def insert_part_fields_into_sch_V6(
                             ),
                         )
                         f["ref"] = quote(field_value)
-                        component.set_field_value(f['name'], quote(field_value))
+                        component.set_field_value(f["name"], quote(field_value))
                         break
                         # # Set field attributes but don't change its position.
                         # if "attributes" in field_attributes:
@@ -1487,13 +1485,12 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
                 logger.warn("Unable to write to file: {}.".format(f))
 
 
-
 def clean_part_fields(part_fields_dict):
     """Clean field values (i.e., remove or replace any newlines with spaces.)"""
     for part, fields in part_fields_dict.items():
         for k, v in fields.items():
-            v = re.sub("[\n\r]+$", "", str(v)) # Remove newlines at end of field.
-            fields[k] = re.sub("[\n\r]+", " ", v) # Replace newlines within field.
+            v = re.sub("[\n\r]+$", "", str(v))  # Remove newlines at end of field.
+            fields[k] = re.sub("[\n\r]+", " ", v)  # Replace newlines within field.
 
 
 def kifield(
