@@ -594,12 +594,19 @@ class Schematic_V6(object):
 
         return list(field_names)
 
-    def save(self, filename=None):
+    def save(self, recurse=False, backup=True, filename=None):
         """Save schematic in a file."""
 
         if not filename:
             filename = self.filename
 
+        if backup:
+            create_backup(filename)
+
         with open(filename, "w") as fp:
             fp.write(sexp_indent(sexpdata.dumps(self.sexpdata)))
+
+        for child in self.children:
+            child.save(recurse, backup)
+
         return
