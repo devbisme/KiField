@@ -471,10 +471,10 @@ class Component_V6(object):
 
         return {f["name"] for f in self.fields}
 
-    def get_refs(self):
-        """Return a list of references for a component."""
+    def get_ref(self):
+        """Return the reference for a component."""
 
-        return [f["value"] for f in self.fields if f["name"] == "Reference"]
+        return [f["value"] for f in self.fields if f["name"] == "Reference"][0]
 
     def get_field(self, name):
         for field in self.fields:

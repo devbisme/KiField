@@ -409,17 +409,17 @@ def extract_part_fields_from_sch_V6(
             if name in field_names:
                 part_fields[name] = field["value"]
 
-        # Create a dictionary entry for each ref and assign the part fields to it.
-        for ref in component.get_refs():
-            if ref[0] == "#" or ref[-1] == "?":
-                continue  # Skip pseudo-parts (e.g. power nets) and unallocated parts.
+        # Create a dictionary entry for the component ref and assign the part fields to it.
+        ref = component.get_ref()
+        if ref[0] == "#" or ref[-1] == "?":
+            continue  # Skip pseudo-parts (e.g. power nets) and unallocated parts.
 
-            # Some components (like resistor arrays) contain multiple units.
-            # Add the fields for a unit to the part fields dict. By the end of
-            # the loop, the part fields dict will have the union of the fields
-            # of all of the units.
-            part_fields.update(part_fields_dict.get(ref, {}))
-            part_fields_dict[ref] = part_fields
+        # Some components (like resistor arrays) contain multiple units.
+        # Add the fields for a unit to the part fields dict. By the end of
+        # the loop, the part fields dict will have the union of the fields
+        # of all of the units.
+        part_fields.update(part_fields_dict.get(ref, {}))
+        part_fields_dict[ref] = part_fields
 
     return part_fields_dict
 
@@ -1046,113 +1046,112 @@ def insert_part_fields_into_sch_V6(
 
         # For each reference for this component, search in the dictionary
         # for new or updated fields for this part.
-        refs = component.get_refs()
-        for ref in refs:
+        ref = component.get_ref()
 
-            # Get the part fields for the given part reference (or an empty list).
-            part_fields = part_fields_dict.get(ref, {})
+        # Get the part fields for the given part reference (or an empty list).
+        part_fields = part_fields_dict.get(ref, {})
 
-            # Warn if the current part fields for this component don't match the
-            # previous part fields (which may happen with hierarchical schematics).
-            if prev_part_fields is not None and part_fields != prev_part_fields:
-                logger.warn(
-                    "The inserted part lists for hierarchically-instantiated components {} have different values.".format(
-                        refs
-                    )
+        # Warn if the current part fields for this component don't match the
+        # previous part fields (which may happen with hierarchical schematics).
+        if prev_part_fields is not None and part_fields != prev_part_fields:
+            logger.warn(
+                "The inserted part lists for hierarchically-instantiated components {} have different values.".format(
+                    refs
                 )
-            # Store the part fields for later comparison.
-            prev_part_fields = deepcopy(part_fields)
+            )
+        # Store the part fields for later comparison.
+        prev_part_fields = deepcopy(part_fields)
 
-            # Insert the fields from the part dictionary into the component fields.
-            for field_name, field_value in part_fields.items():
+        # Insert the fields from the part dictionary into the component fields.
+        for field_name, field_value in part_fields.items():
 
-                # Create a dict to hold the field visibility attribute.
-                try:
-                    raise AttributeError  # TODO: Remove this!
-                    field_attributes = dict()
-                    INVIS_CODE = "0001"
-                    VISIBLE_CODE = "0000"
-                    if field_name.startswith(INVIS_PREFIX):
-                        field_attributes["attributes"] = INVIS_CODE
-                        field_name = field_name[len(INVIS_PREFIX) :]
-                    elif field_name.startswith(VISIBLE_PREFIX):
-                        field_attributes["attributes"] = VISIBLE_CODE
-                        field_name = field_name[len(VISIBLE_PREFIX) :]
-                    if field_value.startswith(INVIS_PREFIX):
-                        field_attributes["attributes"] = INVIS_CODE
-                        field_value = field_value[len(INVIS_PREFIX) :]
-                    elif field_value.startswith(VISIBLE_PREFIX):
-                        field_attributes["attributes"] = VISIBLE_CODE
-                        field_value = field_value[len(VISIBLE_PREFIX) :]
-                except AttributeError:
-                    # If we get here, it's probably because field_value is not a
-                    # string so the startswith() method wasn't found. Because it's
-                    # not a string, there's no way for it to have a prefix string
-                    # so we can just ignore the exception because the action never
-                    # would have happened anyway.
-                    pass
+            # Create a dict to hold the field visibility attribute.
+            try:
+                raise AttributeError  # TODO: Remove this!
+                field_attributes = dict()
+                INVIS_CODE = "0001"
+                VISIBLE_CODE = "0000"
+                if field_name.startswith(INVIS_PREFIX):
+                    field_attributes["attributes"] = INVIS_CODE
+                    field_name = field_name[len(INVIS_PREFIX) :]
+                elif field_name.startswith(VISIBLE_PREFIX):
+                    field_attributes["attributes"] = VISIBLE_CODE
+                    field_name = field_name[len(VISIBLE_PREFIX) :]
+                if field_value.startswith(INVIS_PREFIX):
+                    field_attributes["attributes"] = INVIS_CODE
+                    field_value = field_value[len(INVIS_PREFIX) :]
+                elif field_value.startswith(VISIBLE_PREFIX):
+                    field_attributes["attributes"] = VISIBLE_CODE
+                    field_value = field_value[len(VISIBLE_PREFIX) :]
+            except AttributeError:
+                # If we get here, it's probably because field_value is not a
+                # string so the startswith() method wasn't found. Because it's
+                # not a string, there's no way for it to have a prefix string
+                # so we can just ignore the exception because the action never
+                # would have happened anyway.
+                pass
 
-                # Get the field id associated with this field name (if there is one).
-                field_id = lib_field_name_to_id.get(field_name, None)
+            # Get the field id associated with this field name (if there is one).
+            field_id = lib_field_name_to_id.get(field_name, None)
 
-                # Search for an existing field with a matching name in the component.
-                for f in component.fields:
+            # Search for an existing field with a matching name in the component.
+            for f in component.fields:
 
-                    if f["id"] == field_id or f["name"].lower() == field_name.lower():
-                        # Update existing named field in component.
-                        logger.log(
-                            DEBUG_OBSESSIVE,
-                            "Updating {} field {} from {} to {}".format(
-                                ref, f["id"], f["value"], quote(field_value)
-                            ),
-                        )
-                        f["value"] = field_value
-                        component.set_field_value(f["name"], field_value)
-                        break
-                        # # Set field attributes but don't change its position.
-                        # if "attributes" in field_attributes:
-                        #     f["attributes"] = field_attributes["attributes"]
-                        # break
+                if f["id"] == field_id or f["name"].lower() == field_name.lower():
+                    # Update existing named field in component.
+                    logger.log(
+                        DEBUG_OBSESSIVE,
+                        "Updating {} field {} from {} to {}".format(
+                            ref, f["id"], f["value"], quote(field_value)
+                        ),
+                    )
+                    f["value"] = field_value
+                    component.set_field_value(f["name"], field_value)
+                    break
+                    # # Set field attributes but don't change its position.
+                    # if "attributes" in field_attributes:
+                    #     f["attributes"] = field_attributes["attributes"]
+                    # break
 
-                # No existing field to update, so add a new field.
-                else:
-                    if field_value not in (None, ""):
-                        # Add new named field and value to component.
-                        component.copy_field("Reference", field_name)
-                        component.set_field_value(field_name, field_value)
+            # No existing field to update, so add a new field.
+            else:
+                if field_value not in (None, ""):
+                    # Add new named field and value to component.
+                    component.copy_field("Reference", field_name)
+                    component.set_field_value(field_name, field_value)
 
-                        # # Position new field based on the REF position.
-                        # posx = component.fields[0]["posx"]
-                        # posy = str(
-                        #     int(component.fields[0]["posy"]) + 100
-                        # )  # Place it below REF.
-                        # field_position = {"posx": posx, "posy": posy}
+                    # # Position new field based on the REF position.
+                    # posx = component.fields[0]["posx"]
+                    # posy = str(
+                    #     int(component.fields[0]["posy"]) + 100
+                    # )  # Place it below REF.
+                    # field_position = {"posx": posx, "posy": posy}
 
-                        # new_field = {
-                        #     "value": quote(field_value),
-                        #     "name": quote(field_name),
-                        # }
-                        # new_field.update(field_attributes)  # Set field's attributes.
-                        # new_field.update(field_position)  # Set new field's position.
-                        # component.add_field(new_field)
-                        logger.log(
-                            DEBUG_OBSESSIVE,
-                            "Adding {} field {} with value {}".format(
-                                ref, component.fields[-1]["id"], quote(field_value)
-                            ),
-                        )
+                    # new_field = {
+                    #     "value": quote(field_value),
+                    #     "name": quote(field_name),
+                    # }
+                    # new_field.update(field_attributes)  # Set field's attributes.
+                    # new_field.update(field_position)  # Set new field's position.
+                    # component.add_field(new_field)
+                    logger.log(
+                        DEBUG_OBSESSIVE,
+                        "Adding {} field {} with value {}".format(
+                            ref, component.fields[-1]["id"], quote(field_value)
+                        ),
+                    )
 
-                # Only keep unnamed fields or named fields with non-empty values.
-                # component.fields = [
-                #     f
-                #     for f in component.fields
-                #     if unquote(f.get("name", None)) in (None, "", "~")
-                #     or unquote(f.get("value", None)) not in (None, "")
-                # ]
+            # Only keep unnamed fields or named fields with non-empty values.
+            # component.fields = [
+            #     f
+            #     for f in component.fields
+            #     if unquote(f.get("name", None)) in (None, "", "~")
+            #     or unquote(f.get("value", None)) not in (None, "")
+            # ]
 
-                # Canonically order the fields to make schematic comparisons
-                # easier during acceptance testing.
-                # component.fields = reorder_sch_fields(component.fields)
+            # Canonically order the fields to make schematic comparisons
+            # easier during acceptance testing.
+            # component.fields = reorder_sch_fields(component.fields)
 
     # Save the updated schematic and sub-schematics (if recursing).
     sch.save(recurse, backup, filename)
