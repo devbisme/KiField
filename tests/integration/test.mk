@@ -2,7 +2,7 @@ PROG = kifield
 #PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
-test: test1 test2 test3 test4 test5
+test: test1 test2 test3 test4 test5 test6 test7
 	@echo 'All tests passed!'
 	@$(PROG) -v
 
@@ -92,6 +92,45 @@ test5:
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'
 
+test6:
+	@rm -f $@*.*
+    # Extract the fields from the schematic into a CSV file.
+	@$(PROG) -x hierarchical_schematic.kicad_sch -i $@.csv -r $(FLAGS)
+    # Add some random columns of random stuff to the CSV file.
+	# @python randomizer.py $@.csv $@.csv
+    # Restore the fields from the CSV file back into the schematic.
+	@$(PROG) -x $@.csv -i hierarchical_schematic.kicad_sch -r -w -d 1
+    # Extract the schematic fields into an XLSX file.
+	@$(PROG) -x hierarchical_schematic.kicad_sch -i $@.xlsx -r $(FLAGS)
+    # Extract the contents of the XLSX file into a CSV file.
+	@$(PROG) -x $@.xlsx -i $@1.csv -r $(FLAGS)
+	# Restore the hierarchical schematic files.
+	@cp -f hierarchical_schematic.kicad_sch.1.bak hierarchical_schematic.kicad_sch
+	@cp -f leaf1.kicad_sch.1.bak leaf1.kicad_sch
+	@cp -f leaf2.kicad_sch.1.bak leaf2.kicad_sch
+    # The extracted CSV file should match the original CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
+test7:
+	@rm -f $@*.*
+    # Extract the fields from the schematic into a CSV file.
+	@$(PROG) -x random_circuit.kicad_sch -i $@.csv -r $(FLAGS)
+    # Add some random columns of random stuff to the CSV file.
+	@python randomizer.py $@.csv $@.csv
+    # Restore the fields from the CSV file back into the schematic.
+	@$(PROG) -x $@.csv -i random_circuit.kicad_sch -r -w -d 1
+    # Extract the schematic fields into an XLSX file.
+	@$(PROG) -x random_circuit.kicad_sch -i $@.xlsx -r $(FLAGS)
+    # Extract the contents of the XLSX file into a CSV file.
+	@$(PROG) -x $@.xlsx -i $@1.csv -r $(FLAGS)
+    # Restore the schematic files.
+	@cp random_circuit.kicad_sch random_circuit_altered.kicad_sch
+	@cp -f random_circuit.kicad_sch.1.bak random_circuit.kicad_sch
+    # The extracted CSV file should match the original CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
 clean:
-	@rm -f test1*.* test2*.* test3*.* test4*.* test5*.*
+	@rm -f test1*.* test2*.* test3*.* test4*.* test5*.* test6*.* *.bak
 	@echo 'Cleanup complete.'
