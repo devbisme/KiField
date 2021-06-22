@@ -460,7 +460,7 @@ class Component_V6(object):
             self.fields.append(
                 {
                     "name": unquote(prop[1]),
-                    "ref": unquote(prop[2]),
+                    "value": unquote(prop[2]),
                     "id": id,
                     "prop": prop,
                 }
@@ -474,7 +474,7 @@ class Component_V6(object):
     def get_refs(self):
         """Return a list of references for a component."""
 
-        return [f["ref"] for f in self.fields if f["name"] == "Reference"]
+        return [f["value"] for f in self.fields if f["name"] == "Reference"]
 
     def get_field(self, name):
         for field in self.fields:
@@ -484,7 +484,7 @@ class Component_V6(object):
 
     def set_field_value(self, name, value):
         field = self.get_field(name)
-        field["ref"] = value
+        field["value"] = value
         field["prop"][2] = value
 
     def set_ref(self, ref):
@@ -505,7 +505,7 @@ class Component_V6(object):
             self.fields.append(dst_field)
         else:
             dst_field["prop"] = deepcopy(src_field["prop"])
-        self.set_field_value(dst, src_field["ref"])
+        self.set_field_value(dst, src_field["value"])
         self.data.append(dst_field["prop"])
 
 

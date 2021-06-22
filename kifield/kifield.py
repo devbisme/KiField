@@ -407,8 +407,7 @@ def extract_part_fields_from_sch_V6(
             # allowed fields.
             name = field["name"]
             if name in field_names:
-                value = field["ref"]
-                part_fields[name] = value
+                part_fields[name] = field["value"]
 
         # Create a dictionary entry for each ref and assign the part fields to it.
         for ref in component.get_refs():
@@ -1104,10 +1103,10 @@ def insert_part_fields_into_sch_V6(
                         logger.log(
                             DEBUG_OBSESSIVE,
                             "Updating {} field {} from {} to {}".format(
-                                ref, f["id"], f["ref"], quote(field_value)
+                                ref, f["id"], f["value"], quote(field_value)
                             ),
                         )
-                        f["ref"] = field_value
+                        f["value"] = field_value
                         component.set_field_value(f["name"], field_value)
                         break
                         # # Set field attributes but don't change its position.
@@ -1130,7 +1129,7 @@ def insert_part_fields_into_sch_V6(
                         # field_position = {"posx": posx, "posy": posy}
 
                         # new_field = {
-                        #     "ref": quote(field_value),
+                        #     "value": quote(field_value),
                         #     "name": quote(field_name),
                         # }
                         # new_field.update(field_attributes)  # Set field's attributes.
@@ -1148,7 +1147,7 @@ def insert_part_fields_into_sch_V6(
                 #     f
                 #     for f in component.fields
                 #     if unquote(f.get("name", None)) in (None, "", "~")
-                #     or unquote(f.get("ref", None)) not in (None, "")
+                #     or unquote(f.get("value", None)) not in (None, "")
                 # ]
 
                 # Canonically order the fields to make schematic comparisons

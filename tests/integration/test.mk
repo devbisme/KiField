@@ -132,5 +132,5 @@ test7:
 	@echo 'Test $@ passed!'
 
 clean:
-	@rm -f test1*.* test2*.* test3*.* test4*.* test5*.* test6*.* *.bak
+	@rm -f test[1-7]*.* *.bak
 	@echo 'Cleanup complete.'
