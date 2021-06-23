@@ -1015,21 +1015,6 @@ def insert_part_fields_into_sch_V6(
         "Inserting extracted fields into schematic file {}.".format(filename),
     )
 
-    def reorder_sch_fields(fields):
-        """Return the part fields with the named fields ordered alphabetically."""
-        # Sort the named fields that come after the first four, unnamed fields.
-        sort_key = operator.itemgetter("name")
-        if USING_PYTHON2:
-            sort_key_func = lambda s: unicode(sort_key(s))
-        else:
-            sort_key_func = sort_key
-        named_fields = sorted(fields[4:], key=sort_key_func)
-        # Renumber the ids of the sorted fields.
-        for id, field in enumerate(named_fields, 4):
-            field["id"] = str(id)
-        # Return the first four fields plus the remaining sorted fields.
-        return fields[:4] + named_fields
-
     # Get an existing schematic or abort. (There's no way we can create
     # a viable schematic file just from part field values.)
     try:
@@ -1141,17 +1126,15 @@ def insert_part_fields_into_sch_V6(
                         ),
                     )
 
-            # Only keep unnamed fields or named fields with non-empty values.
-            # component.fields = [
-            #     f
-            #     for f in component.fields
-            #     if unquote(f.get("name", None)) in (None, "", "~")
-            #     or unquote(f.get("value", None)) not in (None, "")
-            # ]
-
-            # Canonically order the fields to make schematic comparisons
-            # easier during acceptance testing.
-            # component.fields = reorder_sch_fields(component.fields)
+        # Remove non-default fields with empty values.
+        for field in component.fields:
+            name = field["name"]
+            if name.lower() in ("reference", "value", "footprint", "datasheet"):
+                # Skip default fields so they aren't removed.
+                continue
+            if field["value"] in (None, ""):
+                # Remove empty field.
+                component.del_field(name)
 
     # Save the updated schematic and sub-schematics (if recursing).
     sch.save(recurse, backup, filename)

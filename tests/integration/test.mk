@@ -125,7 +125,6 @@ test7:
     # Extract the contents of the XLSX file into a CSV file.
 	@$(PROG) -x $@.xlsx -i $@1.csv -r $(FLAGS)
     # Restore the schematic files.
-	@cp random_circuit.kicad_sch random_circuit_altered.kicad_sch
 	@cp -f random_circuit.kicad_sch.1.bak random_circuit.kicad_sch
     # The extracted CSV file should match the original CSV file.
 	@diff -qsw $@.csv $@1.csv

@@ -415,8 +415,27 @@ class Schematic(object):
         f.writelines(to_write)
 
 
+# def find_by_key(key, array):
+#     """Return list elements in an array whose first element matches the key."""
+#     found_elements = []
+#     for e in array:
+#         try:
+#             k = e[0].value().lower()
+#         except (IndexError, AttributeError, TypeError):
+#             pass
+#         else:
+#             if k == key:
+#                 found_elements.append(e)
+#     return found_elements
+
+
 def find_by_key(key, array):
-    """Return list elements in an array whose first element matches the key."""
+    try:
+        k, sub_key = key.split("/", maxsplit=1)
+    except ValueError:
+        k = key
+        sub_key = None
+
     found_elements = []
     for e in array:
         try:
@@ -425,7 +444,10 @@ def find_by_key(key, array):
             pass
         else:
             if k == key:
-                found_elements.append(e)
+                if not sub_key:
+                    found_elements.append(e)
+                else:
+                    found_elements.extend(find_by_key(sub_key, e))
     return found_elements
 
 
@@ -476,21 +498,24 @@ class Component_V6(object):
 
         return [f["value"] for f in self.fields if f["name"] == "Reference"][0]
 
-    def get_field(self, name):
+    def get_field(self, field_name):
         for field in self.fields:
-            if field["name"] == name:
+            if field["name"] == field_name:
                 return field
         return None
 
-    def set_field_value(self, name, value):
-        field = self.get_field(name)
+    def set_field_value(self, field_name, value):
+        """Set the value of a component field."""
+        field = self.get_field(field_name)
         field["value"] = value
         field["prop"][2] = value
 
     def set_ref(self, ref):
+        """Set the component reference identifier."""
         self.set_field_value("Reference", ref)
 
     def copy_field(self, src, dst):
+        """Add a copy of a component field with a different name."""
         src_field = self.get_field(src)
         if not src_field:
             return
@@ -507,6 +532,17 @@ class Component_V6(object):
             dst_field["prop"] = deepcopy(src_field["prop"])
         self.set_field_value(dst, src_field["value"])
         self.data.append(dst_field["prop"])
+
+    def del_field(self, field_name):
+        """Delete a component field."""
+        for i, field in enumerate(self.fields):
+            if field["name"] == field_name:
+                prop = field["prop"]
+                del self.fields[i]
+                for j, elem in enumerate(self.data):
+                    if elem is prop:
+                        del self.data[j]
+                        return
 
 
 class Sheet_V6(object):
