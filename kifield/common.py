@@ -4,9 +4,9 @@
 
 import logging
 import os
+import re
 import shutil
 import sys
-import re
 
 USING_PYTHON2 = sys.version_info.major == 2
 USING_PYTHON3 = not USING_PYTHON2
