@@ -514,6 +514,38 @@ class Component_V6(object):
         """Set the component reference identifier."""
         self.set_field_value("Reference", ref)
 
+    def set_field_visibility(self, field_name, visible):
+        """Set the visibility of a component field."""
+
+        # Leave visibility unaffected if passed None.
+        if visible == None:
+            return
+
+        field = self.get_field(field_name)
+        if field:
+            effects = find_by_key("effects", field["prop"])[0]
+            if effects:
+                try:
+                    effects.remove(sexpdata.Symbol("hide"))
+                except ValueError:
+                    pass
+                if not visible:
+                    effects.append(sexpdata.Symbol("hide"))
+
+    def get_field_pos(self, field_name):
+        field = self.get_field(field_name)
+        if field:
+            at = find_by_key("at", field["prop"])[0]
+            if at:
+                return at[1:4]
+
+    def set_field_pos(self, field_name, pos):
+        field = self.get_field(field_name)
+        if field:
+            at = find_by_key("at", field["prop"])[0]
+            if at:
+                at[1:4] = pos[:]
+
     def copy_field(self, src, dst):
         """Add a copy of a component field with a different name."""
         src_field = self.get_field(src)
@@ -642,7 +674,8 @@ class Schematic_V6(object):
         with open(filename, "w") as fp:
             fp.write(sexp_indent(sexpdata.dumps(self.sexpdata)))
 
-        for child in self.children:
-            child.save(recurse, backup)
+        if recurse:
+            for child in self.children:
+                child.save(recurse, backup)
 
         return

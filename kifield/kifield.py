@@ -80,7 +80,7 @@ def wb_to_csvfile(wb, csv_filename, dialect):
 
 
 def group_wb(wb):
-    """Group lines that have the same column values in a openpyxl workbook.
+    """ Group lines that have the same column values in a openpyxl workbook.
     Headers are expected on the first row and references are expected in the
     first column."""
     ws = wb.active
@@ -1050,60 +1050,55 @@ def insert_part_fields_into_sch_V6(
         # Insert the fields from the part dictionary into the component fields.
         for field_name, field_value in part_fields.items():
 
-            # Create a dict to hold the field visibility attribute.
-            try:
-                raise AttributeError  # TODO: Remove this!
-                field_attributes = dict()
-                INVIS_CODE = "0001"
-                VISIBLE_CODE = "0000"
-                if field_name.startswith(INVIS_PREFIX):
-                    field_attributes["attributes"] = INVIS_CODE
-                    field_name = field_name[len(INVIS_PREFIX) :]
-                elif field_name.startswith(VISIBLE_PREFIX):
-                    field_attributes["attributes"] = VISIBLE_CODE
-                    field_name = field_name[len(VISIBLE_PREFIX) :]
-                if field_value.startswith(INVIS_PREFIX):
-                    field_attributes["attributes"] = INVIS_CODE
-                    field_value = field_value[len(INVIS_PREFIX) :]
-                elif field_value.startswith(VISIBLE_PREFIX):
-                    field_attributes["attributes"] = VISIBLE_CODE
-                    field_value = field_value[len(VISIBLE_PREFIX) :]
-            except AttributeError:
-                # If we get here, it's probably because field_value is not a
-                # string so the startswith() method wasn't found. Because it's
-                # not a string, there's no way for it to have a prefix string
-                # so we can just ignore the exception because the action never
-                # would have happened anyway.
-                pass
-
-            # Get the field id associated with this field name (if there is one).
-            field_id = lib_field_name_to_id.get(field_name, None)
+            # Get [V] (visible) or [I] (invisible) flag prepended to entire field name
+            # or individual field value. If no flag, visibility is set to None.
+            field_vis, field_name = re.match("(\[([VI])\])?(.*)", field_name).group(2, 3)
+            value_vis, field_value = re.match("(\[([VI])\])?(.*)", field_value).group(2, 3)
+            if value_vis == "V":
+                total_vis = True
+            elif value_vis == "I":
+                total_vis = False
+            else:
+                if field_vis == "V":
+                    total_vis = True
+                elif field_vis == "I":
+                    total_vis = False
+                else:
+                    total_vis = None
 
             # Search for an existing field with a matching name in the component.
             for f in component.fields:
 
-                if f["id"] == field_id or f["name"].lower() == field_name.lower():
+                if f["name"].lower() == field_name.lower():
                     # Update existing named field in component.
                     logger.log(
                         DEBUG_OBSESSIVE,
-                        "Updating {} field {} from {} to {}".format(
-                            ref, f["id"], f["value"], quote(field_value)
+                        "Updating {} field {} from {} to {} with visibility {}".format(
+                            ref, f["name"], f["value"], quote(field_value), total_vis
                         ),
                     )
                     f["value"] = field_value
                     component.set_field_value(f["name"], field_value)
-                    break
-                    # # Set field attributes but don't change its position.
-                    # if "attributes" in field_attributes:
-                    #     f["attributes"] = field_attributes["attributes"]
-                    # break
+                    component.set_field_visibility(f["name"], total_vis)
+                    break  # To keep following else from creating a new field.
 
             # No existing field to update, so add a new field.
             else:
                 if field_value not in (None, ""):
                     # Add new named field and value to component.
+                    logger.log(
+                        DEBUG_OBSESSIVE,
+                        "Adding {} field {} with value {} with visibility {}".format(
+                            ref, field_name, quote(field_value), total_vis
+                        ),
+                    )
                     component.copy_field("Reference", field_name)
                     component.set_field_value(field_name, field_value)
+                    pos = component.get_field_pos(field_name)
+                    field = component.get_field(field_name)
+                    pos[1] += 2.54 * field["id"]
+                    component.set_field_pos(field_name, pos)
+                    component.set_field_visibility(field_name, total_vis)
 
                     # # Position new field based on the REF position.
                     # posx = component.fields[0]["posx"]
@@ -1119,12 +1114,6 @@ def insert_part_fields_into_sch_V6(
                     # new_field.update(field_attributes)  # Set field's attributes.
                     # new_field.update(field_position)  # Set new field's position.
                     # component.add_field(new_field)
-                    logger.log(
-                        DEBUG_OBSESSIVE,
-                        "Adding {} field {} with value {}".format(
-                            ref, component.fields[-1]["id"], quote(field_value)
-                        ),
-                    )
 
         # Remove non-default fields with empty values.
         for field in component.fields:
