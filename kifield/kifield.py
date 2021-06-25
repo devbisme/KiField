@@ -1100,21 +1100,6 @@ def insert_part_fields_into_sch_V6(
                     component.set_field_pos(field_name, pos)
                     component.set_field_visibility(field_name, total_vis)
 
-                    # # Position new field based on the REF position.
-                    # posx = component.fields[0]["posx"]
-                    # posy = str(
-                    #     int(component.fields[0]["posy"]) + 100
-                    # )  # Place it below REF.
-                    # field_position = {"posx": posx, "posy": posy}
-
-                    # new_field = {
-                    #     "value": quote(field_value),
-                    #     "name": quote(field_name),
-                    # }
-                    # new_field.update(field_attributes)  # Set field's attributes.
-                    # new_field.update(field_position)  # Set new field's position.
-                    # component.add_field(new_field)
-
         # Remove non-default fields with empty values.
         for field in component.fields:
             name = field["name"]
@@ -1133,6 +1118,107 @@ def insert_part_fields_into_lib(
     part_fields_dict, filename, recurse, group_components, backup
 ):
     """Insert the fields in the extracted part dictionary into a library."""
+
+    logger.log(
+        DEBUG_OVERVIEW,
+        "Inserting extracted fields into library file {}.".format(filename),
+    )
+
+    if backup:
+        create_backup(filename)
+
+    # Get an existing library or abort. (There's no way we can create
+    # a viable library file just from part field values.)
+    try:
+        lib = SchLib(filename)
+    except IOError:
+        logger.warn("Library file {} not found.".format(filename))
+        return
+
+    # Go through all the library components, replacing field values and
+    # adding new fields from the part fields dictionary.
+    for component in lib.components:
+        component_name = component.definition["name"]
+
+        # Get fields for the part with the same name as this component (or an empty list).
+        part_fields = part_fields_dict.get(component_name, {})
+
+        # Insert the fields from the part dictionary into the component fields.
+        for field_name, field_value in part_fields.items():
+
+            # Get the field id associated with this field name (if there is one).
+            field_id = lib_field_name_to_id.get(field_name, None)
+
+            # Search for an existing field with a matching name in the component.
+            for id, f in enumerate(component.fields):
+
+                if unquote(f.get("fieldname", "")).lower() == field_name.lower():
+                    # Update existing named field in component.
+                    logger.log(
+                        DEBUG_OBSESSIVE,
+                        "Updating {} field {} from {} to {}".format(
+                            component_name, field_name, f["name"], quote(field_value)
+                        ),
+                    )
+                    f["name"] = quote(field_value)
+                    break
+
+                elif str(id) == field_id:
+                    if id == 0:
+                        # Update the F0 field of the component.
+                        logger.log(
+                            DEBUG_OBSESSIVE,
+                            "Updating {} field {} from {} to {}".format(
+                                component_name,
+                                field_id,
+                                f["reference"],
+                                quote(field_value),
+                            ),
+                        )
+                        f["reference"] = quote(field_value)
+                    else:
+                        # Update one of the F1, F2, or F3 fields in the component.
+                        logger.log(
+                            DEBUG_OBSESSIVE,
+                            "Updating {} field {} from {} to {}".format(
+                                component_name, field_id, f["name"], quote(field_value)
+                            ),
+                        )
+                        f["name"] = quote(field_value)
+                    break
+
+            # No existing field to update, so add a new field.
+            else:
+                if field_value not in (None, ""):
+                    # Copy an existing field from the component and then
+                    # update its name and value to create a new field.
+                    new_field = deepcopy(component.fields[-1])
+                    new_field["fieldname"] = quote(field_name)
+                    new_field["name"] = quote(field_value)
+                    component.fields.append(new_field)
+                    logger.log(
+                        DEBUG_OBSESSIVE,
+                        "Adding {} field {} with value {}".format(
+                            component_name, field_name, quote(field_value)
+                        ),
+                    )
+
+        # Remove any named fields with empty values.
+        component.fields = [
+            f
+            for f in component.fields
+            if unquote(f.get("fieldname", None)) in (None, "", "~")
+            or unquote(f.get("name", None)) not in (None, "")
+        ]
+
+    # Save the updated library.
+    lib.save(filename)
+
+
+def insert_part_fields_into_lib_V6(
+    part_fields_dict, filename, recurse, group_components, backup
+):
+    """Insert the fields in the extracted part dictionary into a KiCad V6 library."""
 
     logger.log(
         DEBUG_OVERVIEW,
@@ -1283,6 +1369,7 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
         ".sch": insert_part_fields_into_sch,
         ".kicad_sch": insert_part_fields_into_sch_V6,
         ".lib": insert_part_fields_into_lib,
+        ".kicad_sym": insert_part_fields_into_lib_V6,
         ".dcm": insert_part_fields_into_dcm,
     }
 
