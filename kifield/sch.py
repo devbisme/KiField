@@ -415,57 +415,9 @@ class Schematic(object):
         f.writelines(to_write)
 
 
-# def find_by_key(key, array):
-#     """Return list elements in an array whose first element matches the key."""
-#     found_elements = []
-#     for e in array:
-#         try:
-#             k = e[0].value().lower()
-#         except (IndexError, AttributeError, TypeError):
-#             pass
-#         else:
-#             if k == key:
-#                 found_elements.append(e)
-#     return found_elements
-
-
-def find_by_key(key, array):
-    try:
-        k, sub_key = key.split("/", maxsplit=1)
-    except ValueError:
-        k = key
-        sub_key = None
-
-    found_elements = []
-    for e in array:
-        try:
-            k = e[0].value().lower()
-        except (IndexError, AttributeError, TypeError):
-            pass
-        else:
-            if k == key:
-                if not sub_key:
-                    found_elements.append(e)
-                else:
-                    found_elements.extend(find_by_key(sub_key, e))
-    return found_elements
-
-
-def get_value_by_key(key, array):
-    try:
-        value = find_by_key(key, array)[0][1]
-    except IndexError:
-        return None
-    else:
-        try:
-            return value.value()
-        except AttributeError:
-            return value
-
-
 class Component_V6(object):
     """
-    A class to parse components of Schematic Files Format of the KiCad
+    A class to parse components of KiCad V6 schematic files.
     """
 
     def __init__(self, data, uuid_path=""):
@@ -579,7 +531,7 @@ class Component_V6(object):
 
 class Sheet_V6(object):
     """
-    A class to parse sheets of Schematic Files Format of the KiCad
+    A class to parse sheets of KiCad V6 schematic files.
     """
 
     def __init__(self, data, parent_filename, uuid_path):
@@ -607,8 +559,10 @@ class Schematic_V6(object):
         with open(filename) as fp:
             try:
                 self.sexpdata = sexpdata.loads("\n".join(fp.readlines()))
+                if self.sexpdata[0].value() != "kicad_sch":
+                    raise AssertionError
             except AssertionError:
-                sys.stderr.write("The file is not a KiCad Schematic File\n")
+                sys.stderr.write("The file is not a KiCad V6 Schematic File\n")
                 return
 
         self.filename = filename
@@ -653,10 +607,9 @@ class Schematic_V6(object):
     def get_field_names(self):
         """Return a list all the field names found in a schematic's components."""
 
-        # Add names of fields every component will have.
-        field_names = set(sch_field_id_to_name.values())
+        field_names = set()
 
-        # Add any extra field names from each component.
+        # Add field names from each component.
         for component in self.components:
             field_names.update(component.get_field_names())
 

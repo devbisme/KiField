@@ -20,7 +20,7 @@ from future import standard_library
 from .common import *
 from .dcm import Component, Dcm
 from .sch import Schematic, Schematic_V6
-from .schlib import SchLib
+from .schlib import SchLib, SchLib_V6
 
 standard_library.install_aliases()
 
@@ -80,7 +80,7 @@ def wb_to_csvfile(wb, csv_filename, dialect):
 
 
 def group_wb(wb):
-    """ Group lines that have the same column values in a openpyxl workbook.
+    """Group lines that have the same column values in a openpyxl workbook.
     Headers are expected on the first row and references are expected in the
     first column."""
     ws = wb.active
@@ -526,44 +526,33 @@ def extract_part_fields_from_lib_V6(
 
     part_fields_dict = {}  # Start with an empty part dictionary.
 
-    lib = SchLib(filename)  # Read in all the parts in the library.
+    lib = SchLib_V6(filename)  # Read in all the parts in the library.
 
     # Get all the part fields in the schematic and keep only the desired ones.
-    field_names = get_field_names_lib(lib)
+    field_names = lib.get_field_names()
     cull_list(field_names, inc_field_names, exc_field_names)
 
     # Go through each component in the library, extracting its fields.
     for component in lib.components:
-        component_name = component.definition["name"]
 
         # Get the fields and their values from the component.
         part_fields = {}
-        for id, f in enumerate(component.fields):
-            if "reference" in list(f.keys()):
-                name = "prefix"
-                value = unquote(f["reference"])
-            elif "name" in list(f.keys()):
-                # Assign a name for the unnamed fields (F1, F2 & F3).
-                # Use the already-assigned name for the higher fields (F4...).
-                name = lib_field_id_to_name.get(str(id), unquote(f["fieldname"]))
-                value = unquote(f["name"])
-            else:
-                logger.warn(
-                    "Unknown type of field in part {}: {}.".format(component_name, f)
-                )
-                continue
+        for field in component.fields:
+            name = field["name"]
+            value = field["value"]
+
+            logger.log(
+                DEBUG_OBSESSIVE,
+                "Extracted library part: {} {} {}.".format(component.name, name, value),
+            )
 
             # Store the field and its value if the field name is in the list of
             # allowed fields.
-            logger.log(
-                DEBUG_OBSESSIVE,
-                "Extracted library part: {} {} {}.".format(component_name, name, value),
-            )
             if name in field_names:
                 part_fields[name] = value
 
         # Create a dictionary entry for this library component.
-        part_fields_dict[component_name] = part_fields
+        part_fields_dict[component.name] = part_fields
 
     if logger.isEnabledFor(DEBUG_DETAILED):
         print("Extracted Part Fields:")
@@ -1127,8 +1116,12 @@ def insert_part_fields_into_sch_V6(
 
             # Get [V] (visible) or [I] (invisible) flag prepended to entire field name
             # or individual field value. If no flag, visibility is set to None.
-            field_vis, field_name = re.match("(\[([VI])\])?(.*)", field_name).group(2, 3)
-            value_vis, field_value = re.match("(\[([VI])\])?(.*)", field_value).group(2, 3)
+            field_vis, field_name = re.match("(\[([VI])\])?(.*)", field_name).group(
+                2, 3
+            )
+            value_vis, field_value = re.match("(\[([VI])\])?(.*)", field_value).group(
+                2, 3
+            )
             if value_vis == "V":
                 total_vis = True
             elif value_vis == "I":

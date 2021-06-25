@@ -97,14 +97,14 @@ test6:
     # Extract the fields from the schematic into a CSV file.
 	@$(PROG) -x hierarchical_schematic.kicad_sch -i $@.csv -r $(FLAGS)
     # Add some random columns of random stuff to the CSV file.
-	# @python randomizer.py $@.csv $@.csv
+    # @python randomizer.py $@.csv $@.csv
     # Restore the fields from the CSV file back into the schematic.
 	@$(PROG) -x $@.csv -i hierarchical_schematic.kicad_sch -r -w -d 1
     # Extract the schematic fields into an XLSX file.
 	@$(PROG) -x hierarchical_schematic.kicad_sch -i $@.xlsx -r $(FLAGS)
     # Extract the contents of the XLSX file into a CSV file.
 	@$(PROG) -x $@.xlsx -i $@1.csv -r $(FLAGS)
-	# Restore the hierarchical schematic files.
+    # Restore the hierarchical schematic files.
 	@cp -f hierarchical_schematic.kicad_sch.1.bak hierarchical_schematic.kicad_sch
 	@cp -f leaf1.kicad_sch.1.bak leaf1.kicad_sch
 	@cp -f leaf2.kicad_sch.1.bak leaf2.kicad_sch

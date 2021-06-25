@@ -53,6 +53,54 @@ def sexp_indent(s, tab="    "):
     return out_s
 
 
+# def find_by_key(key, array):
+#     """Return list elements in an array whose first element matches the key."""
+#     found_elements = []
+#     for e in array:
+#         try:
+#             k = e[0].value().lower()
+#         except (IndexError, AttributeError, TypeError):
+#             pass
+#         else:
+#             if k == key:
+#                 found_elements.append(e)
+#     return found_elements
+
+
+def find_by_key(key, array):
+    try:
+        k, sub_key = key.split("/", maxsplit=1)
+    except ValueError:
+        k = key
+        sub_key = None
+
+    found_elements = []
+    for e in array:
+        try:
+            k = e[0].value().lower()
+        except (IndexError, AttributeError, TypeError):
+            pass
+        else:
+            if k == key:
+                if not sub_key:
+                    found_elements.append(e)
+                else:
+                    found_elements.extend(find_by_key(sub_key, e))
+    return found_elements
+
+
+def get_value_by_key(key, array):
+    try:
+        value = find_by_key(key, array)[0][1]
+    except IndexError:
+        return None
+    else:
+        try:
+            return value.value()
+        except AttributeError:
+            return value
+
+
 def quote(s):
     """Surround a string with quote marks."""
 

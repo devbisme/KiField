@@ -9,6 +9,10 @@ import os.path
 import re
 import sys
 
+import sexpdata
+
+from .common import *
+
 
 class Documentation(object):
     """
@@ -465,3 +469,148 @@ class SchLib(object):
 
         f = open(filename, "w")
         f.writelines(to_write)
+
+
+class Component_V6(object):
+    """
+    A class to parse components of KiCad V6 Schematic Files.
+    """
+
+    def __init__(self, data):
+        self.data = data
+
+        self.name = unquote(data[1])
+
+        self.fields = []
+        for prop in find_by_key("property", data):
+            id = get_value_by_key("id", prop)
+            self.fields.append(
+                {
+                    "name": unquote(prop[1]),
+                    "value": unquote(prop[2]),
+                    "id": id,
+                    "prop": prop,
+                }
+            )
+
+    def get_field_names(self):
+        """Return the set of all the field names found in a component."""
+
+        return {f["name"] for f in self.fields}
+
+    def get_ref(self):
+        """Return the reference for a component."""
+
+        return [f["value"] for f in self.fields if f["name"] == "Reference"][0]
+
+    def get_field(self, field_name):
+        for field in self.fields:
+            if field["name"] == field_name:
+                return field
+        return None
+
+    def set_field_value(self, field_name, value):
+        """Set the value of a component field."""
+        field = self.get_field(field_name)
+        field["value"] = value
+        field["prop"][2] = value
+
+    def set_ref(self, ref):
+        """Set the component reference identifier."""
+        self.set_field_value("Reference", ref)
+
+    def set_field_visibility(self, field_name, visible):
+        """Set the visibility of a component field."""
+
+        # Leave visibility unaffected if passed None.
+        if visible == None:
+            return
+
+        field = self.get_field(field_name)
+        if field:
+            effects = find_by_key("effects", field["prop"])[0]
+            if effects:
+                try:
+                    effects.remove(sexpdata.Symbol("hide"))
+                except ValueError:
+                    pass
+                if not visible:
+                    effects.append(sexpdata.Symbol("hide"))
+
+    def get_field_pos(self, field_name):
+        field = self.get_field(field_name)
+        if field:
+            at = find_by_key("at", field["prop"])[0]
+            if at:
+                return at[1:4]
+
+    def set_field_pos(self, field_name, pos):
+        field = self.get_field(field_name)
+        if field:
+            at = find_by_key("at", field["prop"])[0]
+            if at:
+                at[1:4] = pos[:]
+
+    def copy_field(self, src, dst):
+        """Add a copy of a component field with a different name."""
+        src_field = self.get_field(src)
+        if not src_field:
+            return
+        dst_field = self.get_field(dst)
+        if not dst_field:
+            dst_field = deepcopy(src_field)
+            dst_field["name"] = dst
+            dst_field["id"] = len(self.fields)
+            dst_field["prop"][1] = dst
+            id = find_by_key("id", dst_field["prop"])[0]
+            id[1] = dst_field["id"]
+            self.fields.append(dst_field)
+        else:
+            dst_field["prop"] = deepcopy(src_field["prop"])
+        self.set_field_value(dst, src_field["value"])
+        self.data.append(dst_field["prop"])
+
+    def del_field(self, field_name):
+        """Delete a component field."""
+        for i, field in enumerate(self.fields):
+            if field["name"] == field_name:
+                prop = field["prop"]
+                del self.fields[i]
+                for j, elem in enumerate(self.data):
+                    if elem is prop:
+                        del self.data[j]
+                        return
+
+
+class SchLib_V6(object):
+    """A class to parse KiCad V6 schematic symbol libraries."""
+
+    def __init__(self, filename):
+
+        # Parse the library file into a nested list.
+        with open(filename) as fp:
+            try:
+                self.sexpdata = sexpdata.loads("\n".join(fp.readlines()))
+                if self.sexpdata[0].value() != "kicad_symbol_lib":
+                    raise AssertionError
+            except AssertionError:
+                sys.stderr.write("The file is not a KiCad V6 Schematic Library File\n")
+                return
+
+        self.filename = filename
+
+        # Get any components included in this schematic file.
+        self.components = [
+            Component_V6(comp) for comp in find_by_key("symbol", self.sexpdata)
+        ]
+
+    def get_field_names(self):
+        """Return a list all the field names found in a library's components."""
+
+        field_names = set()
+
+        # Add field names from each component.
+        for component in self.components:
+            field_names.update(component.get_field_names())
+
+        return list(field_names)
