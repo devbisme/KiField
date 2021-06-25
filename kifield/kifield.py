@@ -498,6 +498,80 @@ def extract_part_fields_from_lib(
     return part_fields_dict
 
 
+def extract_part_fields_from_lib_V6(
+    filename, inc_field_names=None, exc_field_names=None, recurse=False
+):
+    """Return a dictionary of part fields extracted from a KiCad V6 library."""
+
+    logger.log(
+        DEBUG_OVERVIEW,
+        "Extracting fields {}, -{} from part library {}.".format(
+            inc_field_names, exc_field_names, filename
+        ),
+    )
+
+    def get_field_names_lib(lib):
+        """Return a list all the field names found in a library's components."""
+
+        field_names = set(lib_field_id_to_name.values())
+        field_names.add("prefix")
+        for component in lib.components:
+            for f in component.fields:
+                try:
+                    field_names.add(unquote(f["fieldname"]))
+                except KeyError:
+                    pass
+        field_names.discard("")
+        return list(field_names)
+
+    part_fields_dict = {}  # Start with an empty part dictionary.
+
+    lib = SchLib(filename)  # Read in all the parts in the library.
+
+    # Get all the part fields in the schematic and keep only the desired ones.
+    field_names = get_field_names_lib(lib)
+    cull_list(field_names, inc_field_names, exc_field_names)
+
+    # Go through each component in the library, extracting its fields.
+    for component in lib.components:
+        component_name = component.definition["name"]
+
+        # Get the fields and their values from the component.
+        part_fields = {}
+        for id, f in enumerate(component.fields):
+            if "reference" in list(f.keys()):
+                name = "prefix"
+                value = unquote(f["reference"])
+            elif "name" in list(f.keys()):
+                # Assign a name for the unnamed fields (F1, F2 & F3).
+                # Use the already-assigned name for the higher fields (F4...).
+                name = lib_field_id_to_name.get(str(id), unquote(f["fieldname"]))
+                value = unquote(f["name"])
+            else:
+                logger.warn(
+                    "Unknown type of field in part {}: {}.".format(component_name, f)
+                )
+                continue
+
+            # Store the field and its value if the field name is in the list of
+            # allowed fields.
+            logger.log(
+                DEBUG_OBSESSIVE,
+                "Extracted library part: {} {} {}.".format(component_name, name, value),
+            )
+            if name in field_names:
+                part_fields[name] = value
+
+        # Create a dictionary entry for this library component.
+        part_fields_dict[component_name] = part_fields
+
+    if logger.isEnabledFor(DEBUG_DETAILED):
+        print("Extracted Part Fields:")
+        pprint(part_fields_dict)
+
+    return part_fields_dict
+
+
 def extract_part_fields_from_dcm(
     filename, inc_field_names=None, exc_field_names=None, recurse=False
 ):
@@ -593,6 +667,7 @@ def extract_part_fields(
         ".sch": extract_part_fields_from_sch,
         ".kicad_sch": extract_part_fields_from_sch_V6,
         ".lib": extract_part_fields_from_lib,
+        ".kicad_sym": extract_part_fields_from_lib_V6,
         ".dcm": extract_part_fields_from_dcm,
     }
 
