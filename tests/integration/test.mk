@@ -130,6 +130,24 @@ test7:
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'
 
+test8:
+	@rm -f $@*.*
+    # Copy the library file.
+	@cp Amplifier_Video.kicad_sym $@.kicad_sym
+    # Extract the fields from the library into a CSV file.
+	@$(PROG) -x $@.kicad_sym -i $@.csv $(FLAGS)
+    # Add some random columns of random stuff to the CSV file.
+	@python randomizer.py $@.csv $@.csv
+    # Insert the random stuff back into the fields of the library.
+	@$(PROG) -x $@.csv -i $@.kicad_sym $(FLAGS)
+    # Extract the updated fields from the library into an XLSX file.
+	@$(PROG) -x $@.kicad_sym -i $@.xlsx $(FLAGS)
+    # Extract the contents of the XLSX file into a CSV file.
+	@$(PROG) -x $@.xlsx -i $@1.csv $(FLAGS)
+    # The extracted CSV file should match the randomized CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
 clean:
 	@rm -f test[1-7]*.* *.bak
 	@echo 'Cleanup complete.'

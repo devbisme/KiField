@@ -212,7 +212,7 @@ def extract_part_fields_from_wb(
         header_row, header = find_header(ws)
 
         # Find the column with the part references.
-        refs_c, refs_lbl = find_header_column(header, "references")
+        refs_c, refs_lbl = find_header_column(header, "refs")
 
         # Get the list of part references.
         refs = [r.value for r in list(ws.columns)[refs_c - 1][header_row:]]
@@ -1293,13 +1293,10 @@ def insert_part_fields_into_lib_V6(
         "Inserting extracted fields into library file {}.".format(filename),
     )
 
-    if backup:
-        create_backup(filename)
-
     # Get an existing library or abort. (There's no way we can create
     # a viable library file just from part field values.)
     try:
-        lib = SchLib(filename)
+        lib = SchLib_V6(filename)
     except IOError:
         logger.warn("Library file {} not found.".format(filename))
         return
@@ -1307,81 +1304,88 @@ def insert_part_fields_into_lib_V6(
     # Go through all the library components, replacing field values and
     # adding new fields from the part fields dictionary.
     for component in lib.components:
-        component_name = component.definition["name"]
 
         # Get fields for the part with the same name as this component (or an empty list).
-        part_fields = part_fields_dict.get(component_name, {})
+        part_fields = part_fields_dict.get(component.name, {})
 
         # Insert the fields from the part dictionary into the component fields.
         for field_name, field_value in part_fields.items():
 
-            # Get the field id associated with this field name (if there is one).
-            field_id = lib_field_name_to_id.get(field_name, None)
+            # Get [V] (visible) or [I] (invisible) flag prepended to entire field name
+            # or individual field value. If no flag, visibility is set to None.
+            field_vis, field_name = re.match("(\[([VI])\])?(.*)", field_name).group(
+                2, 3
+            )
+            value_vis, field_value = re.match("(\[([VI])\])?(.*)", field_value).group(
+                2, 3
+            )
+            if value_vis == "V":
+                total_vis = True
+            elif value_vis == "I":
+                total_vis = False
+            else:
+                if field_vis == "V":
+                    total_vis = True
+                elif field_vis == "I":
+                    total_vis = False
+                else:
+                    total_vis = None
 
             # Search for an existing field with a matching name in the component.
-            for id, f in enumerate(component.fields):
+            for f in component.fields:
 
-                if unquote(f.get("fieldname", "")).lower() == field_name.lower():
+                if f["name"].lower() == field_name.lower():
                     # Update existing named field in component.
                     logger.log(
                         DEBUG_OBSESSIVE,
                         "Updating {} field {} from {} to {}".format(
-                            component_name, field_name, f["name"], quote(field_value)
+                            component.name, f["name"], f["value"], quote(field_value)
                         ),
                     )
-                    f["name"] = quote(field_value)
-                    break
-
-                elif str(id) == field_id:
-                    if id == 0:
-                        # Update the F0 field of the component.
-                        logger.log(
-                            DEBUG_OBSESSIVE,
-                            "Updating {} field {} from {} to {}".format(
-                                component_name,
-                                field_id,
-                                f["reference"],
-                                quote(field_value),
-                            ),
-                        )
-                        f["reference"] = quote(field_value)
-                    else:
-                        # Update one of the F1, F2, or F3 fields in the component.
-                        logger.log(
-                            DEBUG_OBSESSIVE,
-                            "Updating {} field {} from {} to {}".format(
-                                component_name, field_id, f["name"], quote(field_value)
-                            ),
-                        )
-                        f["name"] = quote(field_value)
-                    break
+                    f["value"] = field_value
+                    component.set_field_value(f["name"], field_value)
+                    component.set_field_visibility(f["name"], total_vis)
+                    break  # To keep following else from creating a new field.
 
             # No existing field to update, so add a new field.
             else:
                 if field_value not in (None, ""):
-                    # Copy an existing field from the component and then
-                    # update its name and value to create a new field.
-                    new_field = deepcopy(component.fields[-1])
-                    new_field["fieldname"] = quote(field_name)
-                    new_field["name"] = quote(field_value)
-                    component.fields.append(new_field)
+                    # Add new named field and value to component.
                     logger.log(
                         DEBUG_OBSESSIVE,
-                        "Adding {} field {} with value {}".format(
-                            component_name, field_name, quote(field_value)
+                        "Adding {} field {} with value {} with visibility {}".format(
+                            component.name, f["name"], f["value"], total_vis
                         ),
                     )
+                    component.copy_field("Reference", field_name)
+                    component.set_field_value(field_name, field_value)
+                    pos = component.get_field_pos(field_name)
+                    field = component.get_field(field_name)
+                    pos[1] += 2.54 * field["id"]
+                    component.set_field_pos(field_name, pos)
+                    component.set_field_visibility(field_name, total_vis)
 
-        # Remove any named fields with empty values.
-        component.fields = [
-            f
-            for f in component.fields
-            if unquote(f.get("fieldname", None)) in (None, "", "~")
-            or unquote(f.get("name", None)) not in (None, "")
-        ]
+        # Remove non-default fields with empty values.
+        for field in component.fields:
+            name = field["name"]
+            if name.lower() in (
+                "reference",
+                "value",
+                "footprint",
+                "datasheet",
+                "ki_description",
+                "ki_fp_filters",
+                "ki_keywords",
+                "ki_locked",
+            ):
+                # Skip default fields so they aren't removed.
+                continue
+            if field["value"] in (None, ""):
+                # Remove empty field.
+                component.del_field(name)
 
     # Save the updated library.
-    lib.save(filename)
+    lib.save(backup, filename)
 
 
 def insert_part_fields_into_dcm(

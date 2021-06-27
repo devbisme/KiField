@@ -630,5 +630,3 @@ class Schematic_V6(object):
         if recurse:
             for child in self.children:
                 child.save(recurse, backup)
-
-        return

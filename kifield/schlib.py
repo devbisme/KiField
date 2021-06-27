@@ -8,6 +8,7 @@
 import os.path
 import re
 import sys
+from copy import deepcopy
 
 import sexpdata
 
@@ -614,3 +615,15 @@ class SchLib_V6(object):
             field_names.update(component.get_field_names())
 
         return list(field_names)
+
+    def save(self, backup=True, filename=None):
+        """Save schematic in a file."""
+
+        if not filename:
+            filename = self.filename
+
+        if backup:
+            create_backup(filename)
+
+        with open(filename, "w") as fp:
+            fp.write(sexp_indent(sexpdata.dumps(self.sexpdata)))
