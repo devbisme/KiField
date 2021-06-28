@@ -4,16 +4,15 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kifield 0.1.17 documentation</title>
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kifield 0.1.18 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
     
     <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -21,8 +20,8 @@
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="#">kifield 0.1.17 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">kifield 0.1.17 documentation</a></li> 
+        <li class="nav-item nav-item-0"><a href="#">kifield 0.1.18 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">kifield 0.1.18 documentation</a></li> 
       </ul>
     </div>  
 
@@ -136,7 +135,7 @@ the spreadsheet file into the schematic or library.</p></li>
 <p>The result will look something like this (I added spaces to format it into
 nice columns):</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span>
-<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="o">.</span><span class="mi">3</span><span class="n">x5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span>
+<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="mf">.3</span><span class="n">x5</span><span class="mf">.3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span>
 <span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">C_0805</span><span class="p">,</span>            <span class="mi">10</span><span class="n">uF</span>
 <span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">Connect</span><span class="p">:</span><span class="n">BARREL_JACK</span><span class="p">,</span>              <span class="n">BARREL_JACK</span>
 <span class="n">GPIO1</span><span class="p">,</span>    <span class="p">,</span>          <span class="n">RPi_Hat</span><span class="p">:</span><span class="n">Pin_Header_Straight_2x20</span><span class="p">,</span> <span class="n">RPi_GPIO</span>
@@ -157,7 +156,7 @@ nice columns):</p>
 components. Just add a new column named <code class="docutils literal notranslate"><span class="pre">manf#</span></code> and fill in some of the
 values like so:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Refs</span><span class="p">,</span>     <span class="n">datasheet</span><span class="p">,</span> <span class="n">footprint</span><span class="p">,</span>                        <span class="n">value</span><span class="p">,</span>        <span class="n">manf</span><span class="c1">#</span>
-<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="o">.</span><span class="mi">3</span><span class="n">x5</span><span class="o">.</span><span class="mi">3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span><span class="p">,</span>        <span class="n">UWX1A101MCL1GB</span>
+<span class="n">C1</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">c_elec_6</span><span class="mf">.3</span><span class="n">x5</span><span class="mf">.3</span><span class="p">,</span>    <span class="mi">100</span><span class="n">uF</span><span class="p">,</span>        <span class="n">UWX1A101MCL1GB</span>
 <span class="n">C2</span><span class="p">,</span>       <span class="p">,</span>          <span class="n">Capacitors_SMD</span><span class="p">:</span><span class="n">C_0805</span><span class="p">,</span>            <span class="mi">10</span><span class="n">uF</span><span class="p">,</span>         <span class="n">UWX1A101MCL1GB</span>
 <span class="n">CON1</span><span class="p">,</span>     <span class="p">,</span>          <span class="n">Connect</span><span class="p">:</span><span class="n">BARREL_JACK</span><span class="p">,</span>              <span class="n">BARREL_JACK</span><span class="p">,</span>  <span class="n">PJ002A</span>
 <span class="n">GPIO1</span><span class="p">,</span>    <span class="p">,</span>          <span class="n">RPi_Hat</span><span class="p">:</span><span class="n">Pin_Header_Straight_2x20</span><span class="p">,</span> <span class="n">RPi_GPIO</span><span class="p">,</span>
@@ -382,116 +381,122 @@ and make sure that the tests pass for all supported Python versions.</p></li>
 <span id="document-history"></span><div class="section" id="history">
 <h2>History<a class="headerlink" href="#history" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="id1">
-<h3>0.1.17 (2021-03-25)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>0.1.18 (2021-06-28)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>KiCad V6 schematic and library files are now supported (well, V5.99 actually, but the file formats shouldn’t change).</p></li>
+</ul>
+</div>
+<div class="section" id="id2">
+<h3>0.1.17 (2021-03-25)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Part fields are cleaned up if they contain newlines.</p></li>
 <li><p>Lines in a schematic file which were broken by a newline within a quoted string are rejoined.</p></li>
 <li><p>Generated spreadsheet cells have their format set to TEXT if they contain a string.</p></li>
 </ul>
 </div>
-<div class="section" id="id2">
-<h3>0.1.16 (2020-07-26)<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id3">
+<h3>0.1.16 (2020-07-26)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed problem with unescaped quote being inserted into schematics/libraries.</p></li>
 </ul>
 </div>
-<div class="section" id="id3">
-<h3>0.1.15 (2019-02-17)<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h3>0.1.15 (2019-02-17)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed problems caused by new 2.6.0 version of openpyxl.</p></li>
 </ul>
 </div>
-<div class="section" id="id4">
-<h3>0.1.14 (2019-01-08)<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id5">
+<h3>0.1.14 (2019-01-08)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed handling of relative sheetpaths in hierarchical schematics.</p></li>
 <li><p>Fixed string problems that occur under Anaconda.</p></li>
 </ul>
 </div>
-<div class="section" id="id5">
-<h3>0.1.13 (2018-10-28)<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h3>0.1.13 (2018-10-28)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Now works on files outside the current directory.</p></li>
 <li><p>Clearer error explanation when part field extraction fails.</p></li>
 <li><p>Simplified installation instructions.</p></li>
 </ul>
 </div>
-<div class="section" id="id6">
-<h3>0.1.12 (2018-01-22)<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id7">
+<h3>0.1.12 (2018-01-22)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed error where output was not produced because KiField was first trying to backup a non-existent output file.</p></li>
 </ul>
 </div>
-<div class="section" id="id7">
-<h3>0.1.11 (2018-01-04)<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id8">
+<h3>0.1.11 (2018-01-04)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Line-feeds and carriage-returns are stripped from strings inserted into .sch or .lib files.</p></li>
 <li><p>Fixed error where reading .lib files was ignoring the first line after the EESchema-LIBRARY header and missing a part DEF.</p></li>
 </ul>
 </div>
-<div class="section" id="id8">
-<h3>0.1.10 (2018-01-01)<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id9">
+<h3>0.1.10 (2018-01-01)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>File backup now works on all files in a hierarchical schematic.</p></li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h3>0.1.9 (2017-12-31)<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>0.1.9 (2017-12-31)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed mishandling of quoted strings containing escaped quotation marks.</p></li>
 </ul>
 </div>
-<div class="section" id="id10">
-<h3>0.1.8 (2017-09-23)<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id11">
+<h3>0.1.8 (2017-09-23)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Catch exception caused by numeric fields that aren’t strings interacting with vis/invis option.</p></li>
 </ul>
 </div>
-<div class="section" id="id11">
-<h3>0.1.7 (2017-08-14)<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id12">
+<h3>0.1.7 (2017-08-14)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Added visibility/invisibility option for fields.</p></li>
 </ul>
 </div>
-<div class="section" id="id12">
-<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id13">
+<h3>0.1.6 (2017-01-30)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Added “grouping” option (<cite>–group</cite>) for gathering components with the same field values onto a single line of the XLSX/CSV/TSV file.</p></li>
 </ul>
 </div>
-<div class="section" id="id13">
-<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>0.1.5 (2016-11-29)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Added recursive operations on hierarchical schematics so everything can be handled just by processing the top-level file.</p></li>
 </ul>
 </div>
-<div class="section" id="id14">
-<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>0.1.4 (2016-05-29)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Added support for TSV files (thanks, <a class="reference external" href="mailto:kaspar&#46;emanuel&#37;&#52;&#48;gmail&#46;com">kaspar<span>&#46;</span>emanuel<span>&#64;</span>gmail<span>&#46;</span>com</a>).</p></li>
 </ul>
 </div>
-<div class="section" id="id15">
-<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>0.1.3 (2016-05-29)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed issue where all the fields from multi-unit components in a schematic were not appearing in the csv file.</p></li>
 </ul>
 </div>
-<div class="section" id="id16">
-<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id17">
+<h3>0.1.2 (2016-04-13)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Fixed issues #3 and #4 regarding incompatibilities with openpyxl 2.4.0a1.</p></li>
 </ul>
 </div>
-<div class="section" id="id17">
-<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id18">
+<h3>0.1.1 (2016-02-20)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>Added the ability to extract/insert fields in DCM files.</p></li>
 <li><p>Added the ability to explicitly exclude fields from extraction/insertion.</p></li>
 </ul>
 </div>
-<div class="section" id="id18">
-<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id19">
+<h3>0.1.0 (2016-01-29)<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><p>First release on PyPI.</p></li>
 </ul>
@@ -540,24 +545,25 @@ and make sure that the tests pass for all supported Python versions.</p></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="index.html#document-history">History</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.17 (2021-03-25)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.16 (2020-07-26)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.15 (2019-02-17)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.14 (2019-01-08)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.13 (2018-10-28)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.12 (2018-01-22)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.11 (2018-01-04)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id8">0.1.10 (2018-01-01)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id9">0.1.9 (2017-12-31)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id10">0.1.8 (2017-09-23)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id11">0.1.7 (2017-08-14)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id12">0.1.6 (2017-01-30)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id13">0.1.5 (2016-11-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id14">0.1.4 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id15">0.1.3 (2016-05-29)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id16">0.1.2 (2016-04-13)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id17">0.1.1 (2016-02-20)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="index.html#id18">0.1.0 (2016-01-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id1">0.1.18 (2021-06-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id2">0.1.17 (2021-03-25)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id3">0.1.16 (2020-07-26)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id4">0.1.15 (2019-02-17)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id5">0.1.14 (2019-01-08)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id6">0.1.13 (2018-10-28)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id7">0.1.12 (2018-01-22)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id8">0.1.11 (2018-01-04)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id9">0.1.10 (2018-01-01)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id10">0.1.9 (2017-12-31)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id11">0.1.8 (2017-09-23)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id12">0.1.7 (2017-08-14)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id13">0.1.6 (2017-01-30)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id14">0.1.5 (2016-11-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id15">0.1.4 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id16">0.1.3 (2016-05-29)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id17">0.1.2 (2016-04-13)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id18">0.1.1 (2016-02-20)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#id19">0.1.0 (2016-01-29)</a></li>
 </ul>
 </li>
 </ul>
@@ -569,13 +575,13 @@ and make sure that the tests pass for all supported Python versions.</p></li>
     <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
-        <li class="nav-item nav-item-0"><a href="#">kifield 0.1.17 documentation</a> &#187;</li>
-        <li class="nav-item nav-item-this"><a href="">kifield 0.1.17 documentation</a></li> 
+        <li class="nav-item nav-item-0"><a href="#">kifield 0.1.18 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">kifield 0.1.18 documentation</a></li> 
       </ul>
     </div>
     <div class="footer" role="contentinfo">
         &#169; Copyright 2016, XESS Corp..
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.1.2.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
     </div>
   </body>
 </html>

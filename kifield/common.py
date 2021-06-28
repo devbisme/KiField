@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# MIT License / Copyright (c) 2021 by XESS Corporation.
+# MIT License / Copyright (c) 2021 by Dave Vandenbout.
 
 import logging
 import os

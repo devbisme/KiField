@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 #
-# This code was taken without change from https://github.com/KiCad/kicad-library-utils/tree/master/schlib.
+# Much of this code was taken from https://github.com/KiCad/kicad-library-utils/tree/master/schlib.
 # It's covered by GPL3.
+#
+# The KiCad V6-related code was developed by Dave Vandenbout and is covered by the MIT license.
 #
 
 import os.path

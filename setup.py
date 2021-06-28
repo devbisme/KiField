@@ -10,9 +10,9 @@ try:
 except ImportError:
     from distutils.core import setup
 
-__author__ = "XESS Corp."
-__email__ = "info@xess.com"
-__version__ = "0.2.0"
+__author__ = "Dave Vandenbout"
+__email__ = "devb@xess.com"
+__version__ = "0.1.18"
 
 if "sdist" in sys.argv[1:]:
     with open("kifield/pckg_info.py", "w") as f:
@@ -48,9 +48,10 @@ setup(
     install_requires=requirements,
     license="MIT",
     zip_safe=False,
-    keywords="kifield KiCad",
+    keywords="kifield KiCad EDA ",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        # More information at https://pypi.org/classifiers/.
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",

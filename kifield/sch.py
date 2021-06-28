@@ -2,7 +2,9 @@
 
 #
 # This code was taken from https://github.com/KiCad/kicad-library-utils/tree/master/sch.
-# It's covered by GPL3. Some changes/additions were made by XESS Corp.
+# It's covered by GPL3.#
+#
+# The KiCad V6-related code was developed by Dave Vandenbout and is covered by the MIT license.
 #
 
 import os

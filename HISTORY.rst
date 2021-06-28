@@ -4,6 +4,12 @@ History
 -------
 
 
+0.1.18 (2021-06-28)
+______________________
+
+* KiCad V6 schematic and library files are now supported (well, V5.99 actually, but the file formats shouldn't change).
+
+
 0.1.17 (2021-03-25)
 ______________________
 
