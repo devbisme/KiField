@@ -1,0 +1,509 @@
+(kicad_symbol_lib 
+    (version 20201005) 
+    (generator kicad_symbol_editor) 
+    (symbol "Amplifier_Video:AD813" 
+        (pin_names 
+            (offset 0.127)) 
+        (in_bom yes) 
+        (on_board yes) 
+        (property "Reference" "U" 
+            (id 0) 
+            (at 5.08 2.54 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "AD813" 
+            (id 1) 
+            (at 5.08 -2.54 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "" 
+            (id 2) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/AD813.pdf" 
+            (id 3) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "ki_keywords" "triple opamp" 
+            (id 5) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "ki_description" "Single Supply, Low Power, Triple Video Amplifier, DIP-14/SOIC-14" 
+            (id 6) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "ki_fp_filters" "SOIC*P1.27mm* DIP*W7.62mm*" 
+            (id 7) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (symbol "AD813_1_1" 
+            (polyline 
+                (pts 
+                    (xy 5.08 0) 
+                    (xy -5.08 5.08) 
+                    (xy -5.08 -5.08) 
+                    (xy 5.08 0)) 
+                (stroke 
+                    (width 0.254)) 
+                (fill 
+                    (type background))) 
+            (pin input line 
+                (at 0 -5.08 90) 
+                (length 2.54) 
+                (name "~DISABLE" 
+                    (effects 
+                        (font 
+                            (size 0.508 0.508)))) 
+                (number "1" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -7.62 2.54 0) 
+                (length 2.54) 
+                (name "+" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "5" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -7.62 -2.54 0) 
+                (length 2.54) 
+                (name "-" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "6" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin output line 
+                (at 7.62 0 180) 
+                (length 2.54) 
+                (name "~" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "7" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))))) 
+        (symbol "AD813_2_1" 
+            (polyline 
+                (pts 
+                    (xy 5.08 0) 
+                    (xy -5.08 5.08) 
+                    (xy -5.08 -5.08) 
+                    (xy 5.08 0)) 
+                (stroke 
+                    (width 0.254)) 
+                (fill 
+                    (type background))) 
+            (pin input line 
+                (at -7.62 2.54 0) 
+                (length 2.54) 
+                (name "+" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "12" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -7.62 -2.54 0) 
+                (length 2.54) 
+                (name "-" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "13" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin output line 
+                (at 7.62 0 180) 
+                (length 2.54) 
+                (name "~" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "14" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at 0 -5.08 90) 
+                (length 2.54) 
+                (name "~DISABLE" 
+                    (effects 
+                        (font 
+                            (size 0.508 0.508)))) 
+                (number "2" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))))) 
+        (symbol "AD813_3_1" 
+            (polyline 
+                (pts 
+                    (xy 5.08 0) 
+                    (xy -5.08 5.08) 
+                    (xy -5.08 -5.08) 
+                    (xy 5.08 0)) 
+                (stroke 
+                    (width 0.254)) 
+                (fill 
+                    (type background))) 
+            (pin input line 
+                (at -7.62 2.54 0) 
+                (length 2.54) 
+                (name "+" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "10" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at 0 -5.08 90) 
+                (length 2.54) 
+                (name "~DISABLE" 
+                    (effects 
+                        (font 
+                            (size 0.508 0.508)))) 
+                (number "3" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin output line 
+                (at 7.62 0 180) 
+                (length 2.54) 
+                (name "~" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "8" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -7.62 -2.54 0) 
+                (length 2.54) 
+                (name "-" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "9" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))))) 
+        (symbol "AD813_4_1" 
+            (pin power_in line 
+                (at -2.54 -7.62 90) 
+                (length 3.81) 
+                (name "V-" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "11" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin power_in line 
+                (at -2.54 7.62 270) 
+                (length 3.81) 
+                (name "V+" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "4" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))))) 
+    (symbol "Amplifier_Video:MAX453" 
+        (in_bom yes) 
+        (on_board yes) 
+        (property "Reference" "U" 
+            (id 0) 
+            (at 7.62 8.89 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)))) 
+        (property "Value" "MAX453" 
+            (id 1) 
+            (at -6.35 8.89 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)))) 
+        (property "Footprint" "" 
+            (id 2) 
+            (at -3.81 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "https://datasheets.maximintegrated.com/en/ds/MAX452-MAX455.pdf" 
+            (id 3) 
+            (at -3.81 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "ki_keywords" "amplifier" 
+            (id 4) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "ki_description" "CMOS video amplifier with input multiplexer, DIP-8/SOIC-8" 
+            (id 5) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "ki_fp_filters" "DIP*W7.62mm* SOIC*3.9x4.9mm*P1.27mm*" 
+            (id 6) 
+            (at 0 0 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (symbol "MAX453_0_0" 
+            (text "+" 
+                (at 2.794 1.27 0) 
+                (effects 
+                    (font 
+                        (size 1.016 1.016)))) 
+            (text "-" 
+                (at 2.794 -1.016 0) 
+                (effects 
+                    (font 
+                        (size 1.016 1.016)))) 
+            (text "MUX" 
+                (at -3.81 3.556 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)))) 
+            (rectangle 
+                (start -12.7 7.62) 
+                (end 12.7 -7.62) 
+                (stroke 
+                    (width 0.254)) 
+                (fill 
+                    (type background))) 
+            (rectangle 
+                (start -6.35 5.842) 
+                (end -1.27 1.27) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -6.35 2.54) 
+                    (xy -7.112 2.54)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -6.35 5.08) 
+                    (xy -7.112 5.08)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -1.27 3.556) 
+                    (xy -0.254 3.556)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -3.81 1.27) 
+                    (xy -3.81 0) 
+                    (xy -7.112 0)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy 2.032 1.27) 
+                    (xy 0.508 1.27) 
+                    (xy 0.508 3.556) 
+                    (xy -0.254 3.556)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy 5.842 0) 
+                    (xy 2.032 2.54) 
+                    (xy 2.032 -2.54) 
+                    (xy 5.842 0)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy 2.032 -1.27) 
+                    (xy 0.508 -1.27) 
+                    (xy -3.81 -1.27) 
+                    (xy -3.81 -5.08) 
+                    (xy -6.604 -5.08)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none)))) 
+        (symbol "MAX453_0_1" 
+            (polyline 
+                (pts 
+                    (xy -8.128 2.54) 
+                    (xy -7.112 2.54)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -7.112 0) 
+                    (xy -8.128 0)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -7.112 5.08) 
+                    (xy -8.128 5.08)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy -6.604 -5.08) 
+                    (xy -8.128 -5.08)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none))) 
+            (polyline 
+                (pts 
+                    (xy 5.842 0) 
+                    (xy 6.604 0)) 
+                (stroke 
+                    (width 0)) 
+                (fill 
+                    (type none)))) 
+        (symbol "MAX453_1_1" 
+            (pin input line 
+                (at -15.24 0 0) 
+                (length 2.54) 
+                (name "A0" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "1" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin power_in line 
+                (at 7.62 -10.16 90) 
+                (length 2.54) 
+                (name "GND" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "2" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin power_in line 
+                (at 2.54 -10.16 90) 
+                (length 2.54) 
+                (name "V-" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "3" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -15.24 5.08 0) 
+                (length 2.54) 
+                (name "IN0" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "4" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -15.24 2.54 0) 
+                (length 2.54) 
+                (name "IN1" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "5" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin power_in line 
+                (at 2.54 10.16 270) 
+                (length 2.54) 
+                (name "V+" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "6" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin input line 
+                (at -15.24 -5.08 0) 
+                (length 2.54) 
+                (name "IN-" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "7" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))) 
+            (pin output line 
+                (at 15.24 0 180) 
+                (length 2.54) 
+                (name "VOUT" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27)))) 
+                (number "8" 
+                    (effects 
+                        (font 
+                            (size 1.27 1.27))))))))

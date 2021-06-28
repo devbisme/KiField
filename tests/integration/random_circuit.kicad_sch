@@ -1,0 +1,1082 @@
+(kicad_sch 
+    (version 20210615) 
+    (generator eeschema) 
+    (uuid 3d7e3f93-3880-4d36-9864-4c3b23895e69) 
+    (paper "A4") 
+    (lib_symbols 
+        (symbol "Amplifier_Operational:AD8676xR" 
+            (pin_names 
+                (offset 0.127)) 
+            (in_bom yes) 
+            (on_board yes) 
+            (property "Reference" "U" 
+                (id 0) 
+                (at 2.54 6.35 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) 
+                    (justify left))) 
+            (property "Value" "AD8676xR" 
+                (id 1) 
+                (at 2.54 3.81 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) 
+                    (justify left))) 
+            (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" 
+                (id 2) 
+                (at 2.54 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/AD8676.pdf" 
+                (id 3) 
+                (at 6.35 3.81 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_locked" "" 
+                (id 4) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)))) 
+            (property "ki_keywords" "dual opamp precision high-voltage RRO RTR" 
+                (id 5) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_description" "Dual operational amplifier, Ultra-precision, 36V, Rail-to-rail output, SOIC-8" 
+                (id 6) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_fp_filters" "SOIC*3.9x4.9mm*P1.27mm*" 
+                (id 7) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (symbol "AD8676xR_1_1" 
+                (polyline 
+                    (pts 
+                        (xy 5.08 0) 
+                        (xy -5.08 5.08) 
+                        (xy -5.08 -5.08) 
+                        (xy 5.08 0)) 
+                    (stroke 
+                        (width 0.254)) 
+                    (fill 
+                        (type background))) 
+                (pin output line 
+                    (at 7.62 0 180) 
+                    (length 2.54) 
+                    (name "~" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin input line 
+                    (at -7.62 -2.54 0) 
+                    (length 2.54) 
+                    (name "-" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin input line 
+                    (at -7.62 2.54 0) 
+                    (length 2.54) 
+                    (name "+" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "3" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))))) 
+            (symbol "AD8676xR_2_1" 
+                (polyline 
+                    (pts 
+                        (xy 5.08 0) 
+                        (xy -5.08 5.08) 
+                        (xy -5.08 -5.08) 
+                        (xy 5.08 0)) 
+                    (stroke 
+                        (width 0.254)) 
+                    (fill 
+                        (type background))) 
+                (pin input line 
+                    (at -7.62 2.54 0) 
+                    (length 2.54) 
+                    (name "+" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "5" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin input line 
+                    (at -7.62 -2.54 0) 
+                    (length 2.54) 
+                    (name "-" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "6" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin output line 
+                    (at 7.62 0 180) 
+                    (length 2.54) 
+                    (name "~" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "7" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))))) 
+            (symbol "AD8676xR_3_1" 
+                (pin power_in line 
+                    (at 0 -7.62 90) 
+                    (length 3.81) 
+                    (name "V-" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "4" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin power_in line 
+                    (at 0 7.62 270) 
+                    (length 3.81) 
+                    (name "V+" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "8" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))))) 
+        (symbol "Device:Q_NPN_CBE" 
+            (pin_names 
+                (offset 0) hide) 
+            (in_bom yes) 
+            (on_board yes) 
+            (property "Reference" "Q" 
+                (id 0) 
+                (at 5.08 1.27 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) 
+                    (justify left))) 
+            (property "Value" "Q_NPN_CBE" 
+                (id 1) 
+                (at 5.08 -1.27 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) 
+                    (justify left))) 
+            (property "Footprint" "" 
+                (id 2) 
+                (at 5.08 2.54 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "Datasheet" "~" 
+                (id 3) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_keywords" "transistor NPN" 
+                (id 4) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_description" "NPN transistor, collector/base/emitter" 
+                (id 5) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (symbol "Q_NPN_CBE_0_1" 
+                (circle 
+                    (center 1.27 0) 
+                    (radius 2.8194) 
+                    (stroke 
+                        (width 0.254)) 
+                    (fill 
+                        (type none))) 
+                (polyline 
+                    (pts 
+                        (xy 0.635 0.635) 
+                        (xy 2.54 2.54)) 
+                    (stroke 
+                        (width 0)) 
+                    (fill 
+                        (type none))) 
+                (polyline 
+                    (pts 
+                        (xy 0.635 -0.635) 
+                        (xy 2.54 -2.54) 
+                        (xy 2.54 -2.54)) 
+                    (stroke 
+                        (width 0)) 
+                    (fill 
+                        (type none))) 
+                (polyline 
+                    (pts 
+                        (xy 0.635 1.905) 
+                        (xy 0.635 -1.905) 
+                        (xy 0.635 -1.905)) 
+                    (stroke 
+                        (width 0.508)) 
+                    (fill 
+                        (type none))) 
+                (polyline 
+                    (pts 
+                        (xy 1.27 -1.778) 
+                        (xy 1.778 -1.27) 
+                        (xy 2.286 -2.286) 
+                        (xy 1.27 -1.778) 
+                        (xy 1.27 -1.778)) 
+                    (stroke 
+                        (width 0)) 
+                    (fill 
+                        (type outline)))) 
+            (symbol "Q_NPN_CBE_1_1" 
+                (pin passive line 
+                    (at 2.54 5.08 270) 
+                    (length 2.54) 
+                    (name "C" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin input line 
+                    (at -5.08 0 0) 
+                    (length 5.715) 
+                    (name "B" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin passive line 
+                    (at 2.54 -5.08 90) 
+                    (length 2.54) 
+                    (name "E" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "3" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))))) 
+        (symbol "Device:R_Pack04_SIP_Split" 
+            (pin_names 
+                (offset 0) hide) 
+            (in_bom yes) 
+            (on_board yes) 
+            (property "Reference" "RN" 
+                (id 0) 
+                (at 2.032 0 90) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)))) 
+            (property "Value" "R_Pack04_SIP_Split" 
+                (id 1) 
+                (at 0 0 90) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)))) 
+            (property "Footprint" "Resistor_THT:R_Array_SIP8" 
+                (id 2) 
+                (at -2.032 0 90) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "Datasheet" "http://www.vishay.com/docs/31509/csc.pdf" 
+                (id 3) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_keywords" "R network parallel topology isolated" 
+                (id 4) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_description" "4 resistor network, parallel topology, SIP package, split" 
+                (id 5) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (property "ki_fp_filters" "R?Array?SIP*" 
+                (id 6) 
+                (at 0 0 0) 
+                (effects 
+                    (font 
+                        (size 1.27 1.27)) hide)) 
+            (symbol "R_Pack04_SIP_Split_0_1" 
+                (rectangle 
+                    (start 1.016 2.54) 
+                    (end -1.016 -2.54) 
+                    (stroke 
+                        (width 0.254)) 
+                    (fill 
+                        (type none)))) 
+            (symbol "R_Pack04_SIP_Split_1_1" 
+                (pin passive line 
+                    (at 0 -3.81 90) 
+                    (length 1.27) 
+                    (name "R1.1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin passive line 
+                    (at 0 3.81 270) 
+                    (length 1.27) 
+                    (name "R1.2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))))) 
+            (symbol "R_Pack04_SIP_Split_2_1" 
+                (pin passive line 
+                    (at 0 -3.81 90) 
+                    (length 1.27) 
+                    (name "R2.1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "3" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin passive line 
+                    (at 0 3.81 270) 
+                    (length 1.27) 
+                    (name "R2.2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "4" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))))) 
+            (symbol "R_Pack04_SIP_Split_3_1" 
+                (pin passive line 
+                    (at 0 -3.81 90) 
+                    (length 1.27) 
+                    (name "R3.1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "5" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin passive line 
+                    (at 0 3.81 270) 
+                    (length 1.27) 
+                    (name "R3.2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "6" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))))) 
+            (symbol "R_Pack04_SIP_Split_4_1" 
+                (pin passive line 
+                    (at 0 -3.81 90) 
+                    (length 1.27) 
+                    (name "R4.1" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "7" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27))))) 
+                (pin passive line 
+                    (at 0 3.81 270) 
+                    (length 1.27) 
+                    (name "R4.2" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))) 
+                    (number "8" 
+                        (effects 
+                            (font 
+                                (size 1.27 1.27)))))))) 
+    (junction 
+        (at 76.2 76.2) 
+        (diameter 1.016) 
+        (color 0 0 0 0)) 
+    (junction 
+        (at 124.46 114.3) 
+        (diameter 1.016) 
+        (color 0 0 0 0)) 
+    (junction 
+        (at 127 81.28) 
+        (diameter 1.016) 
+        (color 0 0 0 0)) 
+    (junction 
+        (at 167.64 53.34) 
+        (diameter 1.016) 
+        (color 0 0 0 0)) 
+    (junction 
+        (at 167.64 66.04) 
+        (diameter 1.016) 
+        (color 0 0 0 0)) 
+    (junction 
+        (at 167.64 88.9) 
+        (diameter 1.016) 
+        (color 0 0 0 0)) 
+    (wire 
+        (pts 
+            (xy 76.2 40.64) 
+            (xy 167.64 40.64)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid cb8af3f7-ccaa-49e1-9934-86a959105e53)) 
+    (wire 
+        (pts 
+            (xy 76.2 58.42) 
+            (xy 76.2 40.64)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid cb8af3f7-ccaa-49e1-9934-86a959105e53)) 
+    (wire 
+        (pts 
+            (xy 76.2 63.5) 
+            (xy 76.2 76.2)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid a7717222-9479-4cc4-b8a6-5f7745d68d9b)) 
+    (wire 
+        (pts 
+            (xy 76.2 76.2) 
+            (xy 76.2 88.9)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid a7717222-9479-4cc4-b8a6-5f7745d68d9b)) 
+    (wire 
+        (pts 
+            (xy 76.2 76.2) 
+            (xy 149.86 76.2)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 95ae4bd1-0392-4d66-ae76-6f1ac60b21d8)) 
+    (wire 
+        (pts 
+            (xy 76.2 93.98) 
+            (xy 76.2 114.3)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid fc6791e6-8684-4b1a-a154-9b50aee33619)) 
+    (wire 
+        (pts 
+            (xy 76.2 114.3) 
+            (xy 124.46 114.3)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid fc6791e6-8684-4b1a-a154-9b50aee33619)) 
+    (wire 
+        (pts 
+            (xy 91.44 60.96) 
+            (xy 119.38 60.96)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid d936c208-0472-4b21-8520-ccedc671029b)) 
+    (wire 
+        (pts 
+            (xy 91.44 91.44) 
+            (xy 116.84 91.44)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid be8621dd-f499-4ffa-b8c6-f1d9e9d16fa1)) 
+    (wire 
+        (pts 
+            (xy 124.46 81.28) 
+            (xy 124.46 86.36)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid f4692f09-d8d5-462c-92c4-ecef1a6e6340)) 
+    (wire 
+        (pts 
+            (xy 124.46 114.3) 
+            (xy 124.46 96.52)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 7917ab8a-ef91-4eb7-befd-7ffcdc315190)) 
+    (wire 
+        (pts 
+            (xy 127 53.34) 
+            (xy 127 55.88)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 3a9d9fd2-5dc2-46ee-9025-d0252a39ba49)) 
+    (wire 
+        (pts 
+            (xy 127 66.04) 
+            (xy 127 81.28)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 98e132ba-0921-45cc-b1d8-222f0c0680f4)) 
+    (wire 
+        (pts 
+            (xy 127 81.28) 
+            (xy 124.46 81.28)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid f4692f09-d8d5-462c-92c4-ecef1a6e6340)) 
+    (wire 
+        (pts 
+            (xy 144.78 81.28) 
+            (xy 127 81.28)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid f4692f09-d8d5-462c-92c4-ecef1a6e6340)) 
+    (wire 
+        (pts 
+            (xy 144.78 88.9) 
+            (xy 144.78 81.28)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid f4692f09-d8d5-462c-92c4-ecef1a6e6340)) 
+    (wire 
+        (pts 
+            (xy 149.86 66.04) 
+            (xy 167.64 66.04)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 95ae4bd1-0392-4d66-ae76-6f1ac60b21d8)) 
+    (wire 
+        (pts 
+            (xy 149.86 76.2) 
+            (xy 149.86 66.04)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 95ae4bd1-0392-4d66-ae76-6f1ac60b21d8)) 
+    (wire 
+        (pts 
+            (xy 167.64 40.64) 
+            (xy 167.64 53.34)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 794a24d5-3230-428a-a98a-82bf89928464)) 
+    (wire 
+        (pts 
+            (xy 167.64 53.34) 
+            (xy 127 53.34)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid cb8af3f7-ccaa-49e1-9934-86a959105e53)) 
+    (wire 
+        (pts 
+            (xy 167.64 60.96) 
+            (xy 167.64 66.04)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 50583b45-5f47-423a-9fa4-978b58198928)) 
+    (wire 
+        (pts 
+            (xy 167.64 66.04) 
+            (xy 167.64 71.12)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 50583b45-5f47-423a-9fa4-978b58198928)) 
+    (wire 
+        (pts 
+            (xy 167.64 78.74) 
+            (xy 167.64 88.9)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 1b4c1721-cb1a-432b-af9b-773f9892da83)) 
+    (wire 
+        (pts 
+            (xy 167.64 88.9) 
+            (xy 144.78 88.9)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid f4692f09-d8d5-462c-92c4-ecef1a6e6340)) 
+    (wire 
+        (pts 
+            (xy 167.64 96.52) 
+            (xy 167.64 106.68)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid e2798d87-5ccb-4b6c-938c-3da6ad1ee07d)) 
+    (wire 
+        (pts 
+            (xy 167.64 114.3) 
+            (xy 124.46 114.3)) 
+        (stroke 
+            (width 0) 
+            (type solid) 
+            (color 0 0 0 0)) 
+        (uuid 7917ab8a-ef91-4eb7-befd-7ffcdc315190)) 
+    (symbol 
+        (lib_id "Amplifier_Operational:AD8676xR") 
+        (at 500.38 -55.88 0) 
+        (unit 3) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid db4afb4f-9333-40f4-8ace-313a3efbf395) 
+        (property "Reference" "U1" 
+            (id 0) 
+            (at 501.65 -56.5151 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "AD8676xR" 
+            (id 1) 
+            (at 501.65 -53.9751 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" 
+            (id 2) 
+            (at 502.92 -55.88 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/AD8676.pdf" 
+            (id 3) 
+            (at 506.73 -59.69 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "4" 
+            (uuid 31a454d8-8b57-499d-8e42-016f8efe1e44)) 
+        (pin "8" 
+            (uuid 526025fa-a459-4558-9299-d712affe2e0d))) 
+    (symbol 
+        (lib_id "Device:R_Pack04_SIP_Split") 
+        (at 167.64 57.15 0) 
+        (unit 1) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 77b6f90c-7209-4d8c-8270-80e531c19836) 
+        (property "Reference" "RN1" 
+            (id 0) 
+            (at 170.18 56.5149 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "R_Pack04_SIP_Split" 
+            (id 1) 
+            (at 170.18 59.0549 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "Resistor_THT:R_Array_SIP8" 
+            (id 2) 
+            (at 165.608 57.15 90) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "http://www.vishay.com/docs/31509/csc.pdf" 
+            (id 3) 
+            (at 167.64 57.15 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "1" 
+            (uuid 568b851d-e940-4416-b9dc-2514fbadfa8e)) 
+        (pin "2" 
+            (uuid d4585f69-8890-422c-acd8-2ace6fe63c86))) 
+    (symbol 
+        (lib_id "Device:R_Pack04_SIP_Split") 
+        (at 167.64 74.93 0) 
+        (unit 2) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 6f37acb3-68bc-4618-b897-622b7ca73009) 
+        (property "Reference" "RN1" 
+            (id 0) 
+            (at 170.18 74.93 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "R_Pack04_SIP_Split" 
+            (id 1) 
+            (at 170.18 76.8349 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "Resistor_THT:R_Array_SIP8" 
+            (id 2) 
+            (at 165.608 74.93 90) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "http://www.vishay.com/docs/31509/csc.pdf" 
+            (id 3) 
+            (at 167.64 74.93 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "3" 
+            (uuid ae7eea92-e1c7-469a-a369-1e6bc29a1418)) 
+        (pin "4" 
+            (uuid 370718a4-aa1f-48f6-8b88-bd7243258d85))) 
+    (symbol 
+        (lib_id "Device:R_Pack04_SIP_Split") 
+        (at 167.64 92.71 0) 
+        (unit 3) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 122b6dab-020e-45e5-b0d1-ff137943da06) 
+        (property "Reference" "RN1" 
+            (id 0) 
+            (at 170.18 92.71 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "R_Pack04_SIP_Split" 
+            (id 1) 
+            (at 170.18 94.6149 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "Resistor_THT:R_Array_SIP8" 
+            (id 2) 
+            (at 165.608 92.71 90) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "http://www.vishay.com/docs/31509/csc.pdf" 
+            (id 3) 
+            (at 167.64 92.71 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "5" 
+            (uuid 51a1ccc2-ec27-4474-bc0b-419b0b1dde5d)) 
+        (pin "6" 
+            (uuid 1287ab89-8945-42fc-aa76-4e191507bba9))) 
+    (symbol 
+        (lib_id "Device:R_Pack04_SIP_Split") 
+        (at 167.64 110.49 0) 
+        (unit 4) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 538d4971-b330-4dce-b6e5-56703dbbc33a) 
+        (property "Reference" "RN1" 
+            (id 0) 
+            (at 170.18 110.49 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "R_Pack04_SIP_Split" 
+            (id 1) 
+            (at 170.18 112.3949 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "Resistor_THT:R_Array_SIP8" 
+            (id 2) 
+            (at 165.608 110.49 90) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "http://www.vishay.com/docs/31509/csc.pdf" 
+            (id 3) 
+            (at 167.64 110.49 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "7" 
+            (uuid c6871e88-1c0b-4ed1-9472-ebb493469a25)) 
+        (pin "8" 
+            (uuid e70a897a-7c46-4fa5-8bdd-2aa3c2bf108d))) 
+    (symbol 
+        (lib_id "Device:Q_NPN_CBE") 
+        (at 121.92 91.44 0) 
+        (unit 1) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 2e362211-ee4e-45fd-b610-19b4284dbafa) 
+        (property "Reference" "Q1" 
+            (id 0) 
+            (at 127 90.8049 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "Q_NPN_CBE" 
+            (id 1) 
+            (at 127 93.3449 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "" 
+            (id 2) 
+            (at 127 88.9 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "~" 
+            (id 3) 
+            (at 121.92 91.44 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "1" 
+            (uuid 4fd45fee-4fd7-4be6-9338-f52701d1cb63)) 
+        (pin "2" 
+            (uuid 15afc317-881d-49f5-a983-b0f5baf0ee0f)) 
+        (pin "3" 
+            (uuid 5d1cf260-16cd-4d14-a8c3-e14a64e83bf9))) 
+    (symbol 
+        (lib_id "Device:Q_NPN_CBE") 
+        (at 124.46 60.96 0) 
+        (unit 1) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 079f9484-2b09-4483-b6c3-62406b557c5e) 
+        (property "Reference" "Q2" 
+            (id 0) 
+            (at 129.54 60.3249 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Value" "Q_NPN_CBE" 
+            (id 1) 
+            (at 129.54 62.8649 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) 
+                (justify left))) 
+        (property "Footprint" "" 
+            (id 2) 
+            (at 129.54 58.42 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "~" 
+            (id 3) 
+            (at 124.46 60.96 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "1" 
+            (uuid 04396ae1-64a4-412a-8ced-a83bee62e444)) 
+        (pin "2" 
+            (uuid f240f3c5-3f42-4031-a7cf-fda13f8a59c5)) 
+        (pin "3" 
+            (uuid adf85214-2b26-48e1-aac9-eddc1a775041))) 
+    (symbol 
+        (lib_id "Amplifier_Operational:AD8676xR") 
+        (at 83.82 60.96 0) 
+        (unit 1) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 0aee2a1c-d766-4f8d-a784-5b172bb6bf9f) 
+        (property "Reference" "U1" 
+            (id 0) 
+            (at 83.82 52.07 0)) 
+        (property "Value" "AD8676xR" 
+            (id 1) 
+            (at 83.82 54.61 0)) 
+        (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" 
+            (id 2) 
+            (at 86.36 60.96 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/AD8676.pdf" 
+            (id 3) 
+            (at 90.17 57.15 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "1" 
+            (uuid c8c68263-ce26-441c-b938-d53f13e07233)) 
+        (pin "2" 
+            (uuid 0ce0a0d2-6248-4988-aa8f-1e0c61799d3a)) 
+        (pin "3" 
+            (uuid 182e5cba-260c-4ff4-a0a7-016192eb3ae9))) 
+    (symbol 
+        (lib_id "Amplifier_Operational:AD8676xR") 
+        (at 83.82 91.44 0) 
+        (unit 2) 
+        (in_bom yes) 
+        (on_board yes) 
+        (fields_autoplaced) 
+        (uuid 942a427a-863e-4778-bae1-72a93d305667) 
+        (property "Reference" "U1" 
+            (id 0) 
+            (at 83.82 82.55 0)) 
+        (property "Value" "AD8676xR" 
+            (id 1) 
+            (at 83.82 85.09 0)) 
+        (property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm" 
+            (id 2) 
+            (at 86.36 91.44 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (property "Datasheet" "https://www.analog.com/media/en/technical-documentation/data-sheets/AD8676.pdf" 
+            (id 3) 
+            (at 90.17 87.63 0) 
+            (effects 
+                (font 
+                    (size 1.27 1.27)) hide)) 
+        (pin "5" 
+            (uuid b1a183f5-d41a-4ed6-9cb2-1882fe23a746)) 
+        (pin "6" 
+            (uuid 9dfbde72-6cae-4b3c-b9b3-812171cea6f0)) 
+        (pin "7" 
+            (uuid c48c651e-c10f-4a8b-88b8-a41920c517ad))) 
+    (sheet_instances 
+        (path "/" 
+            (page "1"))) 
+    (symbol_instances 
+        (path "/2e362211-ee4e-45fd-b610-19b4284dbafa" 
+            (reference "Q1") 
+            (unit 1) 
+            (value "Q_NPN_CBE") 
+            (footprint "")) 
+        (path "/079f9484-2b09-4483-b6c3-62406b557c5e" 
+            (reference "Q2") 
+            (unit 1) 
+            (value "Q_NPN_CBE") 
+            (footprint "")) 
+        (path "/77b6f90c-7209-4d8c-8270-80e531c19836" 
+            (reference "RN1") 
+            (unit 1) 
+            (value "R_Pack04_SIP_Split") 
+            (footprint "Resistor_THT:R_Array_SIP8")) 
+        (path "/6f37acb3-68bc-4618-b897-622b7ca73009" 
+            (reference "RN1") 
+            (unit 2) 
+            (value "R_Pack04_SIP_Split") 
+            (footprint "Resistor_THT:R_Array_SIP8")) 
+        (path "/122b6dab-020e-45e5-b0d1-ff137943da06" 
+            (reference "RN1") 
+            (unit 3) 
+            (value "R_Pack04_SIP_Split") 
+            (footprint "Resistor_THT:R_Array_SIP8")) 
+        (path "/538d4971-b330-4dce-b6e5-56703dbbc33a" 
+            (reference "RN1") 
+            (unit 4) 
+            (value "R_Pack04_SIP_Split") 
+            (footprint "Resistor_THT:R_Array_SIP8")) 
+        (path "/0aee2a1c-d766-4f8d-a784-5b172bb6bf9f" 
+            (reference "U1") 
+            (unit 1) 
+            (value "AD8676xR") 
+            (footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")) 
+        (path "/942a427a-863e-4778-bae1-72a93d305667" 
+            (reference "U1") 
+            (unit 2) 
+            (value "AD8676xR") 
+            (footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm")) 
+        (path "/db4afb4f-9333-40f4-8ace-313a3efbf395" 
+            (reference "U1") 
+            (unit 3) 
+            (value "AD8676xR") 
+            (footprint "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"))))
