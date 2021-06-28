@@ -25,7 +25,15 @@ DEBUG_OBSESSIVE = logging.DEBUG - 2
 
 
 def sexp_indent(s, tab="    "):
-    """Add linebreaks and indents to an S-expression."""
+    """Indent an S-expression string.
+
+    Args:
+        s (string): S-expression string.
+        tab (string, optional): Indentation string. Defaults to "    ".
+
+    Returns:
+        string: Indented S-expression.
+    """
 
     out_s = ""
     indent = ""
@@ -68,6 +76,16 @@ def sexp_indent(s, tab="    "):
 
 
 def find_by_key(key, array):
+    """Return a list of array elements whose first element matches the key.
+
+    Args:
+        key (string): Slash-separated string of keys to search for.
+        array (list): Nested list of lists where first member of each list is a key.
+
+    Returns:
+        list: Elements from the list with the matching key.
+    """
+
     try:
         k, sub_key = key.split("/", maxsplit=1)
     except ValueError:
@@ -90,6 +108,15 @@ def find_by_key(key, array):
 
 
 def get_value_by_key(key, array):
+    """Return the value from a (key, value) list.
+
+    Args:
+        key (string): Key to search for.
+        array (list): Nested list of lists where first element of each list is a key.
+
+    Returns:
+        object: Whatever element followed the key in the matching list.
+    """
     try:
         value = find_by_key(key, array)[0][1]
     except IndexError:
@@ -102,7 +129,14 @@ def get_value_by_key(key, array):
 
 
 def quote(s):
-    """Surround a string with quote marks."""
+    """Surround an unquoted string with quotes.
+
+    Args:
+        s (string): Quoted or unquoted string.
+
+    Returns:
+        string: Quoted string.
+    """
 
     if s is None:
         return s
@@ -117,7 +151,14 @@ def quote(s):
 
 
 def unquote(s):
-    """Remove any quote marks around a string."""
+    """Remove any quote marks around a string.
+
+    Args:
+        s (string): Quoted or unquoted string.
+
+    Returns:
+        string: Unquoted string.
+    """
 
     if not isinstance(s, basestring):
         return s  # Not a string, so just return it.
@@ -130,10 +171,18 @@ def unquote(s):
 
 
 def explode(collapsed):
-    """Explode references like 'C1-C3,C7,C10-C13' into [C1,C2,C3,C7,C10,C11,C12,C13]"""
+    """Explode collapsed references like 'C1-C3,C7,C10-C13' into [C1,C2,C3,C7,C10,C11,C12,C13].
+
+    Args:
+        collapsed (string): String of collapsed references.
+
+    Returns:
+        string: String of exploded references.
+    """
 
     if collapsed == "":
         return []
+
     individual_refs = []
     if isinstance(collapsed, basestring):
         range_refs = re.split(",|;", collapsed)
@@ -150,13 +199,18 @@ def explode(collapsed):
                 range_end = int(mtch.group("range_end"))
                 for i in range(range_start, range_end + 1):
                     individual_refs.append(part_prefix + str(i))
+
     return individual_refs
 
 
 def collapse(individual_refs):
-    """
-    Collapse references like [C1,C2,C3,C7,C10,C11,C12,C13] into
-    'C1-C3, C7, C10-C13'
+    """Collapse references like [C1,C2,C3,C7,C10,C11,C12,C13] into 'C1-C3, C7, C10-C13'.
+
+    Args:
+        individual_refs (string): Uncollapsed references.
+
+    Returns:
+        string: Collapsed references.
     """
 
     parts = []
@@ -205,7 +259,12 @@ backedup_files = []
 
 
 def create_backup(file):
-    """Create a backup copy of a file before it gets modified."""
+    """Create a backup copy of a file.
+
+    Args:
+        file (string): Path to file.
+    """
+
     if file in backedup_files:
         return
 
@@ -220,4 +279,5 @@ def create_backup(file):
             shutil.copy(file, backup_file)
             break  # Backup done, so break out of loop.
         index += 1  # Else keep looking for an unused backup file name.
+
     backedup_files.append(file)

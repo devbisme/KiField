@@ -2,7 +2,7 @@ PROG = kifield
 #PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
-test: test1 test2 test3 test4 test5 test6 test7
+test: test1 test2 test3 test4 test5 test6 test7 test8
 	@echo 'All tests passed!'
 	@$(PROG) -v
 
@@ -149,5 +149,5 @@ test8:
 	@echo 'Test $@ passed!'
 
 clean:
-	@rm -f test[1-7]*.* *.bak
+	@rm -f test[1-8]*.* *.bak
 	@echo 'Cleanup complete.'
