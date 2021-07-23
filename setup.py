@@ -28,6 +28,7 @@ with open("HISTORY.rst") as history_file:
 requirements = [
     "future >= 0.15.0",
     "openpyxl >= 2.6.0",
+    "sexpdata",
 ]
 
 setup(
