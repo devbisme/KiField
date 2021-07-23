@@ -2,6 +2,7 @@
 
 # MIT License / Copyright (c) 2021 by Dave Vandenbout.
 
+from functools import reduce
 import logging
 import os
 import re
@@ -188,7 +189,7 @@ def explode(collapsed):
         range_refs = re.split(",|;", collapsed)
         for r in range_refs:
             mtch = re.match(
-                "^\s*(?P<part_prefix>\D+)(?P<range_start>\d+)\s*[-:]\s*\\1(?P<range_end>\d+)\s*$",
+                r"^\s*(?P<part_prefix>\D+)(?P<range_start>\d+)\s*[-:]\s*\1(?P<range_end>\d+)\s*$",
                 r,
             )
             if mtch is None:
@@ -215,7 +216,7 @@ def collapse(individual_refs):
 
     parts = []
     for ref in individual_refs:
-        mtch = re.match("(?P<part_prefix>\D+)(?P<number>\d+)", ref)
+        mtch = re.match(r"(?P<part_prefix>\D+)(?P<number>\d+)", ref)
         if mtch is not None:
             part_prefix = mtch.group("part_prefix")
             number = int(mtch.group("number"))
