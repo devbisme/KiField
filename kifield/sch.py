@@ -25,31 +25,6 @@ sch_field_id_to_name = {
 }
 
 
-def unquote(s):
-    """Remove any quote marks around a string."""
-
-    if not isinstance(s, basestring):
-        return s  # Not a string, so just return it.
-    try:
-        # This returns inner part of "..." or '...' strings.
-        return re.match("^(['\"])(.*)\\1$", s).group(2)
-    except (IndexError, AttributeError):
-        # No surrounding quotes, so just return string.
-        return s
-
-
-def ensure_quoted(s):
-    """
-    Returns a quoted version of string 's' if that's not already the case
-    """
-    rx = r"^\"(.+)\"$"
-
-    if re.match(rx, s) is not None:
-        return s
-    else:
-        return '"{}"'.format(s)
-
-
 class Description(object):
     """
     A class to parse description information of Schematic Files Format of the KiCad
@@ -118,7 +93,10 @@ class Component(object):
             elif line[0] == "AR":
                 self.references.append(dict(zip(key_list, values)))
             elif line[0] == "F":
-                self.fields.append(dict(zip(key_list, values)))
+                fields = dict(zip(key_list, values))
+                id = line[1]
+                fields["name"] = quote(sch_field_id_to_name.get(id, fields["name"]))
+                self.fields.append(fields)
 
     def get_field_names(self):
         """Return the set of all the field names found in a component."""
@@ -164,8 +142,8 @@ class Component(object):
         field.update(field_data)
 
         # Make sure ref and name are quoted.
-        field["ref"] = ensure_quoted(field["ref"])
-        field["name"] = ensure_quoted(field["name"])
+        field["ref"] = quote(field["ref"])
+        field["name"] = quote(field["name"])
 
         # Set id for new field to be its index in the list of fields.
         field["id"] = str(len(self.fields))
@@ -379,6 +357,8 @@ class Schematic(object):
             for field in component.fields:
                 line = "F "
                 for key in component._F_KEYS:
+                    if field["id"] in sch_field_id_to_name.keys() and key == "name":
+                        continue
                     line += field[key] + " "
                 to_write += [line.rstrip() + "\n"]
 

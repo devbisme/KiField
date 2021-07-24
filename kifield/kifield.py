@@ -19,7 +19,7 @@ from future import standard_library
 
 from .common import *
 from .dcm import Component, Dcm
-from .sch import Schematic, Schematic_V6
+from .sch import sch_field_id_to_name, Schematic, Schematic_V6
 from .schlib import SchLib, SchLib_V6
 
 standard_library.install_aliases()
@@ -1034,11 +1034,12 @@ def insert_part_fields_into_sch(
                             ),
                         )
 
-                # Remove any named fields with empty values.
+                # Keep only default fields and named fields with non-empty values.
+                default_field_ids = sch_field_id_to_name.keys()
                 component.fields = [
                     f
                     for f in component.fields
-                    if unquote(f.get("name", None)) in (None, "", "~")
+                    if f["id"] in default_field_ids
                     or unquote(f.get("ref", None)) not in (None, "")
                 ]
 

@@ -130,25 +130,19 @@ def get_value_by_key(key, array):
 
 
 def quote(s):
-    """Surround an unquoted string with quotes.
-
-    Args:
-        s (string): Quoted or unquoted string.
-
-    Returns:
-        string: Quoted string.
+    """
+    Returns a quoted version of string 's' if that's not already the case
     """
 
     if s is None:
         return s
 
-    # Place a backslash before every double-quote and then remove a backslash
-    # from any quote with two backslashes because it already had one.
-    escq = re.sub(r'"', r"\"", s)
-    escq = re.sub(r'\\\\"', r"\"", escq)
+    rx = r"^['\"](.*)['\"]$"
 
-    # Surround with double quotes.
-    return '"' + escq + '"'
+    if re.match(rx, s) is not None:
+        return s
+    else:
+        return '"{}"'.format(s)
 
 
 def unquote(s):
