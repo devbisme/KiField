@@ -172,7 +172,7 @@ def explode(collapsed):
         collapsed (string): String of collapsed references.
 
     Returns:
-        string: String of exploded references.
+        list: list of reference strings.
     """
 
     if collapsed == "":
@@ -210,10 +210,10 @@ def collapse(individual_refs):
 
     parts = []
     for ref in individual_refs:
-        mtch = re.match(r"(?P<part_prefix>\D+)(?P<number>\d+)", ref)
+        mtch = re.match(r"(?P<part_prefix>\D+)(?P<number>.+)", ref)
         if mtch is not None:
             part_prefix = mtch.group("part_prefix")
-            number = int(mtch.group("number"))
+            number = mtch.group("number")
             parts.append((part_prefix, number))
 
     parts.sort()
@@ -227,7 +227,7 @@ def collapse(individual_refs):
             group = accumulator[-1]
             if len(group) > 0:
                 prev = group[-1]
-        if (prev != None) and (prev[0] == part[0]) and ((prev[1] + 1) == part[1]):
+        if (prev != None) and (prev[0] == part[0]) and isinstance(prev[1], int) and ((prev[1] + 1) == part[1]):
             group.append(part)
             accumulator[-1] = group
         else:

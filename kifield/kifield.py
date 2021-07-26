@@ -83,11 +83,18 @@ def group_wb(wb):
     """Group lines that have the same column values in a openpyxl workbook.
     Headers are expected on the first row and references are expected in the
     first column."""
+
     ws = wb.active
     values = tuple(ws.values)
+
+    try:
+        header = values[0]
+    except IndexError:
+        # No header, so don't even try to ungroup the workbook.
+        return wb
+
     unique_rows = []
     references = []
-    header = values[0]
     for row in values[1:]:
         column_values = row[1:]
         reference = row[0]
@@ -110,6 +117,33 @@ def group_wb(wb):
         grouped_ws.append(row)
 
     return grouped_wb
+
+
+def ungroup_wb(wb):
+    """Ungroup lines that have collapsed references."""
+    # return wb
+
+    ws = wb.active
+    values = tuple(ws.values)
+
+    try:
+        header = values[0]
+    except IndexError:
+        # No header, so don't even try to ungroup the workbook.
+        return wb
+
+    ungrouped_wb = pyxl.Workbook()
+    ungrouped_ws = ungrouped_wb.active
+    ungrouped_ws.append(header)
+
+    for row in values[1:]:
+        column_values = row[1:]
+        reference = row[0]
+        for ref in explode(reference):
+            ungrouped_row = ((ref,) + column_values)
+            ungrouped_ws.append(ungrouped_row)
+
+    return ungrouped_wb
 
 
 class FieldExtractionError(Exception):
@@ -202,6 +236,8 @@ def extract_part_fields_from_wb(
     wb, inc_field_names=None, exc_field_names=None, recurse=False
 ):
     """Return a dictionary of part fields extracted from an XLSX workbook."""
+
+    wb = ungroup_wb(wb)
 
     part_fields = {}  # Start with an empty part dictionary.
 
@@ -724,6 +760,8 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
 
     if wb is None:
         wb = pyxl.Workbook()  # No workbook given, so create one.
+
+    wb = ungroup_wb(wb)  # Ungroup any grouped references.
 
     ws = wb.active  # Get the active sheet from the workbook.
 

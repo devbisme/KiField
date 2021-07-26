@@ -2,7 +2,7 @@ PROG = kifield
 #PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
-test: test1 test2 test3 test4 test5 test6 test7 test8
+test: test1 test2 test3 test4 test5 test6 test7 test8 test9
 	@echo 'All tests passed!'
 	@$(PROG) -v
 
@@ -148,6 +148,21 @@ test8:
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'
 
+test9:
+	@rm -f $@*.*
+    # Copy the CAT schematic file.
+	@cp CAT.sch $@.sch
+    # Get the grouped fields from the schematic into the CSV file.
+	@$(PROG) -g -x $@.sch -i $@.csv $(FLAGS)
+    # Make a copy of the grouped fields.
+	@cp $@.csv $@1.csv
+    # Extract the grouped fields and add them to the copy.
+	@$(PROG) -g -x $@.sch -i $@1.csv $(FLAGS)
+    # The extracted CSV file should match the initial CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
+
 clean:
-	@rm -f test[1-8]*.* *.bak
+	@rm -f test[1-9]*.* *.bak
 	@echo 'Cleanup complete.'
