@@ -1,0 +1,46 @@
+Refs,MANUFACTURER,MOUSER,PART_NUMBER,PART_NUMBET,datasheet,footprint,mouser,value
+C1,,,,,,avishay:R0603,,1uF
+C2,,,,,,avishay:R0603,,0.1u
+C3,,,,,,avishay:R0603,,1uF
+C4,,,,,,avishay:R0603,,1uF
+C5,,,,,,avishay:R0603,,1uF
+C6,,,,,,avishay:R0603,,1uF
+C7,,,,,,avishay:R0603,,0.01uF
+C8,,,,,,avishay:R0603,,1uF
+C9,,,,,,avishay:R0603,,1uF
+D1,,750-CDBU0130R-HF,,,,avishay:SOD-523F,,CDBU0130L
+J1,Wurth Electronics,710-61301011821,61301011821,,,Pin_Headers:Pin_Header_Straight_1x10,,"Female, 0.1\"", 1x10"
+J2,Wurth Electronics,710-61301011821,61301011821,,,Pin_Headers:Pin_Header_Straight_1x10,,"Female, 0.1\"", 1x10"
+J3,,,,,,Pin_Headers:Pin_Header_Straight_2x02,,"Header, .100\"""
+J4,,,,,,avishay:SMT_HOOKUP_3,,CONN_01X03
+J5,,,,,,Pin_Headers:Pin_Header_Straight_2x06,,"Header, .100\"""
+J6,,,,,,hitem:BATTERY_CONTACT,,CONN_01X01
+J7,,,,,,hitem:BATTERY_CONTACT,,CONN_01X01
+Q1,,726-BSS214NH6327XT,,,,avishay:SOT-23,,BSS214N
+Q2,,726-BSS214NH6327XT,,,,avishay:SOT-23,,BSS214N
+Q3,,726-BSS214NH6327XT,,,,avishay:SOT-23,,BSS214N
+R1,,,,,,avishay:R0603,,1K
+R10,,,,,,avishay:R0603,,180K
+R11,,,,,,avishay:R0603,,180K
+R12,,,,,,avishay:R0603,,180K
+R13,,,,,,avishay:R0603,,180K
+R14,,,,,,avishay:R0603,,1K
+R15,,,,,,avishay:R0603,,1K
+R16,,,,,,avishay:R0603,,1.6M
+R17,Bel Fuse,530-0ZCK0075FF2E,,0ZCK0075FF2E,,hitem:BEL-0ZCK,,"PTC, 1.5A"
+R2,,,,,,avishay:R0603,,0
+R3,,,,,,avishay:R0603,,1.6M
+R4,,,,,,avishay:R0603,,47K
+R5,,,,,,avishay:R0603,,0
+R6,,,,,,avishay:R0603,,0
+R7,,,,,,avishay:R0603,,0
+R8,,,,,,avishay:R0603,,0
+R9,,,,,,avishay:R0603,,0
+U1,STMicroelectronics,511-LIS3DHTR,LIS3DHTR,,,hitem:LIS3DH,,LIS3DH
+U2,TOREX,865-XC6120C302NR-G,XC6120C302NR-G,,,hitem:SSOT-24,,XC6120
+U3,,,,,,hitem:WS2812,,WS2812B
+U4,,,,,,hitem:WS2812,,WS2812B
+U5,,,,,,avishay:SEN-13963,,SPARKFUN_LIS3DH
+U6,MICREL,998-MIC5255-3.3YM5TR,MIC5255-3.3YM5-TR,,,hitem:MIC5255,,MIC5255
+U7,,,,,,hitem:WS2812,,WS2812B
+U8,,,,,,hitem:WS2812,,WS2812B

@@ -1,0 +1,3 @@
+Refs,Datasheet,Footprint,Reference,Value,ki_description,ki_fp_filters,ki_keywords
+Amplifier_Video:AD813,https://www.analog.com/media/en/technical-documentation/data-sheets/AD813.pdf,,U,AD813,"Single Supply, Low Power, Triple Video Amplifier, DIP-14/SOIC-14",SOIC*P1.27mm* DIP*W7.62mm*,triple opamp
+Amplifier_Video:MAX453,https://datasheets.maximintegrated.com/en/ds/MAX452-MAX455.pdf,,U,MAX453,"CMOS video amplifier with input multiplexer, DIP-8/SOIC-8",DIP*W7.62mm* SOIC*3.9x4.9mm*P1.27mm*,amplifier

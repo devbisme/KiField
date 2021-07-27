@@ -1,0 +1,38 @@
+[I]Refs,datasheet,description,footprint,mpn,value
+C1,,Capacitor MLCC 0402 0.1uF 10% 16V,Capacitors_SMD:C_0402,MF-CAP-0402-0.1uF,0.1uF
+C10,,Capacitor MLCC 0402 0.1uF 10% 16V,Capacitors_SMD:C_0402,MF-CAP-0402-0.1uF,0.1uF
+C11,,Capacitor Aluminum Electrolytic 6.3mm 100uF 20% 35V,Capacitors_SMD:CP_Elec_6.3x7.7,MF-CAP-6.3MM-100uF,100uF
+C12,,Capacitor MLCC 0402 0.1uF 10% 16V,Capacitors_SMD:C_0402,MF-CAP-0402-0.1uF,0.1uF
+C2,,Capacitor MLCC 0402 0.1uF 10% 16V,Capacitors_SMD:C_0402,MF-CAP-0402-0.1uF,0.1uF
+C3,,Capacitor MLCC 0402 0.1uF 10% 16V,Capacitors_SMD:C_0402,MF-CAP-0402-0.1uF,0.1uF
+C9,,Capacitor Aluminum Electrolytic 6.3mm 100uF 20% 35V,Capacitors_SMD:CP_Elec_6.3x7.7,MF-CAP-6.3MM-100uF,100uF
+D1,,"Single Digit 7-segment RGB LED Display, 1-inch digit height, common anode",myLibrary:AD-121F2,AD-121F2,AD-121F2
+D2,,Tri-Color RGB LED 3228 SMD PLCC-4,LEDs:LED_Cree-PLCC4_3.2x2.8mm_CCW,MF-LED-3228-RGB,LED_ARGB
+D3,,"Single Digit 7-segment RGB LED Display, 1-inch digit height, common anode",myLibrary:AD-121F2,AD-121F2,AD-121F2
+D4,,Tri-Color RGB LED 3228 SMD PLCC-4,LEDs:LED_Cree-PLCC4_3.2x2.8mm_CCW,MF-LED-3228-RGB,LED_ARGB
+F1,,PTC RESTTBLE 3.0A 15V CHIP 2920,Fuse_Holders_and_Fuses:Fuse_SMD2920,0ZCF0300AF2C,Polyfuse
+FID1,,,MF_Aesthetics:MF_Aesthetics-FIDUCIAL_0.5MM,,FIDUCIAL_0.5MM
+FID2,,,MF_Aesthetics:MF_Aesthetics-FIDUCIAL_0.5MM,,FIDUCIAL_0.5MM
+FID3,,,MF_Aesthetics:MF_Aesthetics-FIDUCIAL_0.5MM,,FIDUCIAL_0.5MM
+FID4,,,MF_Aesthetics:MF_Aesthetics-FIDUCIAL_0.5MM,,FIDUCIAL_0.5MM
+FID5,,,MF_Aesthetics:MF_Aesthetics-FIDUCIAL_0.5MM,,FIDUCIAL_0.5MM
+FID6,,,MF_Aesthetics:MF_Aesthetics-FIDUCIAL_0.5MM,,FIDUCIAL_0.5MM
+J1,,USB Micro-B receptacle,myLibrary:USB_Micro-B_Wuerth-629105150521_CircularHoles,629105150521,USB_B_Micro
+J2,,"40 Position Header Connector 0.100\"" (2.54mm) Through Hole Gold",RPi_Hat:Pin_Header_Straight_2x20,PPPC202LFBN-RC,RPi_GPIO
+J3,,,Connectors_Terminal_Blocks:TerminalBlock_4UCON_19963_02x3.5mm_Straight,,Screw_Terminal_01x02
+Q1,,MOSFET P-CH 20V 4.2A SOT23,TO_SOT_Packages_SMD:SOT-23,DMG2305UX-13,Q_PMOS_GSD
+Q2,,TRANS 2PNP 150V 0.2A SOT26,TO_SOT_Packages_SMD:SOT-23-6,DMMT5401,Q_DUAL_PNP_PNP_C1B1B2C2E2E1
+R1,,Resistor Thick Film 0603 10K Ohm 5% 100mW 75V,Resistors_SMD:R_0603,MF-RES-0603-10K,10K
+R2,,RES SMD 47K OHM 1% 1/10W 0603,Resistors_SMD:R_0603,RC0603FR-0747KL,47K
+R3,,RES SMD 3.9K OHM 5% 1/16W 0402,Resistors_SMD:R_0402,RC0402JR-073K9L,3.9k
+R4,,RES SMD 3.9K OHM 5% 1/16W 0402,Resistors_SMD:R_0402,RC0402JR-073K9L,3.9k
+R5,,Resistor Thick Film 0603 1K Ohm 5% 100mW 75V,Resistors_SMD:R_0603,MF-RES-0603-1K,1k
+R7,,RES 4.7K OHM 1/4W 1% AXIAL,Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal,RNMF14FTC4K70,4.7K
+R9,,RES 4.7K OHM 1/4W 1% AXIAL,Resistors_THT:R_Axial_DIN0204_L3.6mm_D1.6mm_P5.08mm_Horizontal,RNMF14FTC4K70,4.7K
+TP1,,,Measurement_Points:Measurement_Point_Round-SMD-Pad_Big,,TEST
+TP2,,,Measurement_Points:Measurement_Point_Round-SMD-Pad_Big,,TEST
+U1,,IC SINGLE INVERTER-GATE SOT-23-5,TO_SOT_Packages_SMD:SOT-23-5,SN74LVC1G04DBVR,74LVC1G04
+U2,,"ambient light sensor, i2c interface, 2.7-3.6V",myLibrary:Broadcom_APDS-9301,APDS-9301-020,APDS-9301
+U3,,32 kbit i2c eeprom,Housings_SOIC:SOIC-8_3.9x4.9mm_Pitch1.27mm,CAT24C32,24LC32
+U4,,"24-Channel, 12-Bit PWM LED Driver, HTSSOP",Housings_SSOP:HTSSOP-32_6.1x11mm_Pitch0.65mm_ThermalPad,TLC5947DAP,TLC5947DAP
+U5,,"24-Channel, 12-Bit PWM LED Driver, HTSSOP",Housings_SSOP:HTSSOP-32_6.1x11mm_Pitch0.65mm_ThermalPad,TLC5947DAP,TLC5947DAP

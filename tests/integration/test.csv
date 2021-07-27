@@ -1,0 +1,12 @@
+Refs,Datasheet,Footprint,Value,[V]arbitrary,[I]new1,[V]qwerty
+C1,~,,2,,b,cap
+C2,~,,2,,b,cap
+L1,~,,4,,d,ind
+L2,~,,4,,d,ind
+L3,~,,4,,d,ind
+R1,~,,6,1,f,resistor
+R2,~,,7,2,g,resistor
+R3,~,,10,3,j,res
+R4,~,,11,4,k,res
+R5,~,,10,3,j,res
+R6,~,,11,4,k,res

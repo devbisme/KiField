@@ -1,0 +1,6 @@
+Refs,datasheet,footprint,value,test,test2
+C1,~,,CP,1,5
+D1,~,,D,2,4
+D2,~,,D,3,3
+U1,http://www.intersil.com/content/dam/Intersil/documents/cd40/cd4000bms-01bms-02bms-25bms.pdf,,4001,4,2
+U2,http://www.analog.com/media/en/technical-documentation/data-sheets/AD5593R.pdf,Package_SO:TSSOP-16_4.4x5mm_P0.65mm,AD5593R,5,1
