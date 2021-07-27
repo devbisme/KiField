@@ -1,0 +1,4 @@
+#!/usr/bin/bash
+
+isort --recursive tests kifield setup.py
+black tests kifield setup.py
