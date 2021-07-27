@@ -12,7 +12,7 @@ except ImportError:
 
 __author__ = "Dave Vandenbout"
 __email__ = "devb@xess.com"
-__version__ = "0.1.18"
+__version__ = "0.1.19"
 
 if "sdist" in sys.argv[1:]:
     with open("kifield/pckg_info.py", "w") as f:
@@ -38,7 +38,7 @@ setup(
     long_description=readme + "\n\n" + history,
     author=__author__,
     author_email=__email__,
-    url="https://github.com/xesscorp/kifield",
+    url="https://github.com/devbisme/kifield",
     #    packages=['kifield',],
     packages=setuptools.find_packages(),
     entry_points={"console_scripts": ["kifield = kifield.__main__:main"]},

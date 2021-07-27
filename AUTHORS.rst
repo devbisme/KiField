@@ -5,9 +5,16 @@ Credits
 Development Lead
 ----------------
 
-* XESS Corp. <info@xess.com>
+* Dave Vandenbout <devb@xess.com>
 
 Contributors
 ------------
 
-Kaspar Emanuel: https://github.com/kasbah
+* Dave Vandenbout
+* Kaspar Emanuel
+* devbisme
+* xesscorp
+* AB
+* Machine-Hum
+* anton
+* Stefan Hamminga

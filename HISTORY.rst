@@ -4,6 +4,15 @@ History
 -------
 
 
+0.1.19 (2021-07-27)
+______________________
+
+* Bug fix: Add ``sexpdata`` to install requirements.
+* Bug fix: Add import of ``reduce`` from ``functools``.
+* Bug fix: Correct disappearance of default part fields when extracting from schematic to spreadsheet file.
+* Bug fix: Explode collapsed references when importing a spreadsheet file.
+
+
 0.1.18 (2021-06-28)
 ______________________
 

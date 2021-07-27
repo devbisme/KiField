@@ -4,8 +4,6 @@ kifield
 
 .. image:: https://img.shields.io/pypi/v/kifield.svg
         :target: https://pypi.python.org/pypi/kifield
-.. image:: https://travis-ci.org/xesscorp/KiField.svg?branch=master
-    :target: https://travis-ci.org/xesscorp/KiField
 
 
 A utility for manipulating part fields in KiCad schematic files or libraries.
@@ -26,7 +24,7 @@ KiField is usually employed in a three-step process:
 
 
 * Free software: MIT license
-* Documentation: https://xesscorp.github.io/KiField.
+* Documentation: https://devbisme.github.io/KiField.
 
 Features
 --------
