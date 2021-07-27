@@ -21,7 +21,7 @@ class Component(object):
             line = file.readline()
             if not line:
                 return False
-            mtch = re.match("^(?P<tag>[$\w]+)\s+(?P<contents>.*)$", line)
+            mtch = re.match(r"^(?P<tag>[$\w]+)\s+(?P<contents>.*)$", line)
             if mtch:
                 tag = str(mtch.group("tag").upper())
                 contents = str(mtch.group("contents"))
@@ -35,7 +35,7 @@ class Component(object):
                     self.docfile = contents
                 elif tag == r"$ENDCMP":
                     return True
-            elif re.match("^\$ENDCMP\s*$", line):
+            elif re.match(r"^\$ENDCMP\s*$", line):
                 return True
 
     def str(self):

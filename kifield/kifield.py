@@ -1155,10 +1155,10 @@ def insert_part_fields_into_sch_V6(
 
             # Get [V] (visible) or [I] (invisible) flag prepended to entire field name
             # or individual field value. If no flag, visibility is set to None.
-            field_vis, field_name = re.match("(\[([VI])\])?(.*)", field_name).group(
+            field_vis, field_name = re.match(r"(\[([VI])\])?(.*)", field_name).group(
                 2, 3
             )
-            value_vis, field_value = re.match("(\[([VI])\])?(.*)", field_value).group(
+            value_vis, field_value = re.match(r"(\[([VI])\])?(.*)", field_value).group(
                 2, 3
             )
             if value_vis == "V":
@@ -1352,10 +1352,10 @@ def insert_part_fields_into_lib_V6(
 
             # Get [V] (visible) or [I] (invisible) flag prepended to entire field name
             # or individual field value. If no flag, visibility is set to None.
-            field_vis, field_name = re.match("(\[([VI])\])?(.*)", field_name).group(
+            field_vis, field_name = re.match(r"(\[([VI])\])?(.*)", field_name).group(
                 2, 3
             )
-            value_vis, field_value = re.match("(\[([VI])\])?(.*)", field_value).group(
+            value_vis, field_value = re.match(r"(\[([VI])\])?(.*)", field_value).group(
                 2, 3
             )
             if value_vis == "V":

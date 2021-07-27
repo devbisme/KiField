@@ -214,6 +214,10 @@ def collapse(individual_refs):
         if mtch is not None:
             part_prefix = mtch.group("part_prefix")
             number = mtch.group("number")
+            try:
+                number = int(mtch.group("number"))
+            except ValueError:
+                pass
             parts.append((part_prefix, number))
 
     parts.sort()
