@@ -107,9 +107,12 @@ def group_wb(wb, no_range=False):
 
     grouped_rows = []
     for i, ref in enumerate(references):
-        # If no_range flag, do a simple join on the references assuming already sorted?
+        # If no_range flag, do the collapse to ensure sorting, then explode, then join to string
         if no_range:
-            grouped_rows.append((', '.join(ref),) + unique_rows[i])
+            collapsed_refs = collapse(ref)
+            exploded_refs = explode(collapsed_refs)
+            joined_refs = (', ').join(exploded_refs)
+            grouped_rows.append((joined_refs,) + unique_rows[i])
         else:
             grouped_rows.append((collapse(ref),) + unique_rows[i])
 
