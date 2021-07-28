@@ -1514,7 +1514,7 @@ def insert_part_fields(part_fields_dict, filenames, recurse, group_components, b
         else:
             try:
                 insertion_function(
-                    part_fields_dict, f, recurse, group_components, backup
+                    part_fields_dict, f, recurse, group_components, backup, no_range
                 )
 
             except IOError:
