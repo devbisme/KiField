@@ -44,4 +44,6 @@ output/*/index.html
 
 # Venv
 venv/*
+
+# VSCode editor
 .vscode/*
