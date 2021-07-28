@@ -18,3 +18,4 @@ Contributors
 * Machine-Hum
 * anton
 * Stefan Hamminga
+* Scott Candey
