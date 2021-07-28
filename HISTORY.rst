@@ -4,6 +4,12 @@ History
 -------
 
 
+0.2.0 (2021-07-28)
+______________________
+
+* Added ``--no_range, -nr`` option to disable hyphenated ranges when components are grouped, explicitly showing each component in a group.
+
+
 0.1.19 (2021-07-27)
 ______________________
 
