@@ -66,4 +66,4 @@ def test_groups3():
 
     values = tuple(ws.values)
     assert values[0] == header
-    assert values[1] == ("C1,C2,C3", "1", "1", "1")
+    assert values[1] == ("C1, C2, C3", "1", "1", "1")

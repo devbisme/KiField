@@ -107,8 +107,9 @@ def group_wb(wb, no_range=False):
 
     grouped_rows = []
     for i, ref in enumerate(references):
+        # If no_range flag, do a simple join on the references assuming already sorted?
         if no_range:
-            grouped_rows.append((ref,) + unique_rows[i])
+            grouped_rows.append((', '.join(ref),) + unique_rows[i])
         else:
             grouped_rows.append((collapse(ref),) + unique_rows[i])
 
