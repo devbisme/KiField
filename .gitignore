@@ -41,3 +41,7 @@ output/*/index.html
 
 # Sphinx
 #docs/_build
+
+# Venv
+venv/*
+.vscode/*
