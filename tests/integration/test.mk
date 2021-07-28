@@ -2,7 +2,7 @@ PROG = kifield
 #PROG = python -m ..\..\kifield
 FLAGS = -w -nb -d 1
 
-test: test1 test2 test3 test4 test5 test6 test7 test8 test9
+test: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11
 	@echo 'All tests passed!'
 	@$(PROG) -v
 
@@ -162,7 +162,39 @@ test9:
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'
 
+test10:
+	@rm -f $@*.*
+    # Copy the CAT schematic file.
+	@cp CAT.sch $@.sch
+    # Get the grouped fields from the schematic into the CSV file, no ranges
+	@$(PROG) -g -nr -x $@.sch -i $@.csv $(FLAGS)
+    # Make a copy of the grouped fields.
+	@cp $@.csv $@1.csv
+    # Extract the grouped fields and add them to the copy.
+	@$(PROG) -g -nr -x $@.sch -i $@1.csv $(FLAGS)
+    # The extracted CSV file should match the initial CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
+test11:
+	@rm -f $@*.*
+    # Copy the CAT schematic file.
+	@cp CAT.sch $@.sch
+    # Get the grouped (no ranges) fields from the schematic into the CSV file.
+	@$(PROG) -g -nr -x $@.sch -i $@.csv $(FLAGS)
+    # Add some random columns of random stuff to the CSV file.
+	@python randomizer.py $@.csv $@.csv
+    # Insert the random stuff back into the fields of the schematic.
+	@$(PROG) -x $@.csv -i $@.sch $(FLAGS)
+    # Extract the updated grouped (no ranges) fields from the schematic into an XLSX file.
+	@$(PROG) -g -nr -x $@.sch -i $@.xlsx $(FLAGS)
+    # Extract the grouped (no ranges) contents of the XLSX file into a CSV file.
+	@$(PROG) -g -nr -x $@.xlsx -i $@1.csv $(FLAGS)
+    # The extracted CSV file should match the randomized CSV file.
+	@diff -qsw $@.csv $@1.csv
+	@echo 'Test $@ passed!'
+
 
 clean:
-	@rm -f test[1-9]*.* *.bak
+	@rm -f test[1-11]*.* *.bak
 	@echo 'Cleanup complete.'

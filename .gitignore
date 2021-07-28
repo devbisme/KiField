@@ -42,6 +42,9 @@ output/*/index.html
 # Sphinx
 #docs/_build
 
+# Mac OS
+.DS_store
+
 # Venv
 venv/*
 
