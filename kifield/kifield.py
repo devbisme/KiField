@@ -935,7 +935,7 @@ def insert_part_fields_into_csv(
 
 
 def insert_part_fields_into_sch(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into a schematic."""
 
@@ -1110,13 +1110,13 @@ def insert_part_fields_into_sch(
                     # Prepend path for sheets which are nested more than once
                     sheet_file = prepend_dir + unquote(field["value"])
                     insert_part_fields_into_sch(
-                        part_fields_dict, sheet_file, recurse, group_components, backup
+                        part_fields_dict, sheet_file, recurse, group_components, backup, no_range
                     )
                     break
 
 
 def insert_part_fields_into_sch_V6(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into a schematic."""
 
@@ -1229,7 +1229,7 @@ def insert_part_fields_into_sch_V6(
 
 
 def insert_part_fields_into_lib(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into a library."""
 
@@ -1330,7 +1330,7 @@ def insert_part_fields_into_lib(
 
 
 def insert_part_fields_into_lib_V6(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into a KiCad V6 library."""
 
@@ -1435,7 +1435,7 @@ def insert_part_fields_into_lib_V6(
 
 
 def insert_part_fields_into_dcm(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into a DCM file."""
 

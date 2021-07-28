@@ -181,15 +181,15 @@ test11:
     # Copy the CAT schematic file.
 	@cp CAT.sch $@.sch
     # Get the grouped (no ranges) fields from the schematic into the CSV file.
-	@$(PROG) -r -g -nr -x $@.sch -i $@.csv $(FLAGS)
+	@$(PROG) -g -nr -x $@.sch -i $@.csv $(FLAGS)
     # Add some random columns of random stuff to the CSV file.
 	@python randomizer.py $@.csv $@.csv
     # Insert the random stuff back into the fields of the schematic.
 	@$(PROG) -x $@.csv -i $@.sch $(FLAGS)
     # Extract the updated grouped (no ranges) fields from the schematic into an XLSX file.
-	@$(PROG) -r -g -nr -x $@.sch -i $@.xlsx $(FLAGS)
+	@$(PROG) -g -nr -x $@.sch -i $@.xlsx $(FLAGS)
     # Extract the grouped (no ranges) contents of the XLSX file into a CSV file.
-	@$(PROG) -r -g -nr -x $@.xlsx -i $@1.csv $(FLAGS)
+	@$(PROG) -g -nr -x $@.xlsx -i $@1.csv $(FLAGS)
     # The extracted CSV file should match the randomized CSV file.
 	@diff -qsw $@.csv $@1.csv
 	@echo 'Test $@ passed!'

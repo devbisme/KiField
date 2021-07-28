@@ -12,7 +12,7 @@ except ImportError:
 
 __author__ = "Dave Vandenbout"
 __email__ = "devb@xess.com"
-__version__ = "0.1.19"
+__version__ = "0.2.0"
 
 if "sdist" in sys.argv[1:]:
     with open("kifield/pckg_info.py", "w") as f:

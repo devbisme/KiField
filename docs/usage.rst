@@ -18,37 +18,32 @@ Command-line Options
 
 ::
 
-    usage: kifield [-h] [--extract file [file ...]] [--insert file [file ...]]
-                   [--recurse] [--fields name|/name|~name [name|/name|~name ...]]
-                   [--overwrite] [--nobackup] [--group] [--debug [LEVEL]]
-                   [--version]
+  usage: kifield [-h] [--extract file [file ...]] [--insert file [file ...]]
+                 [--recurse] [--fields name|/name|~name [name|/name|~name ...]] [--overwrite]
+                 [--nobackup] [--group] [--norange] [--debug [LEVEL]] [--version]
 
-    Insert fields from spreadsheets into KiCad schematics or libraries, or gather
-    fields from schematics or libraries and place them into a spreadsheet.
+  Insert fields from spreadsheets into KiCad schematics or libraries, or gather fields from 
+  schematics or libraries and place them into a spreadsheet.
 
-    optional arguments:
-      -h, --help            show this help message and exit
-      --extract file [file ...], -x file [file ...]
-                            Extract field values from one or more XLSX, CSV, TSV,
-                            SCH, LIB or DCM files.
-      --insert file [file ...], -i file [file ...]
-                            Insert field values into one or more XLSX, CSV, TSV,
-                            SCH, LIB or DCM files.
-      --recurse, -r         Allow recursion from a top-level schematic into lower-
-                            level sub-schematics.
-      --fields name|/name|~name [name|/name|~name ...], -f name|/name|~name [name|/name|~name ...]
-                            Specify the names of the fields to extract and insert.
-                            Place a '/' or '~' in front of a field you wish to
-                            omit. (Leave blank to extract/insert *all* fields.)
-      --overwrite, -w       Allow field insertion into an existing file.
-      --nobackup, -nb       Do *not* create backups before modifying files.
-                            (Default is to make backup files.)
-      --group, -g           Group components with the same field values into
-                            single lines when inserting into a spreadsheet or
-                            CSV/TSV. (Default is to have one component per line)
-      --debug [LEVEL], -d [LEVEL]
-                            Print debugging info. (Larger LEVEL means more info.)
-      --version, -v         show program's version number and exit
+  optional arguments:
+    -h, --help            show this help message and exit
+    --extract file [file ...], -x file [file ...]
+                          Extract field values from one or more XLSX, CSV, TSV, SCH, LIB or DCM files.
+    --insert file [file ...], -i file [file ...]
+                          Insert field values into one or more XLSX, CSV, TSV, SCH, LIB or DCM files.
+    --recurse, -r         Allow recursion from a top-level schematic into lower-level sub-schematics.
+    --fields name|/name|~name [name|/name|~name ...], -f name|/name|~name [name|/name|~name ...]
+                          Specify the names of the fields to extract and insert. Place a '/' or '~'
+                          in front of a field you wish to omit. (Leave blank to extract/insert *all* fields.)
+    --overwrite, -w       Allow field insertion into an existing file.
+    --nobackup, -nb       Do *not* create backups before modifying files. (Default is to make backup files.)
+    --group, -g           Group components with the same field values into single lines when inserting into
+                          a spreadsheet or CSV/TSV. (Default is to have one component per line)
+    --norange, -nr        Disable hyphenated ranges when components are grouped, explicitly showing each
+                          component in a group.
+    --debug [LEVEL], -d [LEVEL]
+                          Print debugging info. (Larger LEVEL means more info.)
+    --version, -v         show program's version number and exit
 
 Examples
 ------------------------
