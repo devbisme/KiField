@@ -107,7 +107,10 @@ def group_wb(wb):
 
     grouped_rows = []
     for i, ref in enumerate(references):
-        grouped_rows.append((collapse(ref),) + unique_rows[i])
+        if no_range:
+            grouped_rows.append((ref,) + unique_rows[i])
+        else:
+            grouped_rows.append((collapse(ref),) + unique_rows[i])
 
     grouped_wb = pyxl.Workbook()
     grouped_ws = grouped_wb.active
@@ -1530,6 +1533,7 @@ def kifield(
     recurse=False,
     group_components=False,
     backup=True,
+    no_range=False
 ):
     """Extract fields from a set of files and insert them into another set of files."""
 
