@@ -89,6 +89,14 @@ def main():
         ),
     )
     parser.add_argument(
+        "--norange",
+        "-nr",
+        action="store_true",
+        help=(
+            "Disable hyphenated ranges when components are grouped, explicitly showing each component in a group."
+        ),
+    )
+    parser.add_argument(
         "--debug",
         "-d",
         nargs="?",
@@ -144,6 +152,7 @@ def main():
         inc_field_names=inc_fields,
         exc_field_names=exc_fields,
         group_components=args.group,
+        no_range=args.norange,
         recurse=args.recurse,
         backup=not args.nobackup,
     )
