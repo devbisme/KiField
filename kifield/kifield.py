@@ -79,7 +79,7 @@ def wb_to_csvfile(wb, csv_filename, dialect):
             writer.writerow([cell.value for cell in row])
 
 
-def group_wb(wb):
+def group_wb(wb, no_range=False):
     """Group lines that have the same column values in a openpyxl workbook.
     Headers are expected on the first row and references are expected in the
     first column."""
@@ -875,7 +875,7 @@ def insert_part_fields_into_wb(part_fields_dict, wb, recurse=False):
 
 
 def insert_part_fields_into_xlsx(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into an XLSX spreadsheet."""
 
@@ -895,13 +895,13 @@ def insert_part_fields_into_xlsx(
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
 
     if group_components:
-        wb = group_wb(wb)
+        wb = group_wb(wb, no_range)
 
     wb.save(filename)
 
 
 def insert_part_fields_into_csv(
-    part_fields_dict, filename, recurse, group_components, backup
+    part_fields_dict, filename, recurse, group_components, backup, no_range
 ):
     """Insert the fields in the extracted part dictionary into a CSV spreadsheet."""
 
@@ -925,7 +925,7 @@ def insert_part_fields_into_csv(
     wb = insert_part_fields_into_wb(part_fields_dict, wb)
 
     if group_components:
-        wb = group_wb(wb)
+        wb = group_wb(wb, no_range)
 
     wb_to_csvfile(wb, filename, dialect)
 
@@ -1464,7 +1464,7 @@ def insert_part_fields_into_dcm(
     dcm.save(filename)
 
 
-def insert_part_fields(part_fields_dict, filenames, recurse, group_components, backup):
+def insert_part_fields(part_fields_dict, filenames, recurse, group_components, backup, no_range):
     """Insert part fields from a dictionary into a spreadsheet, part library, or schematic."""
 
     # No files backed-up yet, so clear list of file names.
@@ -1546,5 +1546,5 @@ def kifield(
 
     # Insert entries from the dictionary into these files.
     insert_part_fields(
-        part_fields_dict, insert_filenames, recurse, group_components, backup
+        part_fields_dict, insert_filenames, recurse, group_components, backup, no_range
     )

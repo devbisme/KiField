@@ -58,8 +58,7 @@ def test_groups3():
     ws.append(("C2", "1", "1", "1"))
     ws.append(("C3", "1", "1", "1"))
 
-    no_range = True
-    wb = kifield.group_wb(wb)
+    wb = kifield.group_wb(wb, no_range=True)
     ws = wb.active
 
     assert ws.max_row == 2
