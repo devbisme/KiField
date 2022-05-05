@@ -1212,7 +1212,8 @@ def insert_part_fields_into_sch_V6(
                     field = component.get_field(field_name)
                     pos[1] += 2.54 * field["id"]
                     component.set_field_pos(field_name, pos)
-                    component.set_field_visibility(field_name, total_vis)
+                    if total_vis is None or total_vis == False:
+                        component.set_field_visibility(field_name, False)
 
         # Remove non-default fields with empty values.
         for field in component.fields:
@@ -1409,7 +1410,8 @@ def insert_part_fields_into_lib_V6(
                     field = component.get_field(field_name)
                     pos[1] += 2.54 * field["id"]
                     component.set_field_pos(field_name, pos)
-                    component.set_field_visibility(field_name, total_vis)
+                    if total_vis is None or total_vis == False:
+                        component.set_field_visibility(field_name, False)
 
         # Remove non-default fields with empty values.
         for field in component.fields:
