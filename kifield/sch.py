@@ -460,7 +460,7 @@ class Component_V6(object):
             effects = find_by_key("effects", field["prop"])
             if len(effects) == 0:
                 field["prop"].append([sexpdata.Symbol("effects")])
-                effects = find_by_key("effects", field["prop"])[0]
+            effects = find_by_key("effects", field["prop"])[0]
             if effects:
                 try:
                     effects.remove(sexpdata.Symbol("hide"))
