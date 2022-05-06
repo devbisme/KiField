@@ -4,6 +4,14 @@ History
 -------
 
 
+1.0.0 (2022-05-06)
+______________________
+
+* Bumped to version 1.0.0.
+* Fixed a bug where field visibility is default-visible and/or cannot be set if Reference field does not contain an 'effects' property.
+* Fixed some string-splitting and unicode bugs in `find_by_key()` that manifested in Python 2.
+
+
 0.2.0 (2021-07-28)
 ______________________
 

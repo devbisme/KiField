@@ -12,7 +12,7 @@ except ImportError:
 
 __author__ = "Dave Vandenbout"
 __email__ = "devb@xess.com"
-__version__ = "0.2.0"
+__version__ = "1.0.0"
 
 if "sdist" in sys.argv[1:]:
     with open("kifield/pckg_info.py", "w") as f:
@@ -39,6 +39,12 @@ setup(
     author=__author__,
     author_email=__email__,
     url="https://github.com/devbisme/kifield",
+    project_urls={
+        "Documentation": "https://devbisme.github.io/KiField",
+        "Source": "https://github.com/devbisme/kifield",
+        "Changelog": "https://github.com/devbisme/kifield/blob/master/HISTORY.rst",
+        "Tracker": "https://github.com/devbisme/kifield/issues",
+    },
     #    packages=['kifield',],
     packages=setuptools.find_packages(),
     entry_points={"console_scripts": ["kifield = kifield.__main__:main"]},
@@ -49,15 +55,17 @@ setup(
     install_requires=requirements,
     license="MIT",
     zip_safe=False,
-    keywords="kifield KiCad EDA ",
+    keywords="kifield KiCad EDA",
     classifiers=[
         # More information at https://pypi.org/classifiers/.
         "Development Status :: 5 - Production/Stable",
-        "Intended Audience :: Developers",
+        "Intended Audience :: Manufacturing",
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
+        "Operating System :: OS Independent",
         "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: Implementation :: CPython",
         "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
     ],
 )

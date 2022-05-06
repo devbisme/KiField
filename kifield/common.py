@@ -88,24 +88,31 @@ def find_by_key(key, array):
     """
 
     try:
-        k, sub_key = key.split("/", maxsplit=1)
+        # Split off the first part of the key and leave the rest as a subkey.
+        k, sub_key = key.split("/", 1)
     except ValueError:
+        # No delimiter, so use the entire key with no subkey.
         k = key
         sub_key = None
 
-    found_elements = []
-    for e in array:
+    # Search the array for subarrays having the key as the first element.
+    found_subarrays = []
+    for subarray in array:
         try:
-            k = e[0].value().lower()
+            # Get the first element of the subarray.
+            e = subarray[0].value().lower()
         except (IndexError, AttributeError, TypeError):
             pass
         else:
-            if k == key:
+            # Check the first element against the key.
+            if e == key:
                 if not sub_key:
-                    found_elements.append(e)
+                    # Found a match, so add the subarray to the list.
+                    found_subarrays.append(subarray)
                 else:
-                    found_elements.extend(find_by_key(sub_key, e))
-    return found_elements
+                    # Found a match, but must check subkeys for further matches.
+                    found_subarrays.extend(find_by_key(sub_key, subarray))
+    return found_subarrays
 
 
 def get_value_by_key(key, array):

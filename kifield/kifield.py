@@ -50,7 +50,7 @@ def csvfile_to_wb(csv_filename):
             for attr in dir(dialect):
                 a = getattr(dialect, attr)
                 if type(a) == unicode:
-                    setattr(dialect, attr, bytes(a))
+                    setattr(dialect, attr, a.encode("utf-8"))
         csv_file.seek(0)
         reader = csv.reader(csv_file, dialect)
         wb = pyxl.Workbook()
