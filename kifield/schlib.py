@@ -565,8 +565,12 @@ class Component_V6(object):
             dst_field["name"] = dst
             dst_field["id"] = len(self.fields)
             dst_field["prop"][1] = dst
-            id = find_by_key("id", dst_field["prop"])[0]
-            id[1] = dst_field["id"]
+            try:
+                id = find_by_key("id", dst_field["prop"])[0]
+                id[1] = dst_field["id"]
+            except IndexError:
+                # No id field found. This must be a file from KiCad version >= 7.
+                pass
             self.fields.append(dst_field)
         else:
             dst_field["prop"] = deepcopy(src_field["prop"])
