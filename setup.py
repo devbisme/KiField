@@ -12,7 +12,7 @@ except ImportError:
 
 __author__ = "Dave Vandenbout"
 __email__ = "devb@xess.com"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 if "sdist" in sys.argv[1:]:
     with open("kifield/pckg_info.py", "w") as f:
@@ -28,7 +28,7 @@ with open("HISTORY.rst") as history_file:
 requirements = [
     "future >= 0.15.0",
     "openpyxl >= 2.6.0",
-    "sexpdata",
+    "sexpdata == 1.0.0", # For Python 2.7 compatibility.
 ]
 
 setup(

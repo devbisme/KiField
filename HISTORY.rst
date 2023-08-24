@@ -3,6 +3,12 @@
 History
 -------
 
+1.0.1 (2023-08-23)
+______________________
+
+* Bumped to version 1.0.1.
+* Made compatible with KiCad 7.
+
 
 1.0.0 (2022-05-06)
 ______________________
@@ -30,7 +36,7 @@ ______________________
 0.1.18 (2021-06-28)
 ______________________
 
-* KiCad V6 schematic and library files are now supported (well, V5.99 actually, but the file formats shouldn't change).
+* KiCad 6 schematic and library files are now supported (well, V5.99 actually, but the file formats shouldn't change).
 
 
 0.1.17 (2021-03-25)
